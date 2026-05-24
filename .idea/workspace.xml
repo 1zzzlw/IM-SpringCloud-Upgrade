@@ -4,15 +4,216 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="集群信息使用Hash结构存储，节约内存。一些小功能的优化，分片文件失败的重传，ip限流异常信息">
+    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="AI扩展，扩展了智谱大模型，因为这个免费">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-springboot/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-springboot/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/config/ChatClientConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/config/ChatClientConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/impl/AIMessageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/impl/AIMessageServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-springboot/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-springboot/target/classes/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/config/ChatClientConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/config/ChatClientConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/impl/AIMessageServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/impl/AIMessageServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/classes/META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/classes/com/zzzlew/config/IMCommonRabbitMQConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/classes/com/zzzlew/constant/FileTypeConstant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/classes/com/zzzlew/constant/JwtClaimsConstant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/classes/com/zzzlew/constant/MessageConstant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/classes/com/zzzlew/constant/RabbitMQConstant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/classes/com/zzzlew/constant/RedisConstant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/classes/com/zzzlew/constant/RegexPatterns.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/classes/com/zzzlew/domain/ClusterMessageWrapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/classes/com/zzzlew/enums/LimitKeyType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/classes/com/zzzlew/enums/SystemMessage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/classes/com/zzzlew/utils/JwtUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/im-common-1.0-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/application-dev.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/application-docker.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/IMNetyApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/config/NettyConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/Message.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/UserBaseDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/request/FriendApplyDealRequestDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/request/FriendApplyRequestDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/request/GroupApplyDealRequestDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/request/GroupApplyRequestDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/request/GroupChatRequestDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/request/HeartRequestDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/request/PrivateChatRequestDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/request/SystemMessageRequestDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/response/ACKMessageResponseVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/response/FriendApplyDealResponseVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/response/FriendApplyResponseVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/response/GroupApplyDealResponseVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/response/GroupApplyResponseVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/response/GroupChatResponseVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/response/LoginSuccessResponseVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/response/OnlineStatusListResponseVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/response/PrivateChatResponseVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/response/QuitLoginResponseVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/domain/response/SystemMessageResponseVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/handler/BinaryWebSocketFrameToByteBufHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/handler/ByteBufToBinaryWebSocketFrameHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/handler/ConnectSuccessMessageHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/handler/HeartBeatHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/handler/HttpHeadersHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/handler/MessageDispatcherHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/handler/QuitLoginHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/handler/impl/MessageHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/handler/messageHandler/FriendApplyDealHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/handler/messageHandler/FriendApplySendHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/handler/messageHandler/GroupApplyDealHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/handler/messageHandler/GroupApplySendHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/handler/messageHandler/GroupChatHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/handler/messageHandler/PrivateChatHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/handler/messageHandler/SystemMessageHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/listener/BroadCastListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/listener/MQMessageListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/properties/SerializerProperties.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/protocol/MessageCodecSharable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/protocol/ProtocolFrameDecoder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/protocol/Serializer$Algorithm$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/protocol/Serializer$Algorithm$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/protocol/Serializer$Algorithm.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/protocol/Serializer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/publish/MQMessagePublish.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/result/MessageResult.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/utils/ACKMessagePackUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/utils/ChannelManageUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/websocket/NettyWebSocketServer$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/com/zzzlew/websocket/NettyWebSocketServer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/logback.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/classes/store_offline_message.lua" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/im-server-1.0-SNAPSHOT.jar.original" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/application-dev.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/application-docker.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/ZzzImServerApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/annotaion/UrlLimit.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/aop/UrlLimitAspect.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/config/ChatClientConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/config/CorsConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/config/KaptchaConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/config/Knife4jConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/config/MinIOConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/config/MinioBucketInit.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/config/SpringBootRabbitMQConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/config/WebMvcConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/controller/AIMessageController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/controller/ApplyController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/controller/CommonsController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/controller/ConversationController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/controller/FavoritesController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/controller/FriendController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/controller/LoginController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/controller/MessageController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/controller/UserController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/enums/ConversationTypeEnum.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/exception/AccountNotFoundException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/exception/BaseException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/exception/LoginCodeGenerateException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/exception/PasswordErrorException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/exception/PhoneAlreadyExistsException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/exception/PhoneErrorException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/exception/TokenExpiredException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/exception/TokenGenerateException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/exception/TokenNotFoundException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/handler/GlobalExceptionHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/interceptor/JwtTokenInterceptor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/listener/MQMessageListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/mapper/AIMessageMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/mapper/ApplyMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/mapper/ConversationMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/mapper/FavoritesMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/mapper/FriendMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/mapper/GroupConversationMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/mapper/MessageMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/mapper/UserInfoMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/mapper/UserMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/dto/apply/DealApplyDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/dto/apply/DealGroupDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/dto/apply/GroupApplyDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/dto/apply/SendApplyDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/dto/conversation/GroupConversationDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/dto/favorites/FavoritesDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/dto/message/AIMessageDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/dto/message/FileChunkInfoDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/dto/message/FileMessageDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/dto/message/MessageDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/dto/user/AIPersonalityDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/dto/user/GroupMemberDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/dto/user/UserBaseDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/dto/user/UserLoginDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/dto/user/UserRegisterDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/entity/Apply.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/entity/Conversation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/entity/Favorites.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/entity/FriendRelation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/entity/GroupConversation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/entity/UserAuth.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/entity/UserInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/entity/message.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/vo/apply/ApplyVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/vo/apply/DealApplyVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/vo/apply/GroupApplyVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/vo/conversation/ConversationVO$ConversationVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/vo/conversation/ConversationVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/vo/conversation/GroupConversationVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/vo/favorites/FavoritesVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/vo/friend/FriendRelationVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/vo/message/AIMessageVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/vo/message/FileMessageVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/vo/message/MessageVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/vo/user/AIPersonalityVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/vo/user/GroupMemberVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/vo/user/UserInfoVO$UserInfoVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/vo/user/UserInfoVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/pojo/vo/user/UserSearchVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/properties/Jwtproperties.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/properties/MinIOConfigProperties.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/result/PageResult.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/result/Result.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/result/TokenResult.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/AIMessageService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/ApplyService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/CommonsService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/ConversationService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/FavoritesService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/FriendService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/MessageService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/UserService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/impl/AIMessageServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/impl/ApplyServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/impl/CommonsServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/impl/ConversationImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/impl/FavoritesServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/impl/FriendServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/impl/MessageServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/server/impl/UserServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/tools/AITools.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/utils/MinIOFileStorgeUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/utils/RefreshTokenInterceptor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/utils/RegexUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/com/zzzlew/utils/UserHolder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/logback.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/login_token_atomic_operation.lua" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/mapper/AIMessageMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/mapper/ConversationMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/mapper/FavoritesMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/mapper/FriendMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/mapper/GroupApplyMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/mapper/GroupConversationMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/mapper/MessageMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/mapper/UserInfoMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/mapper/UserMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/classes/schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/im-springboot-1.0-SNAPSHOT.jar.original" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -332,6 +533,11 @@
       <workItem from="1777134641875" duration="194000" />
       <workItem from="1777184942822" duration="602000" />
       <workItem from="1777392273750" duration="10000" />
+      <workItem from="1777473076668" duration="47000" />
+      <workItem from="1777948501532" duration="2401000" />
+      <workItem from="1778037200782" duration="6633000" />
+      <workItem from="1778156352985" duration="1240000" />
+      <workItem from="1778208057786" duration="9000" />
     </task>
     <task id="LOCAL-00001" summary="我最近为了加上MQ和Redis的功能，去理解沉淀了几天，虽然大部分时间都在休息吧但是我也有了思路，首先是我看了别人的一个IM项目，特别复杂，是用redis实现的消息队列，还有加锁等，对于现在大二的我来说可以说是特别难的，复杂的一个项目了。但是他的有一个设计不合理，感觉这个设计就是为了作为一个练习redis而出现的，就是Http和Ws没有解耦，是通过Http发送消息同时处理存储数据库和推送到消息队列中，Netty模块进行监听消息队列从而实现发送到对方的功能，所以整个项目高度使用了redis的消息队列实现了集群分布。但是我的项目是Http和WS解耦的项目，经过我的学习，发现，好像只需要redisson的发布订阅模式来实现广播的功能，就可以实现集群部署了。至于MQ消息队列的使用，对于我的项目感觉用到的地方很少，比如或未读和已读消息的处理，我仍然可以使用ws进行发送消息的改变状态。以及用户的在线状态，我可以登录成功的时候拉去一次，然后加上好友上线提醒的功能，这个我已经实现了，还有个是好友下线的提醒，这样就可以实现好友的在线状态的展示了。至于消息的撤回，引用，这个就是普通的http请求，以及消息状态的更新，前端的展示的问题了，和MQ的关系并不大。然后就是现在思考一下MQ可以怎么使用，我希望的是MQ不能让我的项目有很大的改动，这样就没必要了，MQ只是个通过异步处理的方式，提高项目性能的工具，首先能想到的就是http请求发送消息时存储到数据库的操作，这个可以异步处理。其他需要的地方我倒是还没有想到。">
       <option name="closed" value="true" />
@@ -621,7 +827,15 @@
       <option name="project" value="LOCAL" />
       <updated>1777109659747</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="AI扩展，扩展了智谱大模型，因为这个免费">
+      <option name="closed" value="true" />
+      <created>1777473106985</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1777473106985</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -639,7 +853,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="在线状态完成，右键菜单前端完成部分，后端还没有开始写业务操作" />
     <MESSAGE value="ai的对话，个性化设置，基本上完成了吧，还差图像的识别功能。这个不急着做，然后接下来想完成那些琐碎的小功能了，完成之后可能就会开始收藏界面，朋友圈界面的编写，或者是MQ消息队列，或者是ES的全局搜索，或者是webrtc" />
     <MESSAGE value="加了一些小功能，尝试了一些Tools方法，但是ai的回答还是不好，感觉是模型的问题，但是我还在尝试找代码的优化地方" />
     <MESSAGE value="增加了笔记系统的内容，后续完善收藏功能" />
@@ -664,7 +877,8 @@
     <MESSAGE value="这次提交，我想说一下我的规划。经过一段时间的八股复习，我发现自己的基础特别的不好，写项目和基础完全就是两回事，因此我感觉我的项目的基层越来越不稳定。部署到服务器上之后的bug频繁出现，并且高并发效果不好。本来打算4月13号就投简历的，但是发现自己不能这么着急，还需要打磨。主要原因我认为是这个项目写的时间太长了，花费了4个多月的时间，而且，大量的时间花在了写前端代码上，但是我的前端代码的基础也不好。我认为是我的学习方法出现了一点问题。接下来的时间安排我打算是6月份等到期末考试结束，我在投暑假的日常实习。然后说一下后面的复习方法，也就是说又争取到了两个月的时间，我准备慢慢的来了，先从redis开始，项目二和项目一都有对redis的应用，但是我的理解还是不够深，打算八股和项目结合学习。然后是RabbitMQ，这个也要深度学习。接下来就是MySQL，项目一是自己独立写的，数据库设计也是自己设计的，相关的优化需要做一下，这个也可以根据项目来学习。然后是JVM，JavaSE，JUC，JavaList这些java基础，只能是熟能生巧了，我也想不到什么好办法去理解，有的感觉就是需要背。只能慢慢来了。算法的话，我现在应该是刷出技巧来了，不会刷的心态崩溃了。" />
     <MESSAGE value="完成了一些优化吧，完成了消息并发的测试，收获就是对Jmeter的使用更了解了。以及netty在linux下的配置" />
     <MESSAGE value="集群信息使用Hash结构存储，节约内存。一些小功能的优化，分片文件失败的重传，ip限流异常信息" />
-    <option name="LAST_COMMIT_MESSAGE" value="集群信息使用Hash结构存储，节约内存。一些小功能的优化，分片文件失败的重传，ip限流异常信息" />
+    <MESSAGE value="AI扩展，扩展了智谱大模型，因为这个免费" />
+    <option name="LAST_COMMIT_MESSAGE" value="AI扩展，扩展了智谱大模型，因为这个免费" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
