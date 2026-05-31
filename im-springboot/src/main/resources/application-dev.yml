@@ -20,7 +20,7 @@ spring:
   #      schema-locations: classpath:schema.sql
   data:
     redis:
-      host: 47.111.22.183
+      host: 39.106.183.13
       port: 6379
       password: 123456
       lettuce:
@@ -30,10 +30,10 @@ spring:
           min-idle: 1
           time-between-eviction-runs: 10s
   rabbitmq:
-    host: 47.111.22.183
+    host: 39.106.183.13
     port: 5672
     virtual-host: /
-    username: rabbitmq
+    username: admin
     password: 123456
     listener:
       simple:
@@ -49,7 +49,7 @@ spring:
           max-interval: 5000ms
 
 minio:
-  endpoint: http://47.111.22.183:9000
+  endpoint: http://39.106.183.13:9000
   accessKey: admin
   secretKey: 12345678
   avatarBucket: zzz-im-avatar

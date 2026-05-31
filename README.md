@@ -96,6 +96,11 @@ docker run -d \
   -v /root/rabbitmq/conf:/etc/rabbitmq \
   -v /root/rabbitmq/logs:/var/log/rabbitmq \
   rabbitmq:3.13-management
+
+# 手动下载插件，才能进入网页端
+docker exec -it rabbitmq bash
+rabbitmq-plugins enable rabbitmq_management
+exit
 ```
 
 ### 项目部署(SpringBoot + NettyServer)

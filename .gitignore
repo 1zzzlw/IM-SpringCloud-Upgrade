@@ -2,4 +2,5 @@ jmeter.log
 im-common/target
 im-server/target
 im-springboot/target
+nginx-1.28.2/logs
 .idea
