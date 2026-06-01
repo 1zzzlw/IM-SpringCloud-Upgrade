@@ -1,0 +1,58 @@
+spring:
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        model: qwen2.5:14b
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.111.22.183:3306/zzz-im-server?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+  #  sql:
+  #    init:
+  #      mode: always
+  #      schema-locations: classpath:schema.sql
+  data:
+    redis:
+      host: 47.111.22.183
+      port: 6379
+      password: 123456
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 10
+          min-idle: 1
+          time-between-eviction-runs: 10s
+  rabbitmq:
+    host: 47.111.22.183
+    port: 5672
+    virtual-host: /
+    username: rabbitmq
+    password: 123456
+    listener:
+      simple:
+        acknowledge-mode: auto
+        prefetch: 10                     # 改为与并发数一致，避免消息被“挤到”队尾
+        concurrency: 20
+        max-concurrency: 30
+        retry:
+          enabled: true
+          initial-interval: 1s           # 首次重试延迟稍长，给Netty缓冲区恢复时间
+          multiplier: 2
+          max-attempts: 3                # 减少重试次数，避免消息积压
+          max-interval: 5000ms
+
+minio:
+  endpoint: http://47.111.22.183:9000
+  accessKey: admin
+  secretKey: 12345678
+  avatarBucket: zzz-im-avatar
+  imageBucket: zzz-im-image
+  videoBucket: zzz-im-video
+  audioBucket: zzz-im-audio
+  fileBucket: zzz-im-file
+  favoriteBucket: zzz-im-favorite
+  imagePath: image
+  videoPath: video
+  expireIn: 180

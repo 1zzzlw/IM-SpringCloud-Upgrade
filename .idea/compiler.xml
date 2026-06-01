@@ -8,15 +8,29 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="im-server" />
+        <module name="im-moments" />
+        <module name="im-api" />
+        <module name="im-social" />
+        <module name="im-chat" />
+        <module name="im-auth" />
+        <module name="im-gateway" />
         <module name="im-common" />
         <module name="im-springboot" />
+        <module name="im-content" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="im-api" options="-parameters" />
+      <module name="im-auth" options="-parameters" />
+      <module name="im-chat" options="-parameters" />
       <module name="im-common" options="-parameters" />
+      <module name="im-content" options="-parameters" />
+      <module name="im-gateway" options="-parameters" />
+      <module name="im-moments" options="-parameters" />
       <module name="im-server" options="-parameters" />
+      <module name="im-social" options="-parameters" />
       <module name="im-springboot" options="-parameters" />
     </option>
   </component>
