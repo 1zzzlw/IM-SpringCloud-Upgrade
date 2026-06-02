@@ -48,22 +48,13 @@ public class ApplyController {
         return Result.success(applyId);
     }
 
-    /**
-     * 创建群聊
-     *
-     * @param groupApplyDTO 群聊申请信息
-     * @param groupAvatar   群聊头像文件信息
-     * @return 创建的会话信息
-     */
-    @Operation(summary = "创建群聊")
-    @PostMapping("/create")
-    public Result<ConversationVO> createGroupConversation(GroupApplyDTO groupApplyDTO,
-                                                          @RequestParam(value = "groupAvatar") MultipartFile groupAvatar) {
-        log.info("创建群聊：{}，群聊名称：{}", groupApplyDTO.getInvitedIds(), groupApplyDTO.getGroupName());
-        List<Long> friendIdList = groupApplyDTO.getInvitedIds();
-        log.info("好友ID列表：{}", friendIdList);
-        ConversationVO conversationVO = applyService.createGroupConversation(friendIdList, groupApplyDTO, groupAvatar);
-        return Result.success(conversationVO);
+    @Operation(summary = "发送群聊申请")
+    @PostMapping("/groupApply")
+    public Result<Object> sendGroupApply(@RequestParam("userId") Long userId,
+                                        @RequestParam("friendIdList") List<Long> friendIdList,
+                                        @RequestBody GroupApplyDTO groupApplyDTO) {
+        applyService.sendGroupApply(userId, friendIdList, groupApplyDTO);
+        return Result.success();
     }
 
     /**
@@ -121,7 +112,7 @@ public class ApplyController {
      */
     @Operation(summary = "同意入群申请")
     @PostMapping("/groupApply/deal")
-    public Result<ConversationVO> dealGroupApply(DealGroupDTO dealGroupDTO,
+    public Result<ConversationVO> dealGroupApply(@RequestBody DealGroupDTO dealGroupDTO,
                                                  @RequestParam(value = "groupAvatarBlob") MultipartFile groupAvatarBlob) {
         log.info("处理群聊申请：{}, {}", dealGroupDTO, groupAvatarBlob);
         ConversationVO conversationVO = applyService.dealGroupApply(dealGroupDTO, groupAvatarBlob);

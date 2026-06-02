@@ -58,10 +58,10 @@ likely be accepted if style corresponds to the surrounding code
 - Keep a clean, concise and meaningful commit history on your branch, rebasing
 locally and breaking changes logically into commits before submitting a PR
 
-- Each commit message should have a single-line subject line followed by verbose
+- Each commit Message should have a single-line subject line followed by verbose
 description after an empty line
 
-- Limit the subject line to 67 characters, and the rest of the commit message
+- Limit the subject line to 67 characters, and the rest of the commit Message
 to 76 characters
 
 - Use subject line prefixes for commits that affect a specific portion of the

@@ -4204,7 +4204,7 @@ Changes with nginx 0.9.2                                         06 Dec 2010
 
 Changes with nginx 0.9.1                                         30 Nov 2010
 
-    *) Bugfix: "return CODE message" directives did not work; the bug had
+    *) Bugfix: "return CODE Message" directives did not work; the bug had
        appeared in 0.9.0.
 
 
@@ -4545,7 +4545,7 @@ Changes with nginx 0.8.35                                        01 Apr 2010
        incorrect.
        Thanks to Maxim Dounin.
 
-    *) Bugfix: ngx_http_memcached_module might issue the error message
+    *) Bugfix: ngx_http_memcached_module might issue the error Message
        "memcached sent invalid trailer".
        Thanks to Maxim Dounin.
 
@@ -4734,7 +4734,7 @@ Changes with nginx 0.8.26                                        16 Nov 2009
 
 Changes with nginx 0.8.25                                        16 Nov 2009
 
-    *) Change: now no message is written in an error log if a variable is
+    *) Change: now no Message is written in an error log if a variable is
        not found by $r->variable() method.
 
     *) Feature: the ngx_http_degradation_module.
@@ -5068,7 +5068,7 @@ Changes with nginx 0.8.6                                         20 Jul 2009
 
     *) Feature: the ngx_http_geoip_module.
 
-    *) Bugfix: XSLT filter may fail with message "not well formed XML
+    *) Bugfix: XSLT filter may fail with Message "not well formed XML
        document" for valid XML document.
        Thanks to Kuramoto Eiji.
 
@@ -5316,7 +5316,7 @@ Changes with nginx 0.7.52                                        20 Apr 2009
 
     *) Bugfix: if nginx was built with the ngx_http_perl_module and with a
        perl which supports threads, then during a master process exit the
-       message "panic: MUTEX_LOCK" might be issued.
+       Message "panic: MUTEX_LOCK" might be issued.
 
     *) Bugfix: nginx could not be built --without-http-cache; the bug had
        appeared in 0.7.48.
@@ -5619,7 +5619,7 @@ Changes with nginx 0.7.31                                        19 Jan 2009
        appeared in 0.7.18.
        Thanks to Maxim Dounin.
 
-    *) Bugfix: while SMTP proxying nginx issued message "250 2.0.0 OK"
+    *) Bugfix: while SMTP proxying nginx issued Message "250 2.0.0 OK"
        instead of "235 2.0.0 OK"; the bug had appeared in 0.7.22.
        Thanks to Maxim Dounin.
 
@@ -6212,7 +6212,7 @@ Changes with nginx 0.6.26                                        11 Feb 2008
     *) Bugfix: socket leak in HTTPS mode if deferred accept was used.
        Thanks to Ben Maurer.
 
-    *) Bugfix: nginx issued the bogus error message "SSL_shutdown() failed
+    *) Bugfix: nginx issued the bogus error Message "SSL_shutdown() failed
        (SSL: )"; the bug had appeared in 0.6.23.
 
     *) Bugfix: in HTTPS mode requests might fail with the "bad write retry"
@@ -6989,7 +6989,7 @@ Changes with nginx 0.5.9                                         25 Jan 2007
 
     *) Feature: the "sendfile" directive is available inside the "if" block.
 
-    *) Feature: now on failure of the writing to access nginx logs a message
+    *) Feature: now on failure of the writing to access nginx logs a Message
        to error_log, but not more often than once a minute.
 
     *) Bugfix: the "access_log off" directive did not always turn off the
@@ -7119,7 +7119,7 @@ Changes with nginx 0.5.1                                         11 Dec 2006
        Thanks to Bron Gondwana.
 
     *) Bugfix: if the "upstream" name was used in the "fastcgi_pass", then
-       the message "no port in upstream" was issued; the bug had appeared in
+       the Message "no port in upstream" was issued; the bug had appeared in
        0.5.0.
 
     *) Bugfix: if the "proxy_pass" and "fastcgi_pass" directives used the
@@ -7525,7 +7525,7 @@ Changes with nginx 0.3.53                                        07 Jul 2006
     *) Feature: nginx supports the request body size more than 2G.
 
     *) Bugfix: if a client was successfully authorized using "satisfy_any
-       on", then anyway the message "access forbidden by rule" was written
+       on", then anyway the Message "access forbidden by rule" was written
        in the log.
 
     *) Bugfix: the "PUT" method may erroneously not create a file and return
@@ -7707,13 +7707,13 @@ Changes with nginx 0.3.40                                        19 Apr 2006
 Changes with nginx 0.3.39                                        17 Apr 2006
 
     *) Feature: the "uninitialized_variable_warn" directive; the logging
-       level of the "uninitialized variable" message was lowered from
+       level of the "uninitialized variable" Message was lowered from
        "alert" to "warn".
 
     *) Feature: the "override_charset" directive.
 
     *) Change: now if the unknown variable is used in the "echo" and "if
-       expr='$name'" SSI-commands, then the "unknown variable" message is
+       expr='$name'" SSI-commands, then the "unknown variable" Message is
        not logged.
 
     *) Bugfix: the active connection counter increased on the exceeding of
@@ -9036,7 +9036,7 @@ Changes with nginx 0.1.17                                        03 Feb 2005
        host name and a slash were added to them; the bug had appeared in
        0.1.14.
 
-    *) Bugfix: the system error message was not logged on Linux.
+    *) Bugfix: the system error Message was not logged on Linux.
 
 
 Changes with nginx 0.1.16                                        25 Jan 2005
@@ -9171,7 +9171,7 @@ Changes with nginx 0.1.11                                        02 Dec 2004
        an error while the response waiting then process may got caught in an
        endless loop.
 
-    *) Bugfix: the worker process may exit with the "unknown cycle" message
+    *) Bugfix: the worker process may exit with the "unknown cycle" Message
        when the /dev/poll method was used.
 
     *) Bugfix: "close() channel failed" errors.

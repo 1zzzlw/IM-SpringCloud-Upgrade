@@ -23,4 +23,30 @@
         where user_id = #{userId}
     </select>
 
+    <insert id="insertUserInfo">
+        insert into user_info (id, username, account, password, email, phone, gender, avatar,
+                               birthday, address)
+        values (#{id}, #{username}, #{account}, #{password}, #{email}, #{phone}, #{gender},
+                #{avatar},
+                #{birthday}, #{address})
+    </insert>
+
+    <select id="getByPhoneOrAccount"
+            resultType="com.zzzlew.domain.vo.UserSearchVO">
+        select u.id,
+               u.username,
+               u.account,
+               u.avatar,
+               u.gender,
+               f.remark,
+               u.address,
+               case
+                   when
+                       f.id is not null then 1
+                   else 0 end as is_friend
+        from user_info u
+                 left join friend_relation f on f.user_id = #{ userId } and f.friend_id =
+                                                                            u.id
+        where u.phone = #{number} or u.account = #{number}
+    </select>
 </mapper>

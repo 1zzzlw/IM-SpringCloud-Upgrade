@@ -74,6 +74,11 @@
             <artifactId>feign-okhttp</artifactId>
         </dependency>
 
+        <!-- minio 依赖 -->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

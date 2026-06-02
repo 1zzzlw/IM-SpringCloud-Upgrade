@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzzlew.mapper.FavoritesMapper">
+
+    <insert id="saveNote">
+        insert into favorites (user_id, title, content, source_username)
+        values (#{userId}, #{title}, #{content}, #{sourceUsername})
+    </insert>
+
+    <update id="updateNote">
+        update favorites
+        set title           = #{title},
+            content         = #{content},
+            source_username = #{sourceUsername}
+        where id = #{id}
+          and user_id = #{userId}
+    </update>
+
+    <select id="getNote" resultType="com.zzzlew.domain.vo.FavoritesVO">
+        select *
+        from favorites
+        where user_id = #{userId}
+          and type = 0
+    </select>
+
+</mapper>

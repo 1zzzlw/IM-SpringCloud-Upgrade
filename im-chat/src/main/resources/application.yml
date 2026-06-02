@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8082
   compression:
     enabled: true
     mime-types: application/json,text/plain,text/html
@@ -24,16 +24,9 @@ spring:
         # 开启连接池功能
         enabled: true
 
-jwt:
-  AccessSecret-key: qwertyuiopasdfghjklzxcvbnmqzzzlew
-  FreshSecret-key: freshqwertyuiopzxcvbnmasdfqzzzlew
-  AccessExpiration: 3600000
-  RefreshExpiration: 31536000000
-  token-name: Authorization
-
 mybatis:
   mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.zzzlew.pojo.entity
+  type-aliases-package: com.zzzlew.domain.entity
   configuration:
     map-underscore-to-camel-case: true
 

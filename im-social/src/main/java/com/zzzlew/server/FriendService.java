@@ -1,8 +1,7 @@
 package com.zzzlew.server;
 
 
-import com.zzzlew.vo.FriendRelationVO;
-import com.zzzlew.domain.vo.UserSearchVO;
+import com.zzzlew.domain.vo.FriendRelationVO;
 
 import java.util.List;
 
@@ -21,14 +20,6 @@ public interface FriendService {
      * @return 好友列表
      */
     List<FriendRelationVO> initFriendList(Boolean isInit);
-
-    /**
-     * 搜索用户
-     * 
-     * @param phone 手机号
-     * @return 用户搜索vo
-     */
-    UserSearchVO search(String phone);
 
     /**
      * 删除好友

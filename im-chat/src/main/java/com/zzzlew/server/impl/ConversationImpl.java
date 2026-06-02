@@ -1,23 +1,31 @@
 package com.zzzlew.server.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.IdUtil;
+import com.zzzlew.client.AuthClient;
+import com.zzzlew.client.SocialClient;
+import com.zzzlew.domain.dto.GroupApplyDTO;
+import com.zzzlew.domain.dto.GroupConversationDTO;
+import com.zzzlew.domain.dto.GroupMemberDTO;
 import com.zzzlew.domain.entity.Conversation;
+import com.zzzlew.domain.entity.GroupConversation;
+import com.zzzlew.domain.entity.UserAuth;
 import com.zzzlew.domain.vo.ConversationVO;
 import com.zzzlew.domain.vo.GroupMemberVO;
 import com.zzzlew.enums.ConversationTypeEnum;
 import com.zzzlew.mapper.AIMessageMapper;
 import com.zzzlew.mapper.ConversationMapper;
-import com.zzzlew.mapper.GroupConversationMapper;
-import com.zzzlew.mapper.UserMapper;
-import com.zzzlew.pojo.entity.GroupConversation;
-import com.zzzlew.pojo.entity.UserAuth;
+import com.zzzlew.properties.MinIOConfigProperties;
 import com.zzzlew.server.ConversationService;
+import com.zzzlew.utils.MinIOFileStorgeUtil;
 import com.zzzlew.utils.UserHolder;
 import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -34,18 +42,23 @@ import static com.zzzlew.constant.RedisConstant.USER_OFFLINE_INFO_KEY;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ConversationImpl implements ConversationService {
+
+    private final AuthClient authClient;
+    private final SocialClient socialClient;
 
     @Resource
     private ConversationMapper conversationMapper;
     @Resource
-    private UserMapper userMapper;
-    @Resource
-    private GroupConversationMapper groupConversationMapper;
-    @Resource
     private StringRedisTemplate stringRedisTemplate;
     @Resource
     private AIMessageMapper aiMessageMapper;
+    @Resource
+    private MinIOFileStorgeUtil minIOFileStorgeUtil;
+    @Resource
+    private MinIOConfigProperties minIOConfigProperties;
+
 
     /**
      * 全量更新并初始化会话列表
@@ -89,7 +102,7 @@ public class ConversationImpl implements ConversationService {
 
         if (!targetUserIdList.isEmpty()) {
             // 查询用户信息
-            List<UserAuth> userAuthList = userMapper.selectUserAuthListByUserIdList(targetUserIdList);
+            List<UserAuth> userAuthList = authClient.getUserListByIds(targetUserIdList).getData();
             // 以用户id为键，用户信息为值
             userMap = userAuthList.stream().collect(Collectors.toMap(UserAuth::getUserId, u -> u));
         } else {
@@ -103,7 +116,7 @@ public class ConversationImpl implements ConversationService {
         if (!groupIdList.isEmpty()) {
             // 查询群聊会话信息
             List<GroupConversation> groupConversationList =
-                    groupConversationMapper.selectGroupConversationListByConversationIdList(groupIdList);
+                    conversationMapper.selectGroupConversationListByConversationIdList(groupIdList);
             // 以群聊会话id为键，群聊会话信息为值
             groupMap = groupConversationList.stream().collect(Collectors.toMap(GroupConversation::getId, g -> g));
         } else {
@@ -186,12 +199,84 @@ public class ConversationImpl implements ConversationService {
     @Override
     public void deleteGroupMember(String conversationId) {
         Long userId = UserHolder.getUser().getId();
-        groupConversationMapper.deleteGroupMember(conversationId, userId);
+        conversationMapper.deleteGroupMember(conversationId, userId);
     }
 
     @Override
     public void createConversation(String conversationId, Long toUserId, String fromUserId, Integer type) {
         conversationMapper.insertConversation(conversationId, toUserId, fromUserId, type);
     }
+
+    @Override
+    public void inviteFriends(GroupMemberDTO groupMemberDTO) {
+        conversationMapper.insertGroupMember(groupMemberDTO);
+        // 增加群成员数量
+        conversationMapper.incrGroupMemberCount(groupMemberDTO.getGroupId());
+    }
+
+    /**
+     * 发送群聊申请
+     *
+     * @param friendIdList   好友ID列表
+     * @param groupCreateDTO 群聊申请信息
+     */
+    @Transactional
+    @Override
+    public ConversationVO createGroupConversation(List<Long> friendIdList, GroupApplyDTO groupCreateDTO,
+                                                  MultipartFile groupAvatarFile) {
+        // 生成群聊的唯一id
+        long snowflakeId = IdUtil.getSnowflakeNextId();
+        String conversationId = "g_" + snowflakeId;
+        // 获得当前登录用户id
+        Long userId = UserHolder.getUser().getId();
+
+        // 生成群聊头像的远端存储路径
+        String avatarName = conversationId + ".png";
+        String minioGroupAvatarPath = conversationId + "/" + avatarName;
+        // 上传用户头像到minio服务端
+        minIOFileStorgeUtil.uploadAvatar(minioGroupAvatarPath, groupAvatarFile);
+        // 生成本地存储远程路径
+        String groupAvatar = minIOConfigProperties.getEndpoint() + "/" + minIOConfigProperties.getAvatarBucket() + "/" + minioGroupAvatarPath;
+
+        groupCreateDTO.setUserAvatar(groupAvatar);
+
+        groupCreateDTO.setConversationId(conversationId);
+        // 插入群聊申请表
+        socialClient.sendGroupApply(userId, friendIdList, groupCreateDTO);
+
+        // 插入群聊会话表
+        GroupConversationDTO groupConversationDTO = new GroupConversationDTO();
+        groupConversationDTO.setId(conversationId);
+        groupConversationDTO.setGroupName(groupCreateDTO.getGroupName());
+        groupConversationDTO.setGroupAvatar(groupAvatar);
+        groupConversationDTO.setOwnerId(userId);
+
+        conversationMapper.insertGroupConversation(groupConversationDTO);
+
+        // 插入群成员表
+        GroupMemberDTO groupMemberDTO = new GroupMemberDTO();
+        groupMemberDTO.setGroupId(conversationId);
+        groupMemberDTO.setUserId(userId);
+        groupMemberDTO.setRole(2);
+        conversationMapper.insertGroupMember(groupMemberDTO);
+
+        // 插入会话表
+        conversationMapper.insertConversation(conversationId, userId, conversationId, 1);
+
+        ConversationVO conversationVO = ConversationVO.builder().id(conversationId).avatar(groupAvatar).name(groupCreateDTO.getGroupName()).userId(userId).targetId(conversationId).type(1).build();
+
+        return conversationVO;
+    }
+
+    @Override
+    public void updateGroupInfo(String conversationId, String groupAvatar) {
+        conversationMapper.updateGroupConversation(conversationId, groupAvatar);
+    }
+
+    @Override
+    public ConversationVO queryConversation(String conversationId) {
+        return conversationMapper.selectGroupConversation(conversationId);
+    }
+
 
 }

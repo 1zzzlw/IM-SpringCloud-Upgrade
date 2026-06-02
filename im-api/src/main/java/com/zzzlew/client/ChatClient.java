@@ -1,8 +1,12 @@
 package com.zzzlew.client;
 
+import com.zzzlew.domain.dto.GroupMemberDTO;
+import com.zzzlew.domain.vo.ConversationVO;
 import com.zzzlew.result.Result;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -13,9 +17,19 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @FeignClient(value = "im-chat")
 public interface ChatClient {
-    @PostMapping("/conversation/create")
+    @PostMapping("/conversation/createGroup")
     Result<Object> createConversation(@RequestParam("conversationId") String conversationId,
-                                     @RequestParam("toUserId") Long toUserId,
-                                     @RequestParam("fromUserId") String fromUserId,
-                                     @RequestParam("type") Integer type);
+                                      @RequestParam("toUserId") Long toUserId,
+                                      @RequestParam("fromUserId") String fromUserId,
+                                      @RequestParam("type") Integer type);
+
+    @PostMapping("/conversation/inviteFriend")
+    Result<Object> inviteFriends(@RequestBody GroupMemberDTO groupMemberDTO);
+
+    @PostMapping("/conversation/updateGroupInfo")
+    Result<Object> updateGroupInfo(@RequestParam("conversationId") String conversationId,
+                                   @RequestParam("groupAvatar") String groupAvatar);
+
+    @GetMapping("/conversation/query")
+    Result<ConversationVO> queryConversation(@RequestParam("conversationId") String conversationId);
 }

@@ -1,7 +1,7 @@
 package com.zzzlew.mapper;
 
 
-import com.zzzlew.vo.FriendRelationVO;
+import com.zzzlew.domain.vo.FriendRelationVO;
 
 import java.util.List;
 

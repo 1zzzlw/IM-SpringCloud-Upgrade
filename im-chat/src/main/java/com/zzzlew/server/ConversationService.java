@@ -1,8 +1,11 @@
 package com.zzzlew.server;
 
 
+import com.zzzlew.domain.dto.GroupApplyDTO;
+import com.zzzlew.domain.dto.GroupMemberDTO;
 import com.zzzlew.domain.vo.ConversationVO;
 import com.zzzlew.domain.vo.GroupMemberVO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -60,4 +63,24 @@ public interface ConversationService {
      * 创建会话
      */
     void createConversation(String conversationId, Long toUserId, String fromUserId, Integer type);
+
+    /**
+     * 邀请好友入群
+     */
+    void inviteFriends(GroupMemberDTO groupMemberDTO);
+
+    /**
+     * 创建群聊
+     */
+    ConversationVO createGroupConversation(List<Long> friendIdList, GroupApplyDTO groupCreateDTO, MultipartFile groupAvatar);
+
+    /**
+     * 更新群聊信息
+     */
+    void updateGroupInfo(String conversationId, String groupAvatar);
+
+    /**
+     * 查询会话
+     */
+    ConversationVO queryConversation(String conversationId);
 }

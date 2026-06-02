@@ -4,8 +4,11 @@ import com.zzzlew.domain.dto.UserLoginDTO;
 import com.zzzlew.domain.dto.UserRegisterDTO;
 import com.zzzlew.domain.entity.UserAuth;
 import com.zzzlew.domain.vo.UserInfoVO;
+import com.zzzlew.domain.vo.UserSearchVO;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * @Auther: zzzlew
@@ -36,8 +39,7 @@ public interface UserService {
      * @param userRegisterDTO 用户注册DTO
      * @return 用户id
      */
-    UserAuth register(UserRegisterDTO userRegisterDTO, MultipartFile avatarFile,
-                      HttpServletResponse response);
+    UserAuth register(UserRegisterDTO userRegisterDTO, MultipartFile avatarFile, HttpServletResponse response);
 
     /**
      * 创建验证码
@@ -62,4 +64,19 @@ public interface UserService {
      */
     void refreshToken(Long userId, HttpServletResponse response);
 
+    /**
+     * 根据用户id列表获取用户信息
+     *
+     * @param userIds 用户id列表
+     * @return
+     */
+    List<UserAuth> getUserListByIds(List<Long> userIds);
+
+    /**
+     * 搜索用户
+     *
+     * @param number 手机号 / 账号
+     * @return 用户搜索VO
+     */
+    UserSearchVO search(String number);
 }

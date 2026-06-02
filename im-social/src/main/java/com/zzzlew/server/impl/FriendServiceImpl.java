@@ -2,10 +2,8 @@ package com.zzzlew.server.impl;
 
 
 import com.zzzlew.domain.dto.UserBaseDTO;
-import com.zzzlew.vo.FriendRelationVO;
-import com.zzzlew.domain.vo.UserSearchVO;
+import com.zzzlew.domain.vo.FriendRelationVO;
 import com.zzzlew.mapper.FriendMapper;
-import com.zzzlew.mapper.UserInfoMapper;
 import com.zzzlew.server.FriendService;
 import com.zzzlew.utils.UserHolder;
 import jakarta.annotation.Resource;
@@ -30,8 +28,6 @@ public class FriendServiceImpl implements FriendService {
 
     @Resource
     private FriendMapper friendMapper;
-    @Resource
-    private UserInfoMapper userInfoMapper;
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
@@ -63,30 +59,6 @@ public class FriendServiceImpl implements FriendService {
         log.info("好友列表: {}", friendRelationVOList);
         // 返回好友列表
         return friendRelationVOList;
-    }
-
-    @Override
-    public UserSearchVO search(String phone) {
-        // 获得当前登录用户的信息，以便查询和好友的状态关系
-        Long userId = UserHolder.getUser().getId();
-
-        // 查询用户信息表，根据手机号或账号查询用户信息
-        UserSearchVO userSearchVO = userInfoMapper.getByPhoneOrAccount(userId, phone);
-        // 打印查询到的用户信息
-        log.info("userSearchVO: {}", userSearchVO);
-        // 检查用户是否存在
-        if (userSearchVO == null) {
-            log.info("用户不存在");
-            return null;
-        }
-        if (userSearchVO.getIsFriend() == 0) {
-            // 不是好友关系
-            log.info("不是好友关系");
-        } else {
-            // 是好友关系
-            log.info("是好友关系");
-        }
-        return userSearchVO;
     }
 
     @Override

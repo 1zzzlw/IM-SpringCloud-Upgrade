@@ -1,9 +1,8 @@
 package com.zzzlew.controller;
 
-import com.zzzlew.vo.FriendRelationVO;
-import com.zzzlew.domain.vo.UserSearchVO;
 import com.zzzlew.result.Result;
 import com.zzzlew.server.FriendService;
+import com.zzzlew.domain.vo.FriendRelationVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -39,20 +38,6 @@ public class FriendController {
         log.info("初始化好友列表: {}", isInit);
         List<FriendRelationVO> friendRelationVOList = friendService.initFriendList(isInit);
         return Result.success(friendRelationVOList);
-    }
-
-    /**
-     * 搜索用户
-     *
-     * @param phone 手机号
-     * @return 用户搜索vo
-     */
-    @Operation(summary = "搜索用户")
-    @GetMapping("/search")
-    public Result<UserSearchVO> search(String phone) {
-        log.info("搜索用户 {} 的信息", phone);
-        UserSearchVO userSearchVO = friendService.search(phone);
-        return Result.success(userSearchVO);
     }
 
     /**

@@ -9,7 +9,8 @@ import io.minio.errors.MinioException;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -23,7 +24,8 @@ import java.util.Objects;
  * @version: 1.0
  */
 @Slf4j
-@Component
+@Configuration
+@ConditionalOnClass(MinioClient.class)
 public class MinioBucketInit {
     @Resource
     private MinIOConfigProperties minIOConfigProperties;

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzzlew.mapper.FriendMapper">
+    <select id="selectFriendList"
+            resultType="com.zzzlew.domain.vo.FriendRelationVO">
+        select user_id as userId,
+        u.id as friendId,
+        u.username,
+        u.account,
+        u.avatar,
+        u.gender,
+        u.phone,
+        u.email,
+        u.birthday,
+        u.address,
+        f.remark,
+        f.relation_status as
+        relationStatus
+        from friend_relation f
+        join user_info u on
+        u.id = f.friend_id
+        <where>
+            f.user_id = #{userId}
+            <if test="quitTime != null and quitTime != ''">
+                and f.update_time >= #{quitTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="addFriendToRelation">
+        insert into friend_relation (user_id, friend_id)
+        values (#{toUserId}, #{fromUserId})
+    </insert>
+
+    <delete id="deleteFriend">
+        delete
+        from friend_relation
+        where user_id = #{userId}
+          and friend_id = #{friendId}
+    </delete>
+
+</mapper>

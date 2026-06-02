@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzzlew.mapper.AIMessageMapper">
+
+    <select id="selectHistory" resultType="com.zzzlew.domain.vo.AIMessageVO">
+        select *
+        from ai_message
+        where user_id = #{userId}
+        order by id desc limit 20
+    </select>
+
+    <insert id="saveMessage">
+        insert into ai_message (id, user_id, role, msg_type, content, image_url, personality_id)
+        values (#{id}, #{userId}, #{role}, #{msgType}, #{content}, #{imageUrl}, #{personalityId})
+    </insert>
+
+    <update id="updatePersonality">
+        update ai_personality
+        set name          = #{roleName},
+            system_prompt = #{content}
+        where id = #{id}
+    </update>
+
+    <delete id="cancelAllAIPersonality">
+        update ai_personality
+        set is_active = 0
+        where user_id = #{userId}
+    </delete>
+
+    <delete id="deletePersonality">
+        delete
+        from ai_personality
+        where id =
+              #{id}
+          and user_id
+            =
+              #{userId}
+    </delete>
+
+    <update id="switchPersonality">
+        update ai_personality
+        set is_active = 1
+        where id = #{id}
+          and user_id = #{userId}
+    </update>
+
+    <insert id="createPersonality" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into ai_personality (user_id, name, avatar, system_prompt, is_active, is_preset)
+        values (#{userId}, #{name}, #{avatar}, #{systemPrompt}, #{isActive}, #{isPreset})
+    </insert>
+
+    <select id="getPersonality" resultType="com.zzzlew.domain.vo.AIPersonalityVO">
+        select *
+        from ai_personality
+        where user_id = #{userId}
+    </select>
+
+    <select id="getAiAvatar" resultType="java.lang.String">
+        select avatar
+        from ai_personality
+        where id = #{id}
+          and user_id = #{userId}
+    </select>
+
+    <select id="getActivePersonality" resultType="com.zzzlew.domain.vo.AIPersonalityVO">
+        select *
+        from ai_personality
+        where user_id = #{userId}
+          and is_active = 1
+    </select>
+
+    <select id="getAiAvatarById" resultType="java.lang.String">
+        select avatar from ai_personality where user_id = #{userId} and is_active = 1
+    </select>
+
+</mapper>

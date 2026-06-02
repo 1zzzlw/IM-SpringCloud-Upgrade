@@ -1,5 +1,7 @@
 package com.zzzlew.controller;
 
+import com.zzzlew.domain.dto.GroupApplyDTO;
+import com.zzzlew.domain.dto.GroupMemberDTO;
 import com.zzzlew.domain.vo.ConversationVO;
 import com.zzzlew.domain.vo.GroupMemberVO;
 import com.zzzlew.result.Result;
@@ -9,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -121,6 +124,14 @@ public class ConversationController {
         return Result.success();
     }
 
+    /**
+     * 创建新的会话
+     *
+     * @param conversationId 会话ID
+     * @param toUserId       对方用户ID
+     * @param fromUserId     自己用户ID
+     * @param type           会话类型
+     */
     @Operation(summary = "创建新的会话")
     @PostMapping("/create")
     public Result<Object> createConversation(@RequestParam("conversationId") String conversationId,
@@ -130,6 +141,65 @@ public class ConversationController {
         log.info("创建新的会话id {}", conversationId);
         conversationService.createConversation(conversationId, toUserId, fromUserId, type);
         return Result.success();
+    }
+
+    /**
+     * 创建群聊
+     *
+     * @param groupCreateDTO 群聊申请信息
+     * @param groupAvatar    群聊头像文件信息
+     * @return 创建的会话信息
+     */
+    @Operation(summary = "创建群聊")
+    @PostMapping("/createGroup")
+    public Result<ConversationVO> createGroupConversation(GroupApplyDTO groupCreateDTO,
+                                                          @RequestParam(value = "groupAvatar") MultipartFile groupAvatar) {
+        log.info("创建群聊：{}，群聊名称：{}", groupCreateDTO.getInvitedIds(), groupCreateDTO.getGroupName());
+        List<Long> friendIdList = groupCreateDTO.getInvitedIds();
+        log.info("好友ID列表：{}", friendIdList);
+        ConversationVO conversationVO = conversationService.createGroupConversation(friendIdList, groupCreateDTO, groupAvatar);
+        return Result.success(conversationVO);
+    }
+
+    /**
+     * 邀请好友入群
+     *
+     * @param groupMemberDTO 群聊申请信息
+     */
+    @Operation(summary = "邀请好友入群")
+    @PostMapping("/inviteFriend")
+    public Result<Object> inviteFriends(@RequestBody GroupMemberDTO groupMemberDTO) {
+        log.info("邀请好友入群id {}", groupMemberDTO);
+        conversationService.inviteFriends(groupMemberDTO);
+        return Result.success();
+    }
+
+
+    /**
+     * 更新群聊信息
+     * TODO 目前就是更新了一下群聊头像
+     * @param conversationId 群聊会话ID
+     * @param groupAvatar    群聊头像文件信息
+     */
+    @Operation(summary = "更新群聊信息")
+    @PostMapping("/updateGroupInfo")
+    public Result<Object> updateGroupInfo(@RequestParam("conversationId") String conversationId, @RequestParam("groupAvatar") String groupAvatar) {
+        log.info("更新群聊信息：{}, {}", conversationId, groupAvatar);
+        conversationService.updateGroupInfo(conversationId, groupAvatar);
+        return Result.success();
+    }
+
+    /**
+     * 查询会话信息
+     *
+     * @param conversationId 群聊会话ID
+     */
+    @Operation(summary = "查询会话信息")
+    @GetMapping("/query")
+    public Result<ConversationVO> queryConversation(@RequestParam("conversationId") String conversationId) {
+        log.info("查询会话信息：{}", conversationId);
+        ConversationVO conversationVO = conversationService.queryConversation(conversationId);
+        return Result.success(conversationVO);
     }
 
 }

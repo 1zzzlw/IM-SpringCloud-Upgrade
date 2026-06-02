@@ -639,7 +639,7 @@ public class BroadCastListener {
             return;
         }
 
-        Message message = messageResult.getResponse();
+        Message Message = messageResult.getResponse();
         String currentClusterId = NettyConfig.NETTY_CLUSTER_ID;
 
         // 异步执行，Netty线程立即释放
@@ -658,17 +658,17 @@ public class BroadCastListener {
 
                     if (StringUtils.isBlank(serverId)) {
                         // 用户离线
-                        if (message instanceof PrivateChatResponseVO ||
-                                message instanceof GroupChatResponseVO ||
-                                message instanceof SystemMessageResponseVO) {
-                            recordOfflineMessageMarker(receiverId, message);
+                        if (Message instanceof PrivateChatResponseVO ||
+                                Message instanceof GroupChatResponseVO ||
+                                Message instanceof SystemMessageResponseVO) {
+                            recordOfflineMessageMarker(receiverId, Message);
                         }
                     } else if (currentClusterId.equals(serverId)) {
                         // 用户在本地集群：直接通过Channel发送，不走MQ
                         Channel channel = ChannelManageUtil.getChannel(receiverId);
                         if (channel != null && channel.isActive() && channel.isWritable()) {
                             // 发送消息并监听结果
-                            channel.writeAndFlush(message).addListener(future -> {
+                            channel.writeAndFlush(Message).addListener(future -> {
                                 if (future.isSuccess()) {
                                     log.debug("本地直接发送消息成功，用户: {}", receiverId);
                                 } else {
@@ -676,7 +676,7 @@ public class BroadCastListener {
                                     // 失败后降级为MQ发送
                                     String routingKey = QUEUE_NETTY_ROUTING_KEY + serverId;
                                     rabbitTemplate.convertAndSend(EXCHANGE, routingKey,
-                                            new ClusterMessageWrapper<>(message, receiverId));
+                                            new ClusterMessageWrapper<>(Message, receiverId));
                                 }
                             });
                         } else {
@@ -685,27 +685,27 @@ public class BroadCastListener {
                                     receiverId,
                                     channel != null && channel.isActive(),
                                     channel != null && channel.isWritable());
-                            if (message instanceof PrivateChatResponseVO ||
-                                    message instanceof GroupChatResponseVO ||
-                                    message instanceof SystemMessageResponseVO) {
-                                recordOfflineMessageMarker(receiverId, message);
+                            if (Message instanceof PrivateChatResponseVO ||
+                                    Message instanceof GroupChatResponseVO ||
+                                    Message instanceof SystemMessageResponseVO) {
+                                recordOfflineMessageMarker(receiverId, Message);
                             }
                         }
                     } else {
                         // 用户在远程集群：通过MQ转发到对应集群
                         String routingKey = QUEUE_NETTY_ROUTING_KEY + serverId;
                         rabbitTemplate.convertAndSend(EXCHANGE, routingKey,
-                                new ClusterMessageWrapper<>(message, receiverId));
+                                new ClusterMessageWrapper<>(Message, receiverId));
                         log.debug("通过MQ发送消息到集群 {}, 用户: {}", serverId, receiverId);
                     }
                 }
 
                 // 消息持久化异步存储
-                if (message instanceof PrivateChatResponseVO ||
-                        message instanceof GroupChatResponseVO ||
-                        message instanceof SystemMessageResponseVO) {
+                if (Message instanceof PrivateChatResponseVO ||
+                        Message instanceof GroupChatResponseVO ||
+                        Message instanceof SystemMessageResponseVO) {
                     rabbitTemplate.convertAndSend(EXCHANGE, QUEUE_STORGE_ROUTING_KEY,
-                            new ClusterMessageWrapper<>(message));
+                            new ClusterMessageWrapper<>(Message));
                 }
 
                 log.info("消息投递完成");
@@ -716,9 +716,9 @@ public class BroadCastListener {
         }, imAsyncExecutor);
     }
 
-    public void recordOfflineMessageMarker(Long userId, Message message) {
+    public void recordOfflineMessageMarker(Long userId, Message Message) {
         String offlineMessageKey = USER_OFFLINE_MESSAGE_CONTENT_KEY + userId;
-        String messageJson = JSON.toJSONString(message);
+        String messageJson = JSON.toJSONString(Message);
         long timestamp = System.currentTimeMillis();
 
         // 执行Lua脚本
@@ -735,16 +735,16 @@ public class BroadCastListener {
     public void handleClusterMessage(ClusterMessageWrapper<Message> wrapper) {
         log.info("收到集群消息: {}", wrapper);
 
-        Message message = wrapper.getMessage();
+        Message Message = wrapper.getMessage();
         Long targetUserId = wrapper.getTargetUserId();
 
-        sendToUser(targetUserId, message);
+        sendToUser(targetUserId, Message);
     }
 
     /**
      * 发送消息给指定用户（同步等待，带重试机制）
      */
-    private void sendToUser(Long userId, Message message) {
+    private void sendToUser(Long userId, Message Message) {
         Channel channel = ChannelManageUtil.getChannel(userId);
         if (channel == null || !channel.isActive()) {
             log.warn("用户 {} 的Channel不存在或未激活", userId);
@@ -759,7 +759,7 @@ public class BroadCastListener {
 
         try {
             // 同步等待发送完成（最多等待3秒）
-            io.netty.channel.ChannelFuture future = channel.writeAndFlush(message);
+            io.netty.channel.ChannelFuture future = channel.writeAndFlush(Message);
             boolean success = future.await(3000);
 
             if (!success) {

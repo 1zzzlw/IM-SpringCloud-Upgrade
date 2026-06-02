@@ -222,10 +222,10 @@ CREATE TABLE `group_member`  (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for message
+-- Table structure for Message
 -- ----------------------------
-DROP TABLE IF EXISTS `message`;
-CREATE TABLE `message`  (
+DROP TABLE IF EXISTS `Message`;
+CREATE TABLE `Message`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '消息唯一ID（主键）',
   `conversation_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '会话ID（单聊：小ID_大ID；群聊：群ID）',
   `sender_id` bigint NOT NULL COMMENT '发送者ID（关联用户表）',
@@ -258,7 +258,7 @@ CREATE TABLE `message`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 7446111736024855688 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '消息表（单聊/群聊通用）' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of message
+-- Records of Message
 -- ----------------------------
 
 -- ----------------------------

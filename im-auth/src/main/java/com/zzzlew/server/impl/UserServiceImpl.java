@@ -14,8 +14,8 @@ import com.zzzlew.domain.dto.UserRegisterDTO;
 import com.zzzlew.domain.entity.UserAuth;
 import com.zzzlew.domain.entity.UserInfo;
 import com.zzzlew.domain.vo.UserInfoVO;
+import com.zzzlew.domain.vo.UserSearchVO;
 import com.zzzlew.exception.*;
-import com.zzzlew.mapper.UserInfoMapper;
 import com.zzzlew.mapper.UserMapper;
 import com.zzzlew.properties.Jwtproperties;
 import com.zzzlew.properties.MinIOConfigProperties;
@@ -25,7 +25,7 @@ import com.zzzlew.utils.JwtUtil;
 import com.zzzlew.utils.MinIOFileStorgeUtil;
 import com.zzzlew.utils.RegexUtils;
 import com.zzzlew.utils.UserHolder;
-import com.zzzlew.vo.FriendRelationVO;
+import com.zzzlew.domain.vo.FriendRelationVO;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -66,8 +66,6 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private UserMapper userMapper;
-    @Resource
-    private UserInfoMapper userInfoMapper;
     @Resource
     private StringRedisTemplate stringRedisTemplate;
     @Resource
@@ -214,7 +212,7 @@ public class UserServiceImpl implements UserService {
 
         userInfo.setAvatar(avatar);
 
-        userInfoMapper.insertUserInfo(userInfo);
+        userMapper.insertUserInfo(userInfo);
 
         UserInfoVO userInfoVO = BeanUtil.copyProperties(userRegisterDTO, UserInfoVO.class);
         UserAuth userAuth = BeanUtil.copyProperties(userRegisterDTO, UserAuth.class);
@@ -254,7 +252,7 @@ public class UserServiceImpl implements UserService {
 
         // 查询数据库，看手机号是否存在
         // TODO 后期可以加上redis缓存，避免频繁查询数据库
-        boolean exists = userInfoMapper.getByPhone(phone);
+        boolean exists = userMapper.getByPhone(phone);
         if (exists) {
             throw new PhoneAlreadyExistsException(MessageConstant.PHONE_ALREADY_EXISTS);
         }
@@ -337,6 +335,36 @@ public class UserServiceImpl implements UserService {
 
         response.setHeader("Authorization", "Bearer " + tokenResult.getAccessToken());
         response.setHeader("refreshtoken", tokenResult.getRefreshToken());
+    }
+
+    @Override
+    public List<UserAuth> getUserListByIds(List<Long> userIds) {
+        return userMapper.selectUserAuthListByUserIdList(userIds);
+    }
+
+    // TODO 后期数据库分库，这里的查询需要分段查询
+    @Override
+    public UserSearchVO search(String number) {
+        // 获得当前登录用户的信息，以便查询和好友的状态关系
+        Long userId = UserHolder.getUser().getId();
+
+        // 查询用户信息表，根据手机号或账号查询用户信息
+        UserSearchVO userSearchVO = userMapper.getByPhoneOrAccount(userId, number);
+        // 打印查询到的用户信息
+        log.info("userSearchVO: {}", userSearchVO);
+        // 检查用户是否存在
+        if (userSearchVO == null) {
+            log.info("用户不存在");
+            return null;
+        }
+        if (userSearchVO.getIsFriend() == 0) {
+            // 不是好友关系
+            log.info("不是好友关系");
+        } else {
+            // 是好友关系
+            log.info("是好友关系");
+        }
+        return userSearchVO;
     }
 
     // public TokenResult generateAndStoreWithUpdateToken(UserInfoVO userInfoVO) {

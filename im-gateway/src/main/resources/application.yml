@@ -1,0 +1,27 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: im-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      routes:
+        - id: im-auth
+          uri: lb://im-auth
+          predicates:
+            - Path=/user/**
+        - id: im-chat
+          uri: lb://im-chat
+          predicates:
+            - Path=/ai-message/**, /conversation/**, /message/**
+        - id: im-social
+          uri: lb://im-social
+          predicates:
+            - Path=/apply/**, /friend/**
+        - id: im-content
+          uri: lb://im-content
+          predicates:
+            - Path=/favorites/**

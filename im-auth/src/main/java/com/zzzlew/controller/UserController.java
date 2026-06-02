@@ -6,6 +6,7 @@ import com.zzzlew.domain.dto.UserLoginDTO;
 import com.zzzlew.domain.dto.UserRegisterDTO;
 import com.zzzlew.domain.entity.UserAuth;
 import com.zzzlew.domain.vo.UserInfoVO;
+import com.zzzlew.domain.vo.UserSearchVO;
 import com.zzzlew.enums.LimitKeyType;
 import com.zzzlew.result.Result;
 import com.zzzlew.server.UserService;
@@ -16,6 +17,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * @Auther: zzzlew
@@ -101,6 +104,32 @@ public class UserController {
         log.info("创建手机号 {} 的验证码", phone);
         String phoneCode = userService.createPhoneCode(phone);
         return Result.success(phoneCode);
+    }
+
+    /**
+     * 批量获取用户信息
+     *
+     * @param userIds 用户id列表
+     * @return 用户信息列表
+     */
+    @PostMapping("/list/ids")
+    public Result<List<UserAuth>> getUserListByIds(@RequestBody List<Long> userIds) {
+        List<UserAuth> userAuths = userService.getUserListByIds(userIds);
+        return Result.success(userAuths);
+    }
+
+    /**
+     * 搜索用户
+     *
+     * @param number 手机号 / 账号
+     * @return 用户搜索vo
+     */
+    @Operation(summary = "搜索用户")
+    @GetMapping("/search")
+    public Result<UserSearchVO> search(String number) {
+        log.info("搜索用户 {} 的信息", number);
+        UserSearchVO userSearchVO = userService.search(number);
+        return Result.success(userSearchVO);
     }
 
 }
