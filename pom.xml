@@ -18,7 +18,7 @@
     <modules>
         <module>im-server</module>
         <module>im-common</module>
-        <module>im-springboot</module>
+<!--        <module>im-springboot</module>-->
         <module>im-auth</module>
         <module>im-social</module>
         <module>im-chat</module>
@@ -41,6 +41,8 @@
         <mybatis.version>3.0.3</mybatis.version>
         <knife4j.version>4.4.0</knife4j.version>
         <minio.version>8.5.1</minio.version>
+        <fastjson.version>1.2.83</fastjson.version>
+        <jjwt.version>0.9.1</jjwt.version>
     </properties>
 
     <dependencyManagement>
@@ -106,6 +108,20 @@
                 <version>${knife4j.version}</version>
             </dependency>
 
+            <!-- FastJson -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <!-- JWT -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
             <!--spring-ai-->
             <dependency>
                 <groupId>org.springframework.ai</groupId>
@@ -118,32 +134,16 @@
     </dependencyManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
+        <!-- 全局通用依赖：所有模块都需要 -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.83</version>
-        </dependency>
-
-        <!--RabbitMQ-->
-        <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

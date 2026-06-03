@@ -1,0 +1,6 @@
+com.zzzlew.config.IMCommonRabbitMQConfig
+com.zzzlew.config.Knife4jConfig
+com.zzzlew.config.MinIOConfig
+com.zzzlew.config.MinioBucketInit
+com.zzzlew.config.WebMvcConfig
+com.zzzlew.handler.GlobalExceptionHandler

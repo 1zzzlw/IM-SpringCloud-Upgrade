@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
   compression:
     enabled: true
     mime-types: application/json,text/plain,text/html
@@ -25,10 +25,10 @@ spring:
         enabled: true
 
 jwt:
-  AccessSecret-key: qwertyuiopasdfghjklzxcvbnmqzzzlew
-  FreshSecret-key: freshqwertyuiopzxcvbnmasdfqzzzlew
-  AccessExpiration: 3600000
-  RefreshExpiration: 31536000000
+  access-secret-key: qwertyuiopasdfghjklzxcvbnmqzzzlew
+  fresh-secret-key: freshqwertyuiopzxcvbnmasdfqzzzlew
+  access-expiration: 3600000
+  refresh-expiration: 31536000000
   token-name: Authorization
 
 mybatis:

@@ -132,4 +132,19 @@ public class UserController {
         return Result.success(userSearchVO);
     }
 
+    /**
+     * 刷新token
+     *
+     * @param userId 用户id
+     * @return 刷新结果
+     */
+    @Operation(summary = "刷新token")
+    @PostMapping("/refreshToken/{userId}")
+    public Result<String> refreshToken(@PathVariable("userId") Long userId, HttpServletResponse response) {
+        log.info("用户id为：{} 开始刷新AccessToken", userId);
+        userService.refreshToken(userId, response);
+        return Result.success();
+    }
+
+
 }

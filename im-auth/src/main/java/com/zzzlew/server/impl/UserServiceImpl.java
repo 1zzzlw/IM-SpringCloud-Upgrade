@@ -13,11 +13,12 @@ import com.zzzlew.domain.dto.UserLoginDTO;
 import com.zzzlew.domain.dto.UserRegisterDTO;
 import com.zzzlew.domain.entity.UserAuth;
 import com.zzzlew.domain.entity.UserInfo;
+import com.zzzlew.domain.vo.FriendRelationVO;
 import com.zzzlew.domain.vo.UserInfoVO;
 import com.zzzlew.domain.vo.UserSearchVO;
 import com.zzzlew.exception.*;
 import com.zzzlew.mapper.UserMapper;
-import com.zzzlew.properties.Jwtproperties;
+import com.zzzlew.properties.JwtProperties;
 import com.zzzlew.properties.MinIOConfigProperties;
 import com.zzzlew.result.TokenResult;
 import com.zzzlew.server.UserService;
@@ -25,7 +26,6 @@ import com.zzzlew.utils.JwtUtil;
 import com.zzzlew.utils.MinIOFileStorgeUtil;
 import com.zzzlew.utils.RegexUtils;
 import com.zzzlew.utils.UserHolder;
-import com.zzzlew.domain.vo.FriendRelationVO;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
     @Resource
-    private Jwtproperties jwtproperties;
+    private JwtProperties jwtproperties;
     @Resource
     private MinIOFileStorgeUtil minIOFileStorgeUtil;
     @Resource

@@ -8,24 +8,37 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="im-server" />
-        <module name="im-moments" />
-        <module name="im-api" />
         <module name="im-social" />
-        <module name="im-chat" />
+        <module name="common-storage" />
         <module name="im-auth" />
         <module name="im-gateway" />
-        <module name="im-common" />
-        <module name="im-springboot" />
+        <module name="common-redis" />
+        <module name="common-base" />
+        <module name="im-moments" />
+        <module name="im-api" />
+        <module name="common-model" />
+        <module name="im-chat" />
+        <module name="common-web" />
         <module name="im-content" />
+        <module name="common-core" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="im-springboot" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="common-base" options="-parameters" />
+      <module name="common-core" options="-parameters" />
+      <module name="common-model" options="-parameters" />
+      <module name="common-redis" options="-parameters" />
+      <module name="common-storage" options="-parameters" />
+      <module name="common-web" options="-parameters" />
       <module name="im-api" options="-parameters" />
       <module name="im-auth" options="-parameters" />
       <module name="im-chat" options="-parameters" />
-      <module name="im-common" options="-parameters" />
+      <module name="im-common" options="" />
       <module name="im-content" options="-parameters" />
       <module name="im-gateway" options="-parameters" />
       <module name="im-moments" options="-parameters" />

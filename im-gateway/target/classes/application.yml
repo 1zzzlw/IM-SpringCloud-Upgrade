@@ -3,6 +3,17 @@ server:
 spring:
   application:
     name: im-gateway
+  data:
+    redis:
+      host: 39.106.183.13
+      port: 6379
+      password: 123456
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 10
+          min-idle: 1
+          time-between-eviction-runs: 10s
   cloud:
     nacos:
       discovery:
@@ -25,3 +36,40 @@ spring:
           uri: lb://im-content
           predicates:
             - Path=/favorites/**
+
+jwt:
+  access-secret-key: qwertyuiopasdfghjklzxcvbnmqzzzlew
+  fresh-secret-key: freshqwertyuiopzxcvbnmasdfqzzzlew
+  access-expiration: 3600000
+  refresh-expiration: 31536000000
+  token-name: Authorization
+
+auth:
+  # 排除路径（完全放行，不需要任何Token）
+  excludePaths:
+    # --- 登录注册相关 ---
+    - "/user/login"               # 登录接口
+    - "/user/pendingLogin"       # 自动登录接口
+    - "/user/register"            # 注册接口
+    - "/user/verifyCode"         # 图片验证码接口
+    - "/user/phoneCode"           # 手机验证码接口
+    # --- 文件上传相关（分块上传在业务层校验） ---
+    - "/message/checkUploaded"
+    - "/message/uploadChunk"
+    # --- 静态资源与接口文档 (Knife4j/Swagger) ---
+    - "/swagger-ui/**"
+    - "/v3/api-docs/**"
+    - "/webjars/**"
+    - "/doc.html/**"
+    - "/doc.html"
+    - "/swagger-resources/**"
+    # --- 系统错误 ---
+    - "/error/**"
+
+  refreshPaths:
+    - "/commons/refreshToken/**" # 拦截刷新token的请求
+    - "/message/verifyUploadToken/**" # 拦截获取文件上传凭证的请求
+    - "/message/merge" # 拦截合并文件的请求
+    - "/message/init/list/**" # 拦截初始化消息表的请求（使用长期Token）
+    - "/conversation/init/list" # 拦截初始化会话表的请求（使用长期Token）
+    - "/friend/init/list" # 拦截初始化好友表的请求（使用长期Token）

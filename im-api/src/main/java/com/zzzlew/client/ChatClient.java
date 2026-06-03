@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @FeignClient(value = "im-chat")
 public interface ChatClient {
-    @PostMapping("/conversation/createGroup")
+    @PostMapping("/conversation/create")
     Result<Object> createConversation(@RequestParam("conversationId") String conversationId,
                                       @RequestParam("toUserId") Long toUserId,
                                       @RequestParam("fromUserId") String fromUserId,
