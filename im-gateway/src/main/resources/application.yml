@@ -49,7 +49,7 @@ auth:
   excludePaths:
     # --- 登录注册相关 ---
     - "/user/login"               # 登录接口
-    - "/user/pendingLogin"       # 自动登录接口
+    - "/user/pendingLogin"        # 自动登录的请求
     - "/user/register"            # 注册接口
     - "/user/verifyCode"         # 图片验证码接口
     - "/user/phoneCode"           # 手机验证码接口

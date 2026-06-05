@@ -1,5 +1,6 @@
 package com.zzzlew.client;
 
+import com.zzzlew.config.DefaultFeignConfig;
 import com.zzzlew.domain.dto.GroupMemberDTO;
 import com.zzzlew.domain.vo.ConversationVO;
 import com.zzzlew.result.Result;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @Description: com.zzzlew.client
  * @version: 1.0
  */
-@FeignClient(value = "im-chat")
+@FeignClient(value = "im-chat", configuration = DefaultFeignConfig.class)
 public interface ChatClient {
     @PostMapping("/conversation/create")
     Result<Object> createConversation(@RequestParam("conversationId") String conversationId,

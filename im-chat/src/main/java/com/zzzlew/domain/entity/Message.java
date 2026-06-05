@@ -41,6 +41,11 @@ public class Message implements Serializable {
     private Integer msgType;
 
     /**
+     * 系统消息子类型
+     */
+    private Integer subType;
+
+    /**
      * 消息内容
      */
     private String content;

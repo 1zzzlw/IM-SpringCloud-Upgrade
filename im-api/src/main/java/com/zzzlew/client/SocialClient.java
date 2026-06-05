@@ -1,8 +1,9 @@
 package com.zzzlew.client;
 
+import com.zzzlew.config.DefaultFeignConfig;
 import com.zzzlew.domain.dto.GroupApplyDTO;
-import com.zzzlew.result.Result;
 import com.zzzlew.domain.vo.FriendRelationVO;
+import com.zzzlew.result.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +18,7 @@ import java.util.List;
  * @Description: com.zzzlew.client
  * @version: 1.0
  */
-@FeignClient("im-social")
+@FeignClient(value = "im-social", configuration = DefaultFeignConfig.class)
 public interface SocialClient {
 
     @GetMapping("/friend/init/list")

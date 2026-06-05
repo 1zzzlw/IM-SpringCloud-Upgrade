@@ -1,5 +1,6 @@
 package com.zzzlew.client;
 
+import com.zzzlew.config.DefaultFeignConfig;
 import com.zzzlew.domain.entity.UserAuth;
 import com.zzzlew.result.Result;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -14,7 +15,7 @@ import java.util.List;
  * @Description: com.zzzlew.client
  * @version: 1.0
  */
-@FeignClient(value = "im-auth", path = "/user")
+@FeignClient(value = "im-auth", path = "/user", configuration = DefaultFeignConfig.class)
 public interface AuthClient {
     @PostMapping("/list/ids")
     Result<List<UserAuth>> getUserListByIds(@RequestBody List<Long> userIds);

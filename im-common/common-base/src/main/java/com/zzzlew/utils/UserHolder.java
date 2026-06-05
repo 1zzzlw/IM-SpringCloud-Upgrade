@@ -5,7 +5,7 @@ import com.zzzlew.domain.dto.UserBaseDTO;
 /**
  * @Auther: zzzlew
  * @Date: 2025/11/12 - 11 - 12 - 0:08
- * @Description: com.zzzlew.zzzimserver.utils
+ * @Description: 用户上下文持有者（ThreadLocal）
  * @version: 1.0
  */
 public class UserHolder {

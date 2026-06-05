@@ -119,8 +119,22 @@ public class UserServiceImpl implements UserService {
         response.setHeader("Authorization", "Bearer " + tokenResult.getAccessToken());
         response.setHeader("refreshtoken", tokenResult.getRefreshToken());
 
-        Long userId = userInfo.getId();
-        storeFriendListId(userId);
+        // 手动将用户信息存入ThreadLocal，以便Feign拦截器使用
+        UserBaseDTO userBaseDTO = new UserBaseDTO();
+        userBaseDTO.setId(userInfo.getId());
+        userBaseDTO.setUsername(userInfo.getUsername());
+        userBaseDTO.setAvatar(userInfo.getAvatar());
+        userBaseDTO.setPhone(userInfo.getPhone());
+        userBaseDTO.setGender(userInfo.getGender());
+        UserHolder.save(userBaseDTO);
+
+        try {
+            Long userId = userInfo.getId();
+            storeFriendListId(userId);
+        } finally {
+            // 清理ThreadLocal，避免内存泄漏
+            UserHolder.removeUser();
+        }
 
         return userInfoVO;
     }
@@ -291,7 +305,21 @@ public class UserServiceImpl implements UserService {
         response.setHeader("Authorization", "Bearer " + tokenResult.getAccessToken());
         response.setHeader("refreshtoken", tokenResult.getRefreshToken());
 
-        storeFriendListId(userId);
+        // 手动将用户信息存入ThreadLocal，以便Feign拦截器使用
+        UserBaseDTO userBaseDTO = new UserBaseDTO();
+        userBaseDTO.setId(userAuth.getUserId());
+        userBaseDTO.setUsername(userAuth.getUsername());
+        userBaseDTO.setAvatar(userAuth.getAvatar());
+        userBaseDTO.setPhone(userAuth.getPhone());
+        userBaseDTO.setGender(userAuth.getGender());
+        UserHolder.save(userBaseDTO);
+
+        try {
+            storeFriendListId(userId);
+        } finally {
+            // 清理ThreadLocal，避免内存泄漏
+            UserHolder.removeUser();
+        }
     }
 
     @Override
