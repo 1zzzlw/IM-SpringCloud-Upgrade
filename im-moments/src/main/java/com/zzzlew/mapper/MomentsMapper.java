@@ -1,6 +1,9 @@
 package com.zzzlew.mapper;
 
 import com.zzzlew.domain.dto.MomentsDTO;
+import com.zzzlew.domain.vo.MomentsVO;
+
+import java.util.List;
 
 /**
  * @Auther: zzzlew
@@ -16,5 +19,12 @@ public interface MomentsMapper {
      * @param momentsDTO 朋友圈信息
      */
     void insert(MomentsDTO momentsDTO);
+
+    /**
+     * 查询朋友圈
+     *
+     * @return 朋友圈列表
+     */
+    List<MomentsVO> list();
 
 }

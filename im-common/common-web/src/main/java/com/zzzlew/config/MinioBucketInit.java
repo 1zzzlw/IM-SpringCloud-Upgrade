@@ -37,7 +37,8 @@ public class MinioBucketInit {
         // 待创建的桶名列表
         String[] bucketNames = {minIOConfigProperties.getImageBucket(), minIOConfigProperties.getVideoBucket(),
                 minIOConfigProperties.getFileBucket(), minIOConfigProperties.getAudioBucket(),
-                minIOConfigProperties.getAvatarBucket(), minIOConfigProperties.getFavoriteBucket()};
+                minIOConfigProperties.getAvatarBucket(), minIOConfigProperties.getFavoriteBucket(),
+                minIOConfigProperties.getMomentsBucket()};
 
         for (String bucketName : bucketNames) {
             try {

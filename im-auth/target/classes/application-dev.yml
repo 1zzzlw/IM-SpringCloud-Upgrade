@@ -25,6 +25,7 @@ minio:
   audioBucket: zzz-im-audio
   fileBucket: zzz-im-file
   favoriteBucket: zzz-im-favorite
+  momentsBucket: zzz-im-moment
   imagePath: image
   videoPath: video
   expireIn: 180

@@ -1,15 +1,17 @@
 package com.zzzlew.controller;
 
+import com.zzzlew.domain.dto.MomentsDTO;
+import com.zzzlew.domain.vo.MomentsVO;
 import com.zzzlew.result.Result;
 import com.zzzlew.server.MomentsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * @Auther: zzzlew
@@ -27,16 +29,30 @@ public class MomentsController {
     private MomentsService momentsService;
 
     /**
+     * 上传文本中的图片
+     *
+     * @param images
+     * @return
+     */
+    @Operation(summary = "上传帖子照片")
+    @PostMapping("/uploadImage")
+    public Result<List<String>> uploadImage(@RequestParam("images") List<MultipartFile> images) {
+        log.info("上传图片：{}", images);
+        List<String> urlList = momentsService.uploadImage(images);
+        return Result.success(urlList);
+    }
+
+    /**
      * 发布朋友圈
      *
-     * @param content 朋友圈内容
+     * @param momentsDTO 朋友圈内容
      * @return 发布结果
      */
     @Operation(summary = "发布朋友圈")
     @PostMapping("/publish")
-    public Result<Object> publish(String content) {
-        log.info("用户发布朋友圈：{}", content);
-        momentsService.publish(content);
+    public Result<Object> publish(@RequestBody MomentsDTO momentsDTO) {
+        log.info("用户发布朋友圈：{}", momentsDTO);
+        momentsService.publish(momentsDTO);
         return Result.success();
     }
 
@@ -47,8 +63,10 @@ public class MomentsController {
      */
     @Operation(summary = "查看朋友圈")
     @GetMapping("/list")
-    public String list() {
-        return "查看成功";
+    public Result<List<MomentsVO>> list() {
+        log.info("查看朋友圈");
+        List<MomentsVO> momentsVOList = momentsService.list();
+        return Result.success(momentsVOList);
     }
 
     /**

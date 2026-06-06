@@ -90,6 +90,26 @@ public class MinIOFileStorgeUtil {
         }
     }
 
+    // 上传朋友圈中的图片
+    public void uploadMomentsImage(String minioImagePath, MultipartFile imageBlob) {
+        try {
+            // 根据分块文件的流存入minio
+            PutObjectArgs putObjectArgs = PutObjectArgs.builder()
+                    // 存储桶名称
+                    .bucket(minIOConfigProperties.getMomentsBucket())
+                    // 存入minio的路径对象
+                    .object(minioImagePath)
+                    // 输入流
+                    .stream(imageBlob.getInputStream(), imageBlob.getSize(), -1)
+                    // 内容类型
+                    .contentType(imageBlob.getContentType()).build();
+            minioClient.putObject(putObjectArgs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("上传文件出错,bucket:{}错误信息:{}", minIOConfigProperties.getMomentsBucket(), e.getMessage());
+        }
+    }
+
     // 上传文件分块到minio
     public void uploadFileChunk(String minioFileChunkPath, MultipartFile chunkBlob, Integer fileType) {
         try {

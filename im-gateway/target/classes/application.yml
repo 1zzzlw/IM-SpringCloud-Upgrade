@@ -36,6 +36,10 @@ spring:
           uri: lb://im-content
           predicates:
             - Path=/favorites/**
+        - id: im-moments
+          uri: lb://im-moments
+          predicates:
+            - Path=/moments/**
 
 jwt:
   access-secret-key: qwertyuiopasdfghjklzxcvbnmqzzzlew
@@ -67,7 +71,7 @@ auth:
     - "/error/**"
 
   refreshPaths:
-    - "/commons/refreshToken/**" # 拦截刷新token的请求
+    - "/user/refreshToken/**" # 拦截刷新token的请求
     - "/message/verifyUploadToken/**" # 拦截获取文件上传凭证的请求
     - "/message/merge" # 拦截合并文件的请求
     - "/message/init/list/**" # 拦截初始化消息表的请求（使用长期Token）
