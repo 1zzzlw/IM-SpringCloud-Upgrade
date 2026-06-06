@@ -12,6 +12,21 @@
         <module name="im-springboot" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="common-base" target="17" />
+      <module name="common-core" target="17" />
+      <module name="common-model" target="17" />
+      <module name="common-redis" target="17" />
+      <module name="common-storage" target="17" />
+      <module name="common-web" target="17" />
+      <module name="im-api" target="17" />
+      <module name="im-auth" target="17" />
+      <module name="im-chat" target="17" />
+      <module name="im-content" target="17" />
+      <module name="im-gateway" target="17" />
+      <module name="im-moments" target="17" />
+      <module name="im-social" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
