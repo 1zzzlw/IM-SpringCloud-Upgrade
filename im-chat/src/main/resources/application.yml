@@ -1,0 +1,42 @@
+server:
+  port: 8082
+  compression:
+    enabled: true
+    mime-types: application/json,text/plain,text/html
+    min-response-size: 1024
+
+spring:
+  profiles:
+    active: dev  # 默认启用本地环境
+  application:
+    name: im-chat
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    openfeign:
+      okhttp:
+        # 开启连接池功能
+        enabled: true
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.zzzlew.domain.entity
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com.zzzlew.mapper: debug
+    com.zzzlew.server: info
+    com.zzzlew.controller: info
+
+knife4j:
+  enable: true
+springdoc:
+  api-docs.enabled: true

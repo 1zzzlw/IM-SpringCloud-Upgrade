@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzzlew.mapper.MomentsMapper">
+
+    <insert id="insert">
+        insert into moments(user_id, username, avatar, content)
+        values (#{userId}, #{username}, #{avatar}, #{content})
+    </insert>
+
+    <select id="list" resultType="com.zzzlew.domain.vo.MomentsVO">
+        select * from moments where is_deleted = 0 order by like_count DESC
+    </select>
+
+</mapper>

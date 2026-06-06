@@ -8,7 +8,7 @@ import com.zzzlew.mapper.MessageMapper;
 import com.zzzlew.pojo.dto.message.FileChunkInfoDTO;
 import com.zzzlew.pojo.dto.message.FileMessageDTO;
 import com.zzzlew.pojo.dto.message.MessageDTO;
-import com.zzzlew.pojo.entity.message;
+import com.zzzlew.pojo.entity.Message;
 import com.zzzlew.pojo.vo.message.MessageVO;
 import com.zzzlew.properties.MinIOConfigProperties;
 import com.zzzlew.server.MessageService;
@@ -82,12 +82,12 @@ public class MessageServiceImpl implements MessageService {
         log.info("需要初始化加载的会话id为：{}，离线时间为：{}", conversationIds, quitTime);
         List<String> conversationIdList = List.of(conversationIds.split(","));
         // 查询会话内的消息列表
-        List<message> messageList = messageMapper.initMessageList(conversationIdList, quitTime);
+        List<Message> messageList = messageMapper.initMessageList(conversationIdList, quitTime);
 
         List<MessageVO> messageVOList = new ArrayList<>();
 
         // 转换为消息VO列表
-        for (message message : messageList) {
+        for (Message message : messageList) {
             log.info("初始化加载的消息为：{}", message);
             MessageVO messageVO = BeanUtil.copyProperties(message, MessageVO.class);
             messageVOList.add(messageVO);
@@ -99,10 +99,10 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<MessageVO> pullMessageList(String conversationId, Long maxMessageId) {
         // 查询会话内的消息列表
-        List<message> messageList = messageMapper.pullMessageList(conversationId, maxMessageId);
+        List<Message> messageList = messageMapper.pullMessageList(conversationId, maxMessageId);
 
         // 转换为消息VO列表
-        List<MessageVO> messageVOList = messageList.stream().map(message -> BeanUtil.copyProperties(message, MessageVO.class)).collect(Collectors.toList());
+        List<MessageVO> messageVOList = messageList.stream().map(Message -> BeanUtil.copyProperties(Message, MessageVO.class)).collect(Collectors.toList());
 
         log.info("从数据库中查询到的消息列表为：{}", messageVOList);
 

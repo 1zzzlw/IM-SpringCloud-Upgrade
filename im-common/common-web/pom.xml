@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.zzzlew</groupId>
+        <artifactId>im-common</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.zzzlew</groupId>
+    <artifactId>common-web</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <dependencies>
+        <!--common-model (需要Result和DTO类)-->
+        <dependency>
+            <groupId>com.zzzlew</groupId>
+            <artifactId>common-model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 依赖 common-redis (包含 common-base) -->
+        <dependency>
+            <groupId>com.zzzlew</groupId>
+            <artifactId>common-redis</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 依赖 common-storage -->
+        <dependency>
+            <groupId>com.zzzlew</groupId>
+            <artifactId>common-storage</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!--knife4j接口文档依赖-->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- FastJson -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+
+        <!-- RabbitMQ -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
+        <!-- Hutool 工具类 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

@@ -10,6 +10,17 @@
     </parent>
 
     <artifactId>im-common</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>common-model</module>
+        <module>common-base</module>
+        <module>common-redis</module>
+        <module>common-storage</module>
+        <module>common-web</module>
+        <module>common-core</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -18,26 +29,10 @@
     </properties>
 
     <dependencies>
-        <!-- JWT 核心 API（必须） -->
+        <!-- 子模块共用的基础依赖 -->
         <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-api</artifactId>
-            <version>0.11.5</version>
-        </dependency>
-
-        <!-- JWT 实现（运行时依赖，必须） -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-impl</artifactId>
-            <version>0.11.5</version>
-            <scope>runtime</scope> <!-- 只在运行时生效 -->
-        </dependency>
-
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId>
-            <version>0.11.5</version>
-            <scope>runtime</scope>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
 

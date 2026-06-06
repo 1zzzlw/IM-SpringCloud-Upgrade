@@ -19,25 +19,57 @@
     </properties>
 
     <dependencies>
-        <!--common-->
+        <!--common-model (只需要数据模型)-->
         <dependency>
             <groupId>com.zzzlew</groupId>
-            <artifactId>im-common</artifactId>
+            <artifactId>common-model</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <!--common-base (基础工具和常量)-->
+        <dependency>
+            <groupId>com.zzzlew</groupId>
+            <artifactId>common-base</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!--common-redis (Redis和JWT工具)-->
+        <dependency>
+            <groupId>com.zzzlew</groupId>
+            <artifactId>common-redis</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Netty -->
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>4.1.94.Final</version>
         </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-        </dependency>
+
+        <!-- Redisson 分布式锁 -->
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson-spring-boot-starter</artifactId>
             <version>3.21.3</version>
+        </dependency>
+
+        <!-- FastJson -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+
+        <!-- RabbitMQ -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
+        <!-- Hutool 工具类 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
         </dependency>
     </dependencies>
 

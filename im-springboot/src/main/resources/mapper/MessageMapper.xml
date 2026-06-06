@@ -3,9 +3,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zzzlew.mapper.MessageMapper">
 
-    <select id="initMessageList" resultType="com.zzzlew.pojo.entity.message"
+    <select id="initMessageList" resultType="com.zzzlew.pojo.entity.Message"
             parameterType="java.util.List">
-        select * from message
+        select * from Message
         <where>conversation_id in
             <foreach collection="conversationIdList" item="conversationId" open="(" close=")"
                      separator=",">
@@ -22,9 +22,9 @@
         </if>
     </select>
 
-    <select id="pullMessageList" resultType="com.zzzlew.pojo.entity.message">
+    <select id="pullMessageList" resultType="com.zzzlew.pojo.entity.Message">
         select *
-        from message
+        from Message
         where conversation_id = #{conversationId}
           and id
             &lt;
@@ -34,7 +34,7 @@
 
     <insert id="saveMessage"
             parameterType="com.zzzlew.pojo.dto.message.MessageDTO">
-        insert ignore into message (id, conversation_id, sender_id, receiver_id, content, msg_type, sub_type,
+        insert ignore into Message (id, conversation_id, sender_id, receiver_id, content, msg_type, sub_type,
                              file_id, file_name, bucket, send_status, remote_path, file_size, preview_base64,
                              local_path, remote_url)
         values (#{id}, #{conversationId}, #{senderId}, #{receiverId}, #{content}, #{msgType}, #{subType},
@@ -45,27 +45,27 @@
     <select id="getMessageList" resultType="com.zzzlew.pojo.vo.message.MessageVO"
             parameterType="java.lang.String">
         select *
-        from message
+        from Message
         where conversation_id = #{conversationId}
         order by send_time
     </select>
 
     <update id="updateSendStatus">
-        update message
+        update Message
         set send_status = #{sendStatus}
         where file_id = #{fileId}
     </update>
 
     <delete id="clearHistoryMessage">
         delete
-        from message
+        from Message
         where conversation_id = #{conversationId}
           and sender_id = #{senderId}
     </delete>
 
     <delete id="deleteMessage">
         delete
-        from message
+        from Message
         where conversation_id = #{conversationId}
           and id = #{messageId}
     </delete>

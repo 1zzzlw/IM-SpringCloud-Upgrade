@@ -1,7 +1,7 @@
 package com.zzzlew.mapper;
 
 import com.zzzlew.pojo.dto.message.MessageDTO;
-import com.zzzlew.pojo.entity.message;
+import com.zzzlew.pojo.entity.Message;
 import com.zzzlew.pojo.vo.message.MessageVO;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public interface MessageMapper {
      * @param quitTime           退出时间
      * @return 消息VO列表
      */
-    List<message> initMessageList(List<String> conversationIdList, String quitTime);
+    List<Message> initMessageList(List<String> conversationIdList, String quitTime);
 
 
     /**
@@ -31,7 +31,7 @@ public interface MessageMapper {
      * @param maxMessageId   最大消息id
      * @return 消息VO列表
      */
-    List<message> pullMessageList(String conversationId, Long maxMessageId);
+    List<Message> pullMessageList(String conversationId, Long maxMessageId);
 
     /**
      * 保存消息

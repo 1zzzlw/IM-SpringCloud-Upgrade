@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzzlew.mapper.ApplyMapper">
+
+    <insert id="sendApply" useGeneratedKeys="true" keyProperty="applyId">
+        insert into friend_apply (from_user_id, to_user_id, apply_msg)
+        values (#{fromUserId}, #{toUserId}, #{applyMsg})
+    </insert>
+
+    <select id="getApplyList" resultType="com.zzzlew.domain.vo.ApplyVO">
+        select f.apply_id,
+               f.from_user_id,
+               u.avatar,
+               u.account,
+               u.gender,
+               u.phone,
+               u.email,
+               u.birthday,
+               u.address,
+               u.username,
+               f.apply_msg,
+               f.is_dealt,
+               f.deal_result
+        from user_info u
+                 join friend_apply f on u.id = f.from_user_id
+        where f.to_user_id = #{userId}
+    </select>
+
+    <update id="dealApply">
+        update friend_apply
+        set is_dealt    = 1,
+            deal_result = #{dealResult},
+            deal_time   = #{dealTime}
+        where apply_id = #{applyId}
+    </update>
+
+    <insert id="sendGroupApply">
+        insert into group_apply (user_id, member_id, conversation_id, group_name, user_avatar)
+        values
+        <foreach collection="friendIdList" item="memberId" separator=",">
+            (#{userId}, #{memberId}, #{groupApplyDTO.conversationId}, #{groupApplyDTO.groupName},
+            #{groupApplyDTO.userAvatar})
+        </foreach>
+    </insert>
+
+    <select id="getGroupApplyList" resultType="com.zzzlew.domain.vo.GroupApplyVO"
+            parameterType="java.lang.Long">
+        select id, conversation_id, user_id, user_avatar, group_name, status
+        from group_apply
+        where member_id = #{userId}
+    </select>
+
+    <update id="dealGroupApply"
+            parameterType="com.zzzlew.domain.dto.DealGroupDTO">
+        update group_apply
+        set status = #{status}, user_avatar = #{userAvatar}
+        where conversation_id = #{conversationId}
+          and user_id = #{userId}
+          and member_id = #{memberId}
+    </update>
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.zzzlew</groupId>
+        <artifactId>im-common</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.zzzlew</groupId>
+    <artifactId>common-core</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <dependencies>
+        <!-- 兼容层：聚合所有模块，方便旧代码迁移 -->
+        <dependency>
+            <groupId>com.zzzlew</groupId>
+            <artifactId>common-model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.zzzlew</groupId>
+            <artifactId>common-base</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.zzzlew</groupId>
+            <artifactId>common-redis</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.zzzlew</groupId>
+            <artifactId>common-storage</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+</project>
