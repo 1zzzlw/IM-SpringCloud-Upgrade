@@ -3,13 +3,47 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zzzlew.mapper.MomentsMapper">
 
-    <insert id="insert">
+    <!--插入后自动把数据库自增 ID 回填到实体类的 id 字段-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into moments(user_id, username, avatar, content)
         values (#{userId}, #{username}, #{avatar}, #{content})
     </insert>
 
     <select id="list" resultType="com.zzzlew.domain.vo.MomentsVO">
-        select * from moments where is_deleted = 0 order by like_count DESC
+        select *
+        from moments
+        <where>
+            is_deleted = 0
+            <if test="lastId != null and lastId > 0">
+                and id &lt; #{lastId}
+            </if>
+        </where>
+        <if test="sortWay == 1">
+            order by id DESC
+        </if>
+        <if test="sortWay == 0">
+            order by like_count DESC
+        </if>
+        limit #{pageSize}
     </select>
+
+    <select id="getById" resultType="com.zzzlew.domain.vo.MomentsVO">
+        select *
+        from moments
+        where id = #{momentId}
+    </select>
+
+    <select id="selectByIds" resultType="com.zzzlew.domain.vo.MomentsVO">
+        select * from moments where id in
+        <foreach item="item" collection="missingIds" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <update id="like">
+        update moments
+        set like_count = like_count + #{i}
+        where id = #{momentId}
+    </update>
 
 </mapper>

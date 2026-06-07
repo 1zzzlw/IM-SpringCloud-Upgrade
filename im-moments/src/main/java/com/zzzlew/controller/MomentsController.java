@@ -59,13 +59,16 @@ public class MomentsController {
     /**
      * 查看朋友圈
      *
+     * @param sortWay 排序方式
+     * @param lastId  最后一条数据的id
      * @return 查看结果
      */
     @Operation(summary = "查看朋友圈")
     @GetMapping("/list")
-    public Result<List<MomentsVO>> list() {
-        log.info("查看朋友圈");
-        List<MomentsVO> momentsVOList = momentsService.list();
+    public Result<List<MomentsVO>> list(@RequestParam(required = false, defaultValue = "0") Integer sortWay,
+                                        @RequestParam Long lastId) {
+        log.info("查看朋友圈，排序方式：{}，最后一个帖子的id：{}", sortWay, lastId);
+        List<MomentsVO> momentsVOList = momentsService.list(sortWay, lastId);
         return Result.success(momentsVOList);
     }
 
@@ -75,20 +78,18 @@ public class MomentsController {
      * @return 点赞结果
      */
     @Operation(summary = "点赞")
-    @PostMapping("/like")
-    public String like() {
-        return "点赞成功";
+    @PostMapping("/like/{momentId}")
+    public Result<Object> like(@PathVariable("momentId") Long momentId) {
+        log.info("点赞，帖子id：{}", momentId);
+        momentsService.like(momentId);
+        return Result.success();
     }
 
-    /**
-     * 取消点赞
-     *
-     * @return 取消点赞结果
-     */
-    @Operation(summary = "取消点赞")
-    @PostMapping("/cancelLike")
-    public String cancelLike() {
-        return "取消点赞成功";
+    @Operation(summary = "查看帖子详细")
+    @GetMapping("/detail/{momentId}")
+    public Result<MomentsVO> detail(@PathVariable("momentId") Long momentId) {
+        log.info("查看帖子详细，帖子id：{}", momentId);
+        return Result.success(momentsService.getById(momentId));
     }
 
     /**

@@ -41,12 +41,17 @@ public class MomentsVO {
     private String publishTime;
 
     /**
+     * 是否点赞
+     */
+    private boolean liked;
+
+    /**
      * 点赞数
      */
-    private String likeCount;
+    private Integer likeCount;
 
     /**
      * 评论数
      */
-    private String commentCount;
+    private Integer commentCount;
 }

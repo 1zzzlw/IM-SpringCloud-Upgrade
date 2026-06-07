@@ -39,14 +39,4 @@ public class MomentsDTO {
      * 发布时间
      */
     private String publishTime;
-
-    /**
-     * 点赞数
-     */
-    private String likeCount;
-
-    /**
-     * 评论数
-     */
-    private String commentCount;
 }

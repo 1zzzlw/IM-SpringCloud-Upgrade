@@ -23,8 +23,33 @@ public interface MomentsMapper {
     /**
      * 查询朋友圈
      *
+     * @param sortWay 排序方式
+     * @param lastId  最后数据id
      * @return 朋友圈列表
      */
-    List<MomentsVO> list();
+    List<MomentsVO> list(Integer sortWay, Long lastId, int pageSize);
 
+    /**
+     * 点赞
+     *
+     * @param momentId 朋友圈id
+     * @param i        操作类型
+     */
+    void like(Long momentId, int i);
+
+    /**
+     * 根据id查询朋友圈
+     *
+     * @param momentId 朋友圈id
+     * @return 朋友圈信息
+     */
+    MomentsVO getById(Long momentId);
+
+    /**
+     * 根据ids批量查询朋友圈
+     *
+     * @param missingIds 缺少的id
+     * @return 朋友圈信息
+     */
+    List<MomentsVO> selectByIds(List<Long> missingIds);
 }

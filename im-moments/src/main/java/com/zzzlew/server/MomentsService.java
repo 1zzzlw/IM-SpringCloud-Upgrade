@@ -31,8 +31,24 @@ public interface MomentsService {
     /**
      * 查看朋友圈
      *
+     * @param sortWay 排序方式
+     * @param lastId   最后一个朋友圈的id
      * @return 查看结果
      */
-    List<MomentsVO> list();
+    List<MomentsVO> list(Integer sortWay, Long lastId);
 
+    /**
+     * 点赞
+     *
+     * @param momentId 朋友圈id
+     */
+    void like(Long momentId);
+
+    /**
+     * 获取朋友圈
+     *
+     * @param momentId 朋友圈id
+     * @return 朋友圈
+     */
+    MomentsVO getById(Long momentId);
 }
