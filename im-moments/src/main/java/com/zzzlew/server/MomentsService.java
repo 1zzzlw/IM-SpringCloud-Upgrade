@@ -1,7 +1,11 @@
 package com.zzzlew.server;
 
+import com.zzzlew.domain.dto.MomentCommentsDTO;
+import com.zzzlew.domain.dto.MomentCommentsPageQueryDTO;
 import com.zzzlew.domain.dto.MomentsDTO;
+import com.zzzlew.domain.vo.MomentsCommentsVO;
 import com.zzzlew.domain.vo.MomentsVO;
+import com.zzzlew.result.PageResult;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -32,7 +36,7 @@ public interface MomentsService {
      * 查看朋友圈
      *
      * @param sortWay 排序方式
-     * @param lastId   最后一个朋友圈的id
+     * @param lastId  最后一个朋友圈的id
      * @return 查看结果
      */
     List<MomentsVO> list(Integer sortWay, Long lastId);
@@ -51,4 +55,19 @@ public interface MomentsService {
      * @return 朋友圈
      */
     MomentsVO getById(Long momentId);
+
+    /**
+     * 发布评论
+     *
+     * @param momentCommentsDTO 评论内容
+     * @return 发布结果
+     */
+    MomentsCommentsVO publishComment(MomentCommentsDTO momentCommentsDTO);
+
+    /**
+     * 查看评论
+     *
+     * @return 评论结果
+     */
+    PageResult<MomentsCommentsVO> comments(MomentCommentsPageQueryDTO momentCommentsPageQueryDTO);
 }

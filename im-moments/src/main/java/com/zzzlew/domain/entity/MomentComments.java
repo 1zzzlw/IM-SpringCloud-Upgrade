@@ -1,0 +1,75 @@
+package com.zzzlew.domain.entity;
+
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+/**
+ * @Auther: zzzlew
+ * @Date: 2026/6/8 - 06 - 08 - 22:20
+ * @Description: com.zzzlew.domain.entity
+ * @version: 1.0
+ */
+@Data
+public class MomentComments {
+    /**
+     * 主键ID
+     */
+    private Long id;
+
+    /**
+     * 关联的动态ID
+     */
+    private Long momentId;
+
+    /**
+     * 评论者用户ID
+     */
+    private Long userId;
+
+    /**
+     * 评论者昵称
+     */
+    private String username;
+
+    /**
+     * 评论者头像
+     */
+    private String avatar;
+
+    /**
+     * 评论内容
+     */
+    private String content;
+
+    /**
+     * 评论时间
+     */
+    private LocalDateTime publishTime;
+
+    /**
+     * 父评论ID（0=一级评论）
+     */
+    private Long parentId;
+
+    /**
+     * 被回复者用户ID
+     */
+    private Long replyToUserId;
+
+    /**
+     * 被回复者昵称
+     */
+    private String replyToUsername;
+
+    /**
+     * 点赞数
+     */
+    private Integer likeCount;
+
+    /**
+     * 是否删除：0=未删除，1=已删除
+     */
+    private Integer isDeleted;
+
+}

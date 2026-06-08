@@ -40,10 +40,20 @@
         </foreach>
     </select>
 
+    <select id="comments" resultType="com.zzzlew.domain.vo.MomentsCommentsVO">
+        select * from moment_comments where moment_id = #{momentId}
+    </select>
+
     <update id="like">
         update moments
         set like_count = like_count + #{i}
         where id = #{momentId}
     </update>
+
+    <insert id="publishComment" useGeneratedKeys="true" keyProperty="id">
+        insert into moment_comments(moment_id, user_id, username, avatar, content)
+        values (#{momentId}, #{userId}, #{username}, #{avatar}, #{content})
+    </insert>
+
 
 </mapper>

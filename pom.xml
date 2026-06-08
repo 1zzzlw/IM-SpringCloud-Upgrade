@@ -18,7 +18,7 @@
     <modules>
         <module>im-server</module>
         <module>im-common</module>
-<!--        <module>im-springboot</module>-->
+        <!--        <module>im-springboot</module>-->
         <module>im-auth</module>
         <module>im-social</module>
         <module>im-chat</module>
@@ -43,6 +43,7 @@
         <minio.version>8.5.1</minio.version>
         <fastjson.version>1.2.83</fastjson.version>
         <jjwt.version>0.9.1</jjwt.version>
+        <pagehelper>1.4.7</pagehelper>
     </properties>
 
     <dependencyManagement>
@@ -120,6 +121,12 @@
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
                 <version>${jjwt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper}</version>
             </dependency>
 
             <!--spring-ai-->

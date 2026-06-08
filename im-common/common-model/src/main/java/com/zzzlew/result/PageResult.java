@@ -1,6 +1,8 @@
 package com.zzzlew.result;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
  * @version: 1.0
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PageResult<T> implements Serializable {
 
     // 总记录数

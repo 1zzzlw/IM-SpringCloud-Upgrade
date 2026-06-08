@@ -4,35 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/domain/vo/MomentsCommentVO.java" afterDir="false" />
+    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="后续准备写评论的功能，还有查看帖子详细的功能，会用到redis缓存，查看帖子详细这里应该会有频繁的评论吧，就假设有这个，应该我会去解决缓存击穿，穿透，雪崩的问题。">
+      <change afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/domain/dto/MomentCommentsDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/domain/dto/MomentCommentsPageQueryDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/domain/entity/MomentComments.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/domain/vo/MomentsCommentsVO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/ClusterMessageWrapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/ClusterMessageWrapper.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/dto/GroupApplyDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/dto/GroupApplyDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/dto/GroupMemberDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/dto/GroupMemberDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/dto/UserBaseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/dto/UserBaseDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/entity/UserAuth.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/entity/UserAuth.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/vo/ConversationVO$ConversationVOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/vo/ConversationVO$ConversationVOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/vo/ConversationVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/vo/ConversationVO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/vo/FriendRelationVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/vo/FriendRelationVO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/result/PageResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/result/PageResult.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/result/Result.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/result/Result.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/result/TokenResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/result/TokenResult.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-model/src/main/java/com/zzzlew/result/PageResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/src/main/java/com/zzzlew/result/PageResult.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-common/common-redis/src/main/java/com/zzzlew/constant/RedisConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-redis/src/main/java/com/zzzlew/constant/RedisConstant.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-common/common-redis/target/classes/com/zzzlew/constant/RedisConstant.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-redis/target/classes/com/zzzlew/constant/RedisConstant.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-gateway/target/classes/com/zzzlew/filters/AuthGlobalFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/target/classes/com/zzzlew/filters/AuthGlobalFilter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-gateway/target/classes/com/zzzlew/properties/AuthProperties.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/target/classes/com/zzzlew/properties/AuthProperties.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/controller/MomentsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/controller/MomentsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/domain/dto/MomentsDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/domain/dto/MomentsDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/domain/vo/MomentsVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/domain/vo/MomentsVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/domain/vo/MomentsCommentVO.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/mapper/MomentsMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/mapper/MomentsMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/MomentsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/MomentsService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/impl/MomentsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/impl/MomentsServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-moments/src/main/resources/mapper/MomentsMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/resources/mapper/MomentsMapper.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/controller/MomentsController.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/controller/MomentsController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/domain/dto/MomentsDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/domain/dto/MomentsDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/domain/vo/MomentsVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/domain/vo/MomentsVO.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/mapper/MomentsMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/mapper/MomentsMapper.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/server/MomentsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/server/MomentsService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/server/impl/MomentsServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/server/impl/MomentsServiceImpl.class" afterDir="false" />
@@ -40,6 +29,7 @@
       <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -199,10 +189,10 @@
       </map>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.AuthApplication">
-    <configuration name="AuthApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="im-auth" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.zzzlew.AuthApplication" />
+  <component name="RunManager" selected="Spring Boot.ContentApplication">
+    <configuration name="ChatApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="im-chat" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.zzzlew.ChatApplication" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.zzzlew.*" />
@@ -213,9 +203,9 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ChatApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="im-chat" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.zzzlew.ChatApplication" />
+    <configuration name="ContentApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="im-content" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.zzzlew.ContentApplication" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.zzzlew.*" />
@@ -272,9 +262,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ZzzImServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="im-springboot" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.zzzlew.ZzzImServerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
+      <item itemvalue="Spring Boot.ZzzImServerApplication" />
       <item itemvalue="Spring Boot.IMNetyApplication" />
-      <item itemvalue="Spring Boot.AuthApplication" />
+      <item itemvalue="Spring Boot.ContentApplication" />
       <item itemvalue="Spring Boot.GatewayApplication" />
       <item itemvalue="Spring Boot.MomentsApplication" />
       <item itemvalue="Spring Boot.ChatApplication" />
@@ -282,10 +280,10 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Spring Boot.MomentsApplication" />
         <item itemvalue="Spring Boot.ChatApplication" />
         <item itemvalue="Spring Boot.SocialApplication" />
-        <item itemvalue="Spring Boot.AuthApplication" />
-        <item itemvalue="Spring Boot.MomentsApplication" />
+        <item itemvalue="Spring Boot.ContentApplication" />
         <item itemvalue="Spring Boot.GatewayApplication" />
       </list>
     </recent_temporary>
@@ -418,7 +416,8 @@
       <workItem from="1780672260864" duration="2996000" />
       <workItem from="1780721346745" duration="9188000" />
       <workItem from="1780748204514" duration="9836000" />
-      <workItem from="1780814040419" duration="5344000" />
+      <workItem from="1780814040419" duration="5679000" />
+      <workItem from="1780918661167" duration="15320000" />
     </task>
     <task id="LOCAL-00001" summary="我最近为了加上MQ和Redis的功能，去理解沉淀了几天，虽然大部分时间都在休息吧但是我也有了思路，首先是我看了别人的一个IM项目，特别复杂，是用redis实现的消息队列，还有加锁等，对于现在大二的我来说可以说是特别难的，复杂的一个项目了。但是他的有一个设计不合理，感觉这个设计就是为了作为一个练习redis而出现的，就是Http和Ws没有解耦，是通过Http发送消息同时处理存储数据库和推送到消息队列中，Netty模块进行监听消息队列从而实现发送到对方的功能，所以整个项目高度使用了redis的消息队列实现了集群分布。但是我的项目是Http和WS解耦的项目，经过我的学习，发现，好像只需要redisson的发布订阅模式来实现广播的功能，就可以实现集群部署了。至于MQ消息队列的使用，对于我的项目感觉用到的地方很少，比如或未读和已读消息的处理，我仍然可以使用ws进行发送消息的改变状态。以及用户的在线状态，我可以登录成功的时候拉去一次，然后加上好友上线提醒的功能，这个我已经实现了，还有个是好友下线的提醒，这样就可以实现好友的在线状态的展示了。至于消息的撤回，引用，这个就是普通的http请求，以及消息状态的更新，前端的展示的问题了，和MQ的关系并不大。然后就是现在思考一下MQ可以怎么使用，我希望的是MQ不能让我的项目有很大的改动，这样就没必要了，MQ只是个通过异步处理的方式，提高项目性能的工具，首先能想到的就是http请求发送消息时存储到数据库的操作，这个可以异步处理。其他需要的地方我倒是还没有想到。">
       <option name="closed" value="true" />
@@ -756,7 +755,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780731801392</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="后续准备写评论的功能，还有查看帖子详细的功能，会用到redis缓存，查看帖子详细这里应该会有频繁的评论吧，就假设有这个，应该我会去解决缓存击穿，穿透，雪崩的问题。">
+      <option name="closed" value="true" />
+      <created>1780837702983</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1780837702983</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -774,7 +781,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="笔记系统的完善" />
     <MESSAGE value="我写了写撤回的逻辑，这个算是系统消息吧，系统消息的设计把我难住了，我很想设计一个不麻烦的，但是好像没什么很好的办法。我想暂时搁置一下了，我准备优化项目了，边复习springboot的基础边优化项目。我感觉我的项目还不是很规范" />
     <MESSAGE value="系统消息的设计还是没有思路，想先放一放了，修改了一个bug，关于文件发送的bug，这个主要是前端的修改，后端就修改了一下ws的返回包装类，少了数据。然后是退出的ws消息推送。全局异常处理类" />
     <MESSAGE value="后端没有怎么补充新的内容，最近在补基础，后面项目还会优化和完善。后续的方向是，MQ的补充，大概就是异步写入数据库存储消息的使用了，然后优化MQ的代码熟悉一下。然后就是系统消息的逻辑再想想吧，还有就是WS消息的完善，对应前端一起。文件断点续传的代码还不完整。然后是redis，再想想还有没有别的地方可以用到redis。加上lua脚本，Redisson的广播，想到好的优化手段就用上" />
@@ -799,7 +805,8 @@
     <MESSAGE value="所有模块全部划分完成，准备搭建网关，网关搭建完成就开始测试" />
     <MESSAGE value="网关搭建完成了，主要难的部分就是拦截器那里代码的编写，因为我的是双token，所以处理逻辑可能比较复杂，然后接下来准备就是把OpenFeign里面的东西完善，比如说日志，信息传递" />
     <MESSAGE value="准备写朋友圈模块，这里打算深度的应用redis，redis缓存，redis分布式锁，然后项目写完之后，再去熟练redis的集群搭建" />
-    <option name="LAST_COMMIT_MESSAGE" value="准备写朋友圈模块，这里打算深度的应用redis，redis缓存，redis分布式锁，然后项目写完之后，再去熟练redis的集群搭建" />
+    <MESSAGE value="后续准备写评论的功能，还有查看帖子详细的功能，会用到redis缓存，查看帖子详细这里应该会有频繁的评论吧，就假设有这个，应该我会去解决缓存击穿，穿透，雪崩的问题。" />
+    <option name="LAST_COMMIT_MESSAGE" value="后续准备写评论的功能，还有查看帖子详细的功能，会用到redis缓存，查看帖子详细这里应该会有频繁的评论吧，就假设有这个，应该我会去解决缓存击穿，穿透，雪崩的问题。" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

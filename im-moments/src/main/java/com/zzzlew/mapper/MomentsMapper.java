@@ -1,6 +1,9 @@
 package com.zzzlew.mapper;
 
+import com.github.pagehelper.Page;
+import com.zzzlew.domain.dto.MomentCommentsPageQueryDTO;
 import com.zzzlew.domain.dto.MomentsDTO;
+import com.zzzlew.domain.vo.MomentsCommentsVO;
 import com.zzzlew.domain.vo.MomentsVO;
 
 import java.util.List;
@@ -52,4 +55,18 @@ public interface MomentsMapper {
      * @return 朋友圈信息
      */
     List<MomentsVO> selectByIds(List<Long> missingIds);
+
+    /**
+     * 评论
+     */
+    void publishComment(MomentsCommentsVO momentsCommentsVO);
+
+
+    /**
+     * 获取评论
+     *
+     * @return 朋友圈评论列表
+     */
+    Page<MomentsCommentsVO> comments(MomentCommentsPageQueryDTO queryDTO);
+
 }

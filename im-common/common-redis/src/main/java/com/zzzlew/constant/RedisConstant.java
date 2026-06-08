@@ -51,12 +51,13 @@ public class RedisConstant {
     // 朋友圈相关key
     public static final String MOMENTS_INFO_LIST_KEY = "moments:list:info:";
     public static final Long MOMENTS_INFO_LIST_KEY_TTL = 24 * 60 * 60L;
+    // 排行榜，不需要添加过期时间
     public static final String MOMENTS_LIST_HOT_KEY = "moments:list:hot";
     public static final String MOMENTS_LIST_NEW_KEY = "moments:list:new";
 
     public static final String MOMENTS_COUNT_KEY = "moments:count:";
     public static final Long MOMENTS_COUNT_KEY_TTL = 24 * 60 * 60L;
 
+    // 点赞列表，不需要过期时间
     public static final String MOMENTS_LIKE_KEY = "moments:like:";
-    public static final Long MOMENTS_LIKE_KEY_TTL = 24 * 60 * 60L;
 }
