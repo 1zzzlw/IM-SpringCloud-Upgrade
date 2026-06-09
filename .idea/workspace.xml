@@ -4,19 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="后续准备写评论的功能，还有查看帖子详细的功能，会用到redis缓存，查看帖子详细这里应该会有频繁的评论吧，就假设有这个，应该我会去解决缓存击穿，穿透，雪崩的问题。">
-      <change afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/domain/dto/MomentCommentsDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/domain/dto/MomentCommentsPageQueryDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/domain/entity/MomentComments.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/domain/vo/MomentsCommentsVO.java" afterDir="false" />
+    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="优化了点赞相关的问题，如果要实现排行，计数，感觉缓存问题挺多的，这里还需要锻炼，然后就是提交评论和分页查询评论，这里不能搞成游标查询，需要常规的分页查询，然后是list那里，我觉的应该需要写两种不同的分页查询方法了，一个是游标查询最新帖子，一个是分页查询最热帖子">
+      <change afterPath="$PROJECT_DIR$/im-common/common-redis/src/main/java/com/zzzlew/utils/CacheClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/朋友圈Redis深度优化方向.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-model/src/main/java/com/zzzlew/result/PageResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/src/main/java/com/zzzlew/result/PageResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-redis/src/main/java/com/zzzlew/constant/RedisConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-redis/src/main/java/com/zzzlew/constant/RedisConstant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-redis/target/classes/com/zzzlew/constant/RedisConstant.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-redis/target/classes/com/zzzlew/constant/RedisConstant.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-moments/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-base/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-base/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-model/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-redis/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-redis/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-redis/src/main/java/com/zzzlew/utils/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-base/src/main/java/com/zzzlew/utils/JwtUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-redis/target/classes/com/zzzlew/utils/JwtUtil.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/controller/MomentsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/controller/MomentsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/domain/vo/MomentsCommentVO.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/mapper/MomentsMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/mapper/MomentsMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/MomentsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/MomentsService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/impl/MomentsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/impl/MomentsServiceImpl.java" afterDir="false" />
@@ -26,6 +26,129 @@
       <change beforePath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/server/MomentsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/server/MomentsService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/server/impl/MomentsServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/server/impl/MomentsServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-moments/target/classes/mapper/MomentsMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/mapper/MomentsMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/ZzzImServerApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/annotaion/UrlLimit.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/aop/UrlLimitAspect.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/config/ChatClientConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/config/CorsConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/config/KaptchaConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/config/Knife4jConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/config/MinIOConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/config/MinioBucketInit.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/config/SpringBootRabbitMQConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/config/WebMvcConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/controller/AIMessageController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/controller/ApplyController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/controller/CommonsController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/controller/ConversationController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/controller/FavoritesController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/controller/FriendController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/controller/LoginController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/controller/MessageController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/controller/UserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/enums/ConversationTypeEnum.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/exception/AccountNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/exception/BaseException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/exception/IPException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/exception/LoginCodeGenerateException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/exception/PasswordErrorException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/exception/PhoneAlreadyExistsException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/exception/PhoneErrorException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/exception/TokenExpiredException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/exception/TokenGenerateException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/exception/TokenNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/handler/GlobalExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/interceptor/JwtTokenInterceptor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/listener/MQMessageListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/mapper/AIMessageMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/mapper/ApplyMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/mapper/ConversationMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/mapper/FavoritesMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/mapper/FriendMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/mapper/GroupConversationMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/mapper/MessageMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/mapper/UserInfoMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/mapper/UserMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/dto/apply/DealApplyDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/dto/apply/DealGroupDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/dto/apply/GroupApplyDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/dto/apply/SendApplyDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/dto/conversation/GroupConversationDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/dto/favorites/FavoritesDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/dto/message/AIMessageDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/dto/message/FileChunkInfoDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/dto/message/FileMessageDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/dto/message/MessageDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/dto/user/AIPersonalityDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/dto/user/GroupMemberDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/dto/user/UserBaseDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/dto/user/UserLoginDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/dto/user/UserRegisterDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/entity/Apply.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/entity/Conversation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/entity/Favorites.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/entity/FriendRelation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/entity/GroupConversation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/entity/Message.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/entity/UserAuth.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/entity/UserInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/vo/apply/ApplyVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/vo/apply/DealApplyVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/vo/apply/GroupApplyVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/vo/conversation/ConversationVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/vo/conversation/GroupConversationVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/vo/favorites/FavoritesVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/vo/friend/FriendRelationVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/vo/message/AIMessageVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/vo/message/FileMessageVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/vo/message/MessageVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/vo/user/AIPersonalityVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/vo/user/GroupMemberVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/vo/user/UserInfoVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/pojo/vo/user/UserSearchVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/properties/Jwtproperties.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/properties/MinIOConfigProperties.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/result/PageResult.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/result/Result.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/result/TokenResult.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/AIMessageService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/ApplyService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/CommonsService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/ConversationService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/FavoritesService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/FriendService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/MessageService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/impl/AIMessageServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/impl/ApplyServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/impl/CommonsServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/impl/ConversationImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/impl/FavoritesServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/impl/FriendServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/impl/MessageServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/server/impl/UserServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/tools/AITools.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/utils/MinIOFileStorgeUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/utils/RefreshTokenInterceptor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/utils/RegexUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/java/com/zzzlew/utils/UserHolder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/resources/application-dev.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/resources/application-docker.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/resources/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/resources/logback.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/resources/login_token_atomic_operation.lua" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/resources/mapper/AIMessageMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/resources/mapper/ApplyMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/resources/mapper/ConversationMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/resources/mapper/FavoritesMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/resources/mapper/FriendMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/resources/mapper/GroupConversationMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/resources/mapper/MessageMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/resources/mapper/UserInfoMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/resources/mapper/UserMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-springboot/src/main/resources/schema.sql" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" afterDir="false" />
@@ -91,62 +214,62 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.ContentApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Application.GatewayApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Application.ZzzImServerApplication.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.mqTest.springbootSend.executor&quot;: &quot;Debug&quot;,
-    &quot;Maven.IM-SpringCloud [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.IM-SpringCloud [package].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Spring Boot.AuthApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.ChatApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.ContentApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.GatewayApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.IMNetyApplication(8000).executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.IMNetyApplication(8001).executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.IMNetyApplication(8002).executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.IMNetyApplication(8082).executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.IMNetyApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.MomentsApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.SocialApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.ZzzImServerApplication(8080).executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.ZzzImServerApplication(8081).executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.ZzzImServerApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/JavaProject/IM-SpringCloud/im-moments/src/main/resources&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;通义灵码&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.ContentApplication.executor": "Run",
+    "Application.GatewayApplication.executor": "Run",
+    "Application.ZzzImServerApplication.executor": "Run",
+    "JUnit.mqTest.springbootSend.executor": "Debug",
+    "Maven.IM-SpringCloud [clean].executor": "Run",
+    "Maven.IM-SpringCloud [package].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.AuthApplication.executor": "Run",
+    "Spring Boot.ChatApplication.executor": "Run",
+    "Spring Boot.ContentApplication.executor": "Run",
+    "Spring Boot.GatewayApplication.executor": "Run",
+    "Spring Boot.IMNetyApplication(8000).executor": "Run",
+    "Spring Boot.IMNetyApplication(8001).executor": "Run",
+    "Spring Boot.IMNetyApplication(8002).executor": "Run",
+    "Spring Boot.IMNetyApplication(8082).executor": "Run",
+    "Spring Boot.IMNetyApplication.executor": "Run",
+    "Spring Boot.MomentsApplication.executor": "Run",
+    "Spring Boot.SocialApplication.executor": "Run",
+    "Spring Boot.ZzzImServerApplication(8080).executor": "Run",
+    "Spring Boot.ZzzImServerApplication(8081).executor": "Run",
+    "Spring Boot.ZzzImServerApplication.executor": "Run",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "E:/JavaProject/IM-SpringCloud",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "通义灵码",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\JavaProject\IM-SpringCloud" />
       <recent name="E:\JavaProject\IM-SpringCloud\im-moments\src\main\resources" />
       <recent name="E:\JavaProject\IM-SpringCloud\im-common\common-base\src\main\java" />
       <recent name="E:\JavaProject\IM-SpringCloud\im-common\common-storage\src\main\java" />
       <recent name="E:\JavaProject\IM-SpringCloud\im-common\common-web\src\main\resources" />
-      <recent name="E:\JavaProject\IM-SpringCloud\im-common\common-web\src\main\java\com\zzzlew" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\JavaProject\IM-SpringCloud\im-common\common-model\src\main\java\com\zzzlew" />
@@ -189,10 +312,10 @@
       </map>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.ContentApplication">
-    <configuration name="ChatApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="im-chat" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.zzzlew.ChatApplication" />
+  <component name="RunManager" selected="Spring Boot.MomentsApplication">
+    <configuration name="AuthApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="im-auth" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.zzzlew.AuthApplication" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.zzzlew.*" />
@@ -262,29 +385,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ZzzImServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="im-springboot" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.zzzlew.ZzzImServerApplication" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <list>
-      <item itemvalue="Spring Boot.ZzzImServerApplication" />
       <item itemvalue="Spring Boot.IMNetyApplication" />
-      <item itemvalue="Spring Boot.ContentApplication" />
-      <item itemvalue="Spring Boot.GatewayApplication" />
       <item itemvalue="Spring Boot.MomentsApplication" />
-      <item itemvalue="Spring Boot.ChatApplication" />
+      <item itemvalue="Spring Boot.GatewayApplication" />
+      <item itemvalue="Spring Boot.AuthApplication" />
+      <item itemvalue="Spring Boot.ContentApplication" />
       <item itemvalue="Spring Boot.SocialApplication" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Spring Boot.MomentsApplication" />
-        <item itemvalue="Spring Boot.ChatApplication" />
         <item itemvalue="Spring Boot.SocialApplication" />
-        <item itemvalue="Spring Boot.ContentApplication" />
         <item itemvalue="Spring Boot.GatewayApplication" />
+        <item itemvalue="Spring Boot.ContentApplication" />
+        <item itemvalue="Spring Boot.AuthApplication" />
       </list>
     </recent_temporary>
   </component>
@@ -417,7 +532,10 @@
       <workItem from="1780721346745" duration="9188000" />
       <workItem from="1780748204514" duration="9836000" />
       <workItem from="1780814040419" duration="5679000" />
-      <workItem from="1780918661167" duration="15320000" />
+      <workItem from="1780918661167" duration="15430000" />
+      <workItem from="1780971814614" duration="1785000" />
+      <workItem from="1780992403813" duration="238000" />
+      <workItem from="1780992652975" duration="16199000" />
     </task>
     <task id="LOCAL-00001" summary="我最近为了加上MQ和Redis的功能，去理解沉淀了几天，虽然大部分时间都在休息吧但是我也有了思路，首先是我看了别人的一个IM项目，特别复杂，是用redis实现的消息队列，还有加锁等，对于现在大二的我来说可以说是特别难的，复杂的一个项目了。但是他的有一个设计不合理，感觉这个设计就是为了作为一个练习redis而出现的，就是Http和Ws没有解耦，是通过Http发送消息同时处理存储数据库和推送到消息队列中，Netty模块进行监听消息队列从而实现发送到对方的功能，所以整个项目高度使用了redis的消息队列实现了集群分布。但是我的项目是Http和WS解耦的项目，经过我的学习，发现，好像只需要redisson的发布订阅模式来实现广播的功能，就可以实现集群部署了。至于MQ消息队列的使用，对于我的项目感觉用到的地方很少，比如或未读和已读消息的处理，我仍然可以使用ws进行发送消息的改变状态。以及用户的在线状态，我可以登录成功的时候拉去一次，然后加上好友上线提醒的功能，这个我已经实现了，还有个是好友下线的提醒，这样就可以实现好友的在线状态的展示了。至于消息的撤回，引用，这个就是普通的http请求，以及消息状态的更新，前端的展示的问题了，和MQ的关系并不大。然后就是现在思考一下MQ可以怎么使用，我希望的是MQ不能让我的项目有很大的改动，这样就没必要了，MQ只是个通过异步处理的方式，提高项目性能的工具，首先能想到的就是http请求发送消息时存储到数据库的操作，这个可以异步处理。其他需要的地方我倒是还没有想到。">
       <option name="closed" value="true" />
@@ -763,7 +881,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780837702983</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="优化了点赞相关的问题，如果要实现排行，计数，感觉缓存问题挺多的，这里还需要锻炼，然后就是提交评论和分页查询评论，这里不能搞成游标查询，需要常规的分页查询，然后是list那里，我觉的应该需要写两种不同的分页查询方法了，一个是游标查询最新帖子，一个是分页查询最热帖子">
+      <option name="closed" value="true" />
+      <created>1780935047346</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1780935047346</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -781,7 +907,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="我写了写撤回的逻辑，这个算是系统消息吧，系统消息的设计把我难住了，我很想设计一个不麻烦的，但是好像没什么很好的办法。我想暂时搁置一下了，我准备优化项目了，边复习springboot的基础边优化项目。我感觉我的项目还不是很规范" />
     <MESSAGE value="系统消息的设计还是没有思路，想先放一放了，修改了一个bug，关于文件发送的bug，这个主要是前端的修改，后端就修改了一下ws的返回包装类，少了数据。然后是退出的ws消息推送。全局异常处理类" />
     <MESSAGE value="后端没有怎么补充新的内容，最近在补基础，后面项目还会优化和完善。后续的方向是，MQ的补充，大概就是异步写入数据库存储消息的使用了，然后优化MQ的代码熟悉一下。然后就是系统消息的逻辑再想想吧，还有就是WS消息的完善，对应前端一起。文件断点续传的代码还不完整。然后是redis，再想想还有没有别的地方可以用到redis。加上lua脚本，Redisson的广播，想到好的优化手段就用上" />
     <MESSAGE value="完成了好友申请处理的ws通知的代码，本来今天是准备完成多窗口缓存共享的问题的，但是好久没有想过这个问题了，所以暂时模拟不出来需要共享的场景了，就转向ws通知代码的完善了。目前是只写了好友申请的通知，还剩下群聊申请的通知，大概明天写完，然后找到需要共享窗口的场景，在完成一些多窗口的缓存共享问题。这就是前端的内容了。自此，这个项目小问题估计大部分都解决了，只剩下小功能了，还有一些优化的点，后端还要引入MQ，还有redis的优化等问题，以及全局异常处理的补充，还有很多的代码细节没有完成，慢慢来吧，等会在补一下八股，java基础" />
@@ -806,7 +931,8 @@
     <MESSAGE value="网关搭建完成了，主要难的部分就是拦截器那里代码的编写，因为我的是双token，所以处理逻辑可能比较复杂，然后接下来准备就是把OpenFeign里面的东西完善，比如说日志，信息传递" />
     <MESSAGE value="准备写朋友圈模块，这里打算深度的应用redis，redis缓存，redis分布式锁，然后项目写完之后，再去熟练redis的集群搭建" />
     <MESSAGE value="后续准备写评论的功能，还有查看帖子详细的功能，会用到redis缓存，查看帖子详细这里应该会有频繁的评论吧，就假设有这个，应该我会去解决缓存击穿，穿透，雪崩的问题。" />
-    <option name="LAST_COMMIT_MESSAGE" value="后续准备写评论的功能，还有查看帖子详细的功能，会用到redis缓存，查看帖子详细这里应该会有频繁的评论吧，就假设有这个，应该我会去解决缓存击穿，穿透，雪崩的问题。" />
+    <MESSAGE value="优化了点赞相关的问题，如果要实现排行，计数，感觉缓存问题挺多的，这里还需要锻炼，然后就是提交评论和分页查询评论，这里不能搞成游标查询，需要常规的分页查询，然后是list那里，我觉的应该需要写两种不同的分页查询方法了，一个是游标查询最新帖子，一个是分页查询最热帖子" />
+    <option name="LAST_COMMIT_MESSAGE" value="优化了点赞相关的问题，如果要实现排行，计数，感觉缓存问题挺多的，这里还需要锻炼，然后就是提交评论和分页查询评论，这里不能搞成游标查询，需要常规的分页查询，然后是list那里，我觉的应该需要写两种不同的分页查询方法了，一个是游标查询最新帖子，一个是分页查询最热帖子" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

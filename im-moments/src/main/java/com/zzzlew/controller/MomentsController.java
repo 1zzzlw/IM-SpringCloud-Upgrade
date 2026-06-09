@@ -63,17 +63,24 @@ public class MomentsController {
     /**
      * 查看朋友圈
      *
-     * @param sortWay 排序方式
-     * @param lastId  最后一条数据的id
+     * @param lastId 最后一条数据的id
      * @return 查看结果
      */
-    @Operation(summary = "查看朋友圈")
-    @GetMapping("/list")
-    public Result<List<MomentsVO>> list(@RequestParam(required = false, defaultValue = "0") Integer sortWay,
-                                        @RequestParam Long lastId) {
-        log.info("查看朋友圈，排序方式：{}，最后一个帖子的id：{}", sortWay, lastId);
-        List<MomentsVO> momentsVOList = momentsService.list(sortWay, lastId);
+    @Operation(summary = "查看最新发布的朋友圈")
+    @GetMapping("/list/new")
+    public Result<List<MomentsVO>> listByNew(@RequestParam Long lastId) {
+        log.info("查看朋友圈，最后一个帖子的id：{}", lastId);
+        List<MomentsVO> momentsVOList = momentsService.listByNew(lastId);
         return Result.success(momentsVOList);
+    }
+
+    @Operation(summary = "查看最热门的朋友圈")
+    @GetMapping("/list/hot")
+    public Result<PageResult<MomentsVO>> listByHot(@RequestParam(defaultValue = "1") int page,
+                                                   @RequestParam(defaultValue = "20") int pageSize) {
+        log.info("查看第 {} 页的最热帖子", page, pageSize);
+        PageResult<MomentsVO> pageResult = momentsService.listByHot(page, pageSize);
+        return Result.success(pageResult);
     }
 
     /**
@@ -94,17 +101,6 @@ public class MomentsController {
     public Result<MomentsVO> detail(@PathVariable("momentId") Long momentId) {
         log.info("查看帖子详细，帖子id：{}", momentId);
         return Result.success(momentsService.getById(momentId));
-    }
-
-    /**
-     * 评论
-     *
-     * @return 评论结果
-     */
-    @Operation(summary = "评论")
-    @PostMapping("/comment")
-    public String comment() {
-        return "评论成功";
     }
 
     /**
@@ -153,6 +149,30 @@ public class MomentsController {
     @PostMapping("/comment/reply/publish/{commentId}")
     public String publishCommentReply(@PathVariable("commentId") Long commentId) {
         return "发布评论下的回复成功";
+    }
+
+    @Operation(summary = "点赞评论")
+    @PostMapping("/comment/like/{commentId}")
+    public String likeComment(@PathVariable("commentId") Long commentId) {
+        return "点赞评论成功";
+    }
+
+    @Operation(summary = "删除帖子")
+    @DeleteMapping("/delete/{momentId}")
+    public String delete(@PathVariable("momentId") Long momentId) {
+        return "删除帖子成功";
+    }
+
+    @Operation(summary = "修改帖子")
+    @PutMapping("/update")
+    public String update(@RequestBody MomentsDTO momentsDTO) {
+        return "修改帖子成功";
+    }
+
+    @Operation(summary = "打赏")
+    @PostMapping("/reward/{momentId}")
+    public String reward(@PathVariable("momentId") Long momentId) {
+        return "打赏成功";
     }
 
 }

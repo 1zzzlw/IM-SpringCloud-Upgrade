@@ -13,7 +13,6 @@
         <module name="im-auth" />
         <module name="im-gateway" />
         <module name="common-redis" />
-        <module name="im-springboot" />
         <module name="common-base" />
         <module name="im-moments" />
         <module name="im-api" />
@@ -24,6 +23,9 @@
         <module name="common-core" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="im-springboot" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

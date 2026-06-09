@@ -26,11 +26,10 @@ public interface MomentsMapper {
     /**
      * 查询朋友圈
      *
-     * @param sortWay 排序方式
      * @param lastId  最后数据id
      * @return 朋友圈列表
      */
-    List<MomentsVO> list(Integer sortWay, Long lastId, int pageSize);
+    List<MomentsVO> listByNew(Long lastId, int pageSize);
 
     /**
      * 点赞
@@ -39,6 +38,14 @@ public interface MomentsMapper {
      * @param i        操作类型
      */
     void like(Long momentId, int i);
+
+    /**
+     * 更新评论计数
+     *
+     * @param momentId 朋友圈id
+     * @param increment 增量（+1 或 -1）
+     */
+    void updateCommentCount(Long momentId, int increment);
 
     /**
      * 根据id查询朋友圈
@@ -68,5 +75,12 @@ public interface MomentsMapper {
      * @return 朋友圈评论列表
      */
     Page<MomentsCommentsVO> comments(MomentCommentsPageQueryDTO queryDTO);
+
+    /**
+     * 获取最热朋友圈
+     *
+     * @return 最热朋友圈列表
+     */
+    Page<MomentsVO> listByHot();
 
 }

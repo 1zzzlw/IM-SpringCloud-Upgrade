@@ -18,7 +18,6 @@
     <modules>
         <module>im-server</module>
         <module>im-common</module>
-        <!--        <module>im-springboot</module>-->
         <module>im-auth</module>
         <module>im-social</module>
         <module>im-chat</module>

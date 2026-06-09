@@ -1,7 +1,6 @@
 package com.zzzlew.utils;
 
 import io.jsonwebtoken.*;
-import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -13,7 +12,6 @@ import java.util.Map;
  * @Description: com.zzzlew.zzzimserver.utils
  * @version: 1.0
  */
-@Slf4j
 public class JwtUtil {
 
     // 生成token
@@ -37,11 +35,9 @@ public class JwtUtil {
                     Jwts.parser().setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token).getBody();
             return claims;
         } catch (ExpiredJwtException e) {
-            log.error("JWT令牌过期");
             return null;
         } catch (Exception e) {
             // 处理其他JWT异常
-            log.error("JWT解析失败：{}", e.getMessage());
             return null;
         }
     }

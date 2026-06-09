@@ -35,11 +35,19 @@ public interface MomentsService {
     /**
      * 查看朋友圈
      *
-     * @param sortWay 排序方式
      * @param lastId  最后一个朋友圈的id
      * @return 查看结果
      */
-    List<MomentsVO> list(Integer sortWay, Long lastId);
+    List<MomentsVO> listByNew(Long lastId);
+
+    /**
+     * 查看最热门的朋友圈
+     *
+     * @param page     页码
+     * @param pageSize 每页显示记录数
+     * @return 查看结果
+     */
+    PageResult<MomentsVO> listByHot(int page, int pageSize);
 
     /**
      * 点赞

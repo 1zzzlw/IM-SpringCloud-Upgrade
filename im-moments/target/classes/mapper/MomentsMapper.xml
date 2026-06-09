@@ -9,7 +9,7 @@
         values (#{userId}, #{username}, #{avatar}, #{content})
     </insert>
 
-    <select id="list" resultType="com.zzzlew.domain.vo.MomentsVO">
+    <select id="listByNew" resultType="com.zzzlew.domain.vo.MomentsVO">
         select *
         from moments
         <where>
@@ -18,12 +18,7 @@
                 and id &lt; #{lastId}
             </if>
         </where>
-        <if test="sortWay == 1">
-            order by id DESC
-        </if>
-        <if test="sortWay == 0">
-            order by like_count DESC
-        </if>
+        order by id DESC
         limit #{pageSize}
     </select>
 
@@ -41,12 +36,28 @@
     </select>
 
     <select id="comments" resultType="com.zzzlew.domain.vo.MomentsCommentsVO">
-        select * from moment_comments where moment_id = #{momentId}
+        select *
+        from moment_comments
+        where moment_id = #{momentId}
+        order by like_count DESC
+    </select>
+
+    <select id="listByHot" resultType="com.zzzlew.domain.vo.MomentsVO">
+        select *
+        from moments
+        where is_deleted = 0
+        order by like_count DESC
     </select>
 
     <update id="like">
         update moments
         set like_count = like_count + #{i}
+        where id = #{momentId}
+    </update>
+
+    <update id="updateCommentCount">
+        update moments
+        set comment_count = comment_count + #{increment}
         where id = #{momentId}
     </update>
 

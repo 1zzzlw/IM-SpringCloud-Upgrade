@@ -99,61 +99,156 @@ public class MomentsServiceImpl implements MomentsService {
     /**
      * 查看朋友圈，采用游标分页来查询
      *
-     * @param sortWay 排序方式
-     * @param lastId  最后一条数据的id
+     * @param lastId 最后一条数据的id
      * @return 朋友圈列表
      */
     @Override
-    public List<MomentsVO> list(Integer sortWay, Long lastId) {
-        String momentsHotSetKey = MOMENTS_LIST_HOT_KEY;
+    public List<MomentsVO> listByNew(Long lastId) {
         List<MomentsVO> resultVO = new ArrayList<>();
         // 固定每次查询的条数
         int pageSize = 20;
+        double max = (lastId == 0) ? Double.MAX_VALUE : (lastId - 1);
+        // 先从 ZSet 拿 ID 列表
+        Set<String> idSet = stringRedisTemplate.opsForZSet().reverseRangeByScore(MOMENTS_LIST_NEW_KEY, 0, max, 0, pageSize);
+        // 第一种情况，redis里面本身就是空的，可能发生在刚启动的时候
+        if (idSet == null || idSet.isEmpty()) {
+            // ZSet 没数据，直接去 MySQL 查旧数据
+            log.info("ZSet 没数据，直接去 MySQL 查旧数据");
+            List<MomentsVO> mysqlData = momentsMapper.listByNew(lastId, pageSize);
+            if (!mysqlData.isEmpty()) {
+                replenishRedis(mysqlData);
+            }
+            resultVO.addAll(mysqlData);
+            // 直接返回就好了，这里相当于给刚启动的redis实例进行了缓存预热，后续再次查询就会快很多
+            return resultVO;
+        }
 
-        if (sortWay == 0) {
-            // 按照最热排序
+        // 如果 idSet 集合有值，就说明 redis 里面已经预热过了，但是还有可能出现预热不完全的情况，也就是说还有旧数据在mysql里，所以需要去查
+        List<String> idList = new ArrayList<>(idSet);
+        // 帖子详细信息的缓存 key 集合
+        List<String> keys = idList.stream().map(id -> MOMENTS_INFO_LIST_KEY + id).toList();
 
+        // 批量查 String 缓存，拿到帖子的详细信息
+        List<String> jsonList = stringRedisTemplate.opsForValue().multiGet(keys);
+        if (jsonList == null) {
+            log.warn("multiGet 返回 null");
+            jsonList = Collections.emptyList();
+        }
 
-        } else if (sortWay == 1) {
-            double max = (lastId == 0) ? Double.MAX_VALUE : (lastId - 1);
-            // 先从 ZSet 拿 ID 列表
-            Set<String> idSet = stringRedisTemplate.opsForZSet().reverseRangeByScore(MOMENTS_LIST_NEW_KEY, 0, max, 0, pageSize);
-            // 第一种情况，redis里面本身就是空的，可能发生在刚启动的时候
-            if (idSet == null || idSet.isEmpty()) {
-                // ZSet 没数据，直接去 MySQL 查旧数据
-                log.info("ZSet 没数据，直接去 MySQL 查旧数据");
-                List<MomentsVO> mysqlData = momentsMapper.list(sortWay, lastId, pageSize);
-                if (!mysqlData.isEmpty()) {
-                    replenishRedis(mysqlData);
+        // 找出缺失的帖子，有的帖子详细信息可能会过期，每个帖子的添加时间不一样，所以需要找到缺失的帖子
+        List<Long> missingIds = new ArrayList<>();
+        Map<Long, MomentsVO> resultMap = new HashMap<>();
+
+        // 找出缺失的帖子
+        for (int i = 0; i < idList.size(); i++) {
+            Long id = Long.valueOf(idList.get(i));
+            String json = (i < jsonList.size()) ? jsonList.get(i) : null;
+
+            if (json == null) {
+                missingIds.add(id); // 记录缓存失效的 ID
+            } else {
+                try {
+                    resultMap.put(id, JSON.parseObject(json, MomentsVO.class));
+                } catch (Exception e) {
+                    log.error("解析 JSON 失败，momentId: {}, json: {}", id, json, e);
+                    missingIds.add(id);
                 }
-                resultVO.addAll(mysqlData);
-                // 直接返回就好了，这里相当于给刚启动的redis实例进行了缓存预热，后续再次查询就会快很多
-                return resultVO;
+            }
+        }
+
+        // 精准回填：去数据库查缺失的 ID
+        if (!missingIds.isEmpty()) {
+            List<MomentsVO> dbMissingData = momentsMapper.selectByIds(missingIds);
+            for (MomentsVO vo : dbMissingData) {
+                resultMap.put(vo.getId(), vo);
+                // 顺手回填到 Redis String 缓存，添加随机 TTL
+                long ttl = calculateRandomTTL(MOMENTS_INFO_LIST_KEY_TTL);
+                stringRedisTemplate.opsForValue().set(MOMENTS_INFO_LIST_KEY + vo.getId(), JSON.toJSONString(vo), ttl, TimeUnit.SECONDS);
+            }
+        }
+
+        // 按照 ZSet 的顺序把结果拼好
+        for (String id : idList) {
+            MomentsVO vo = resultMap.get(Long.valueOf(id));
+            if (vo != null) resultVO.add(vo);
+        }
+
+        // 判断是否需要查“更旧”的数据
+        // 只有当 ZSet 给出的 ID 数量不足 pageSize 时，说明 ZSet 已经见底了
+        if (idList.size() < pageSize) {
+            int needSize = pageSize - idList.size();
+            Long mysqlLastId = idList.isEmpty() ? lastId : Long.valueOf(idList.get(idList.size() - 1));
+            List<MomentsVO> olderData = momentsMapper.listByNew(mysqlLastId, needSize);
+            if (!olderData.isEmpty()) {
+                resultVO.addAll(olderData);
+                replenishRedis(olderData);
+            }
+        }
+
+        isMomentLiked(resultVO);
+        updateCount(resultVO);
+
+        return resultVO;
+    }
+
+    /**
+     * 按热度查询朋友圈，使用 Redis ZSet 热度排行榜
+     *
+     * @param page     页码
+     * @param pageSize 每页大小
+     * @return 分页结果
+     */
+    @Override
+    public PageResult<MomentsVO> listByHot(int page, int pageSize) {
+        List<MomentsVO> resultList = new ArrayList<>();
+
+        try {
+            // 计算 ZSet 的偏移量
+            int offset = (page - 1) * pageSize;
+
+            // 从热度排行榜 ZSet 中获取帖子 ID，按分数降序
+            Set<String> idSet = stringRedisTemplate.opsForZSet()
+                    .reverseRange(MOMENTS_LIST_HOT_KEY, offset, offset + pageSize - 1);
+
+            // 如果 Redis 没数据，降级到数据库查询
+            if (idSet == null || idSet.isEmpty()) {
+                log.info("热度排行榜为空，降级查询数据库");
+                PageHelper.startPage(page, pageSize);
+                Page<MomentsVO> pageData = momentsMapper.listByHot();
+
+                // 预热热度排行榜
+                if (!pageData.isEmpty()) {
+                    replenishHotRank(pageData.getResult());
+                }
+
+                isMomentLiked(pageData.getResult());
+                updateCount(pageData.getResult());
+
+                return new PageResult<>(pageData.getTotal(), pageData.getResult());
             }
 
-            // 如果 idSet 集合有值，就说明 redis 里面已经预热过了，但是还有可能出现预热不完全的情况，也就是说还有旧数据在mysql里，所以需要去查
+            // 从 Redis 批量查询帖子详情
             List<String> idList = new ArrayList<>(idSet);
-            // 帖子详细信息的缓存 key 集合
-            List<String> keys = idList.stream().map(id -> MOMENTS_INFO_LIST_KEY + id).toList();
+            List<String> keys = idList.stream()
+                    .map(id -> MOMENTS_INFO_LIST_KEY + id)
+                    .toList();
 
-            // 批量查 String 缓存，拿到帖子的详细信息
             List<String> jsonList = stringRedisTemplate.opsForValue().multiGet(keys);
             if (jsonList == null) {
                 log.warn("multiGet 返回 null");
                 jsonList = Collections.emptyList();
             }
 
-            // 找出缺失的帖子，有的帖子详细信息可能会过期，每个帖子的添加时间不一样，所以需要找到缺失的帖子
+            // 找出缓存失效的帖子
             List<Long> missingIds = new ArrayList<>();
             Map<Long, MomentsVO> resultMap = new HashMap<>();
 
-            // 找出缺失的帖子
             for (int i = 0; i < idList.size(); i++) {
                 Long id = Long.valueOf(idList.get(i));
                 String json = (i < jsonList.size()) ? jsonList.get(i) : null;
 
                 if (json == null) {
-                    missingIds.add(id); // 记录缓存失效的 ID
+                    missingIds.add(id);
                 } else {
                     try {
                         resultMap.put(id, JSON.parseObject(json, MomentsVO.class));
@@ -164,42 +259,68 @@ public class MomentsServiceImpl implements MomentsService {
                 }
             }
 
-            // 精准回填：去数据库查缺失的 ID
+            // 从数据库查询缺失的帖子
             if (!missingIds.isEmpty()) {
                 List<MomentsVO> dbMissingData = momentsMapper.selectByIds(missingIds);
                 for (MomentsVO vo : dbMissingData) {
                     resultMap.put(vo.getId(), vo);
-                    // 顺手回填到 Redis String 缓存，添加随机 TTL
+                    // 回写到 Redis
                     long ttl = calculateRandomTTL(MOMENTS_INFO_LIST_KEY_TTL);
-                    stringRedisTemplate.opsForValue().set(MOMENTS_INFO_LIST_KEY + vo.getId(), JSON.toJSONString(vo), ttl, TimeUnit.SECONDS);
+                    stringRedisTemplate.opsForValue().set(
+                            MOMENTS_INFO_LIST_KEY + vo.getId(),
+                            JSON.toJSONString(vo),
+                            ttl,
+                            TimeUnit.SECONDS
+                    );
                 }
             }
 
-            // 按照 ZSet 的顺序把结果拼好
+            // 按照 ZSet 的顺序组装结果
             for (String id : idList) {
                 MomentsVO vo = resultMap.get(Long.valueOf(id));
-                if (vo != null) resultVO.add(vo);
-            }
-
-            // 判断是否需要查“更旧”的数据
-            // 只有当 ZSet 给出的 ID 数量不足 pageSize 时，说明 ZSet 已经见底了
-            if (idList.size() < pageSize) {
-                int needSize = pageSize - idList.size();
-                Long mysqlLastId = idList.isEmpty() ? lastId : Long.valueOf(idList.get(idList.size() - 1));
-                List<MomentsVO> olderData = momentsMapper.list(sortWay, mysqlLastId, needSize);
-                if (!olderData.isEmpty()) {
-                    resultVO.addAll(olderData);
-                    replenishRedis(olderData);
+                if (vo != null) {
+                    resultList.add(vo);
                 }
             }
-        } else {
-            log.error("错误的排序类型: {}", sortWay);
+
+            // 填充点赞状态和计数器
+            isMomentLiked(resultList);
+            updateCount(resultList);
+
+            // 获取总数，ZSet 的大小
+            Long total = stringRedisTemplate.opsForZSet().zCard(MOMENTS_LIST_HOT_KEY);
+
+            return new PageResult<>(total != null ? total : 0L, resultList);
+
+        } catch (Exception e) {
+            log.error("查询热门帖子失败，page: {}, pageSize: {}", page, pageSize, e);
+            // 降级到数据库
+            PageHelper.startPage(page, pageSize);
+            Page<MomentsVO> pageData = momentsMapper.listByHot();
+            isMomentLiked(pageData.getResult());
+            updateCount(pageData.getResult());
+            return new PageResult<>(pageData.getTotal(), pageData.getResult());
+        }
+    }
+
+    /**
+     * 预热热度排行榜（用于 Redis 为空时的初始化）
+     */
+    private void replenishHotRank(List<MomentsVO> data) {
+        if (data == null || data.isEmpty()) {
+            return;
         }
 
-        isMomentLiked(resultVO);
-        updateCount(resultVO);
-
-        return resultVO;
+        try {
+            for (MomentsVO moment : data) {
+                String momentId = String.valueOf(moment.getId());
+                double score = moment.getLikeCount(); // 使用点赞数作为热度分数
+                stringRedisTemplate.opsForZSet().add(MOMENTS_LIST_HOT_KEY, momentId, score);
+            }
+            log.info("预热热度排行榜成功，数据量: {}", data.size());
+        } catch (Exception e) {
+            log.error("预热热度排行榜失败", e);
+        }
     }
 
     /**
@@ -354,7 +475,7 @@ public class MomentsServiceImpl implements MomentsService {
     }
 
     /**
-     * 根据id查询帖子，先查缓存，再查数据库
+     * 根据id查询帖子（先查缓存，再查数据库，并刷新实时计数）
      *
      * @param momentId 帖子ID
      * @return 帖子信息
@@ -371,40 +492,86 @@ public class MomentsServiceImpl implements MomentsService {
             String cacheKey = MOMENTS_INFO_LIST_KEY + momentId;
             String cachedJson = stringRedisTemplate.opsForValue().get(cacheKey);
 
+            MomentsVO momentsVO;
+
             if (cachedJson != null) {
-                return JSON.parseObject(cachedJson, MomentsVO.class);
+                momentsVO = JSON.parseObject(cachedJson, MomentsVO.class);
+            } else {
+                // 缓存未命中，查询数据库
+                momentsVO = momentsMapper.getById(momentId);
+
+                if (momentsVO != null) {
+                    // 回写缓存，添加随机 TTL 防止雪崩
+                    long ttl = calculateRandomTTL(MOMENTS_INFO_LIST_KEY_TTL);
+                    stringRedisTemplate.opsForValue().set(cacheKey, JSON.toJSONString(momentsVO), ttl, TimeUnit.SECONDS);
+                }
             }
 
-            // 缓存未命中，查询数据库
-            MomentsVO momentsVO = momentsMapper.getById(momentId);
-
             if (momentsVO != null) {
-                // 回写缓存，添加随机 TTL 防止雪崩
-                long ttl = calculateRandomTTL(MOMENTS_INFO_LIST_KEY_TTL);
-                stringRedisTemplate.opsForValue().set(cacheKey, JSON.toJSONString(momentsVO), ttl, TimeUnit.SECONDS);
+                // 刷新实时计数器（点赞数、评论数）
+                updateCount(Collections.singletonList(momentsVO));
+                // 刷新当前用户的点赞状态
+                isMomentLiked(Collections.singletonList(momentsVO));
             }
 
             return momentsVO;
 
         } catch (Exception e) {
             log.error("查询帖子失败，momentId: {}", momentId, e);
-            // 直接查数据库
+            // 降级：直接查数据库
             return momentsMapper.getById(momentId);
         }
     }
 
+    /**
+     * 发布评论
+     *
+     * @param momentCommentsDTO 评论内容
+     * @return 评论信息
+     */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public MomentsCommentsVO publishComment(MomentCommentsDTO momentCommentsDTO) {
         UserBaseDTO user = UserHolder.getUser();
+        Long momentId = momentCommentsDTO.getMomentId();
+
+        // 构建评论对象
         MomentsCommentsVO momentsCommentsVO = new MomentsCommentsVO();
         momentsCommentsVO.setUserId(user.getId());
         momentsCommentsVO.setUsername(user.getUsername());
         momentsCommentsVO.setAvatar(user.getAvatar());
         momentsCommentsVO.setContent(momentCommentsDTO.getContent());
-        momentsCommentsVO.setMomentId(momentCommentsDTO.getMomentId());
+        momentsCommentsVO.setMomentId(momentId);
+
+        // 插入评论到数据库
         momentsMapper.publishComment(momentsCommentsVO);
 
-        // TODO 评论数量加1
+        // 更新数据库中的评论计数
+        momentsMapper.updateCommentCount(momentId, 1);
+
+        // 更新 Redis 中的评论计数器
+        String countKey = MOMENTS_COUNT_KEY + momentId;
+        try {
+            // 检查计数器是否存在
+            Boolean exists = stringRedisTemplate.hasKey(countKey);
+
+            if (Boolean.TRUE.equals(exists)) {
+                // 计数器存在，直接 +1
+                stringRedisTemplate.opsForHash().increment(countKey, "comment", 1);
+            } else {
+                // 计数器不存在，从数据库查询并预热
+                MomentsVO moment = momentsMapper.getById(momentId);
+                if (moment != null) {
+                    long ttl = calculateRandomTTL(MOMENTS_COUNT_KEY_TTL);
+                    stringRedisTemplate.opsForHash().put(countKey, "like", String.valueOf(moment.getLikeCount()));
+                    stringRedisTemplate.opsForHash().put(countKey, "comment", String.valueOf(moment.getCommentCount()));
+                    stringRedisTemplate.expire(countKey, ttl, TimeUnit.SECONDS);
+                }
+            }
+        } catch (Exception e) {
+            log.error("更新评论计数器失败，momentId: {}", momentId, e);
+            // 不抛异常，数据库已更新即可
+        }
 
         return momentsCommentsVO;
     }
