@@ -68,6 +68,10 @@ public interface MomentsMapper {
      */
     void publishComment(MomentsCommentsVO momentsCommentsVO);
 
+    /**
+     * 发布评论下的回复
+     */
+    void publishCommentReply(MomentsCommentsVO reply);
 
     /**
      * 获取评论
@@ -75,6 +79,22 @@ public interface MomentsMapper {
      * @return 朋友圈评论列表
      */
     Page<MomentsCommentsVO> comments(MomentCommentsPageQueryDTO queryDTO);
+
+    /**
+     * 获取评论的下级回复列表
+     *
+     * @param commentId 评论ID
+     * @return 回复列表
+     */
+    Page<MomentsCommentsVO> commentReplies(Long commentId);
+
+    /**
+     * 点赞评论
+     *
+     * @param commentId 评论ID
+     * @param increment 增量（+1 或 -1）
+     */
+    void likeComment(Long commentId, int increment);
 
     /**
      * 获取最热朋友圈

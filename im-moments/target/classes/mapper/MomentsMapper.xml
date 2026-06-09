@@ -39,6 +39,8 @@
         select *
         from moment_comments
         where moment_id = #{momentId}
+        and (parent_id = 0 or parent_id is null)
+        and is_deleted = 0
         order by like_count DESC
     </select>
 
@@ -65,6 +67,25 @@
         insert into moment_comments(moment_id, user_id, username, avatar, content)
         values (#{momentId}, #{userId}, #{username}, #{avatar}, #{content})
     </insert>
+
+    <insert id="publishCommentReply" useGeneratedKeys="true" keyProperty="id">
+        insert into moment_comments(moment_id, user_id, username, avatar, content, parent_id, reply_to_user_id, reply_to_username)
+        values (#{momentId}, #{userId}, #{username}, #{avatar}, #{content}, #{parentId}, #{replyToUserId}, #{replyToUsername})
+    </insert>
+
+    <select id="commentReplies" resultType="com.zzzlew.domain.vo.MomentsCommentsVO">
+        select *
+        from moment_comments
+        where parent_id = #{commentId}
+        and is_deleted = 0
+        order by publish_time ASC
+    </select>
+
+    <update id="likeComment">
+        update moment_comments
+        set like_count = like_count + #{increment}
+        where id = #{commentId}
+    </update>
 
 
 </mapper>

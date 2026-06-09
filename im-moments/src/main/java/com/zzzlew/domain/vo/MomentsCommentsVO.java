@@ -66,4 +66,9 @@ public class MomentsCommentsVO {
      * 点赞数
      */
     private Integer likeCount;
+
+    /**
+     * 当前用户是否点赞
+     */
+    private Boolean liked;
 }

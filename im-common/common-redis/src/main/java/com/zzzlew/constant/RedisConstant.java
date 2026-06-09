@@ -60,4 +60,7 @@ public class RedisConstant {
 
     // 点赞列表，不需要过期时间
     public static final String MOMENTS_LIKE_KEY = "moments:like:";
+
+    // 评论点赞列表，不需要过期时间
+    public static final String MOMENTS_COMMENT_LIKE_KEY = "moments:comment:like:";
 }

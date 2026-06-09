@@ -78,4 +78,29 @@ public interface MomentsService {
      * @return 评论结果
      */
     PageResult<MomentsCommentsVO> comments(MomentCommentsPageQueryDTO momentCommentsPageQueryDTO);
+
+    /**
+     * 查看评论的下级回复列表
+     *
+     * @param commentId 评论ID
+     * @param page      页码
+     * @param pageSize  每页大小
+     * @return 回复列表
+     */
+    PageResult<MomentsCommentsVO> commentReplies(Long commentId, int page, int pageSize);
+
+    /**
+     * 发布评论下的回复
+     *
+     * @param momentCommentsDTO 回复内容
+     * @return 回复信息
+     */
+    MomentsCommentsVO publishCommentReply(MomentCommentsDTO momentCommentsDTO);
+
+    /**
+     * 点赞评论
+     *
+     * @param commentId 评论ID
+     */
+    void likeComment(Long commentId);
 }

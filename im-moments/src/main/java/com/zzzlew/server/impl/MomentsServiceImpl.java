@@ -585,7 +585,155 @@ public class MomentsServiceImpl implements MomentsService {
         // 封装分页结果
         long total = pageResult.getTotal();
         List<MomentsCommentsVO> result = pageResult.getResult();
+        // 填充点赞状态
+        fillCommentLikeStatus(result);
         return new PageResult<>(total, result);
+    }
+
+    /**
+     * 查看评论的下级回复列表
+     *
+     * @param commentId 评论ID
+     * @param page      页码
+     * @param pageSize  每页大小
+     * @return 回复列表
+     */
+    @Override
+    public PageResult<MomentsCommentsVO> commentReplies(Long commentId, int page, int pageSize) {
+        // 设置分页参数
+        PageHelper.startPage(page, pageSize);
+        // 查询下级回复
+        Page<MomentsCommentsVO> pageResult = momentsMapper.commentReplies(commentId);
+        // 封装分页结果
+        long total = pageResult.getTotal();
+        List<MomentsCommentsVO> result = pageResult.getResult();
+        // 填充点赞状态
+        fillCommentLikeStatus(result);
+        return new PageResult<>(total, result);
+    }
+
+    /**
+     * 填充评论点赞状态
+     */
+    private void fillCommentLikeStatus(List<MomentsCommentsVO> comments) {
+        if (comments == null || comments.isEmpty()) {
+            return;
+        }
+
+        try {
+            Long userId = UserHolder.getUser().getId();
+            if (userId == null) {
+                log.warn("用户ID为空，无法判断评论点赞状态");
+                return;
+            }
+
+            // 批量查询 Redis
+            List<Object> result = stringRedisTemplate.executePipelined((RedisCallback<Object>) connection -> {
+                for (MomentsCommentsVO comment : comments) {
+                    String key = MOMENTS_COMMENT_LIKE_KEY + comment.getId();
+                    connection.sIsMember(key.getBytes(), userId.toString().getBytes());
+                }
+                return null;
+            });
+
+            if (result != null && result.size() == comments.size()) {
+                for (int i = 0; i < comments.size(); i++) {
+                    comments.get(i).setLiked(Boolean.TRUE.equals(result.get(i)));
+                }
+            }
+        } catch (Exception e) {
+            log.error("判断评论点赞状态失败", e);
+            // 异常时默认设置为未点赞
+            comments.forEach(comment -> comment.setLiked(false));
+        }
+    }
+
+    /**
+     * 发布评论下的回复
+     *
+     * @param momentCommentsDTO 回复内容
+     * @return 回复信息
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public MomentsCommentsVO publishCommentReply(MomentCommentsDTO momentCommentsDTO) {
+        UserBaseDTO user = UserHolder.getUser();
+
+        // 构建回复对象
+        MomentsCommentsVO reply = new MomentsCommentsVO();
+        reply.setUserId(user.getId());
+        reply.setUsername(user.getUsername());
+        reply.setAvatar(user.getAvatar());
+        reply.setContent(momentCommentsDTO.getContent());
+        reply.setMomentId(momentCommentsDTO.getMomentId());
+        reply.setParentId(momentCommentsDTO.getParentId());
+        reply.setReplyToUserId(momentCommentsDTO.getReplyToUserId());
+        reply.setReplyToUsername(momentCommentsDTO.getReplyToUsername());
+
+        // 插入回复到数据库
+        momentsMapper.publishCommentReply(reply);
+
+        // 更新数据库中的评论计数
+        Long momentId = momentCommentsDTO.getMomentId();
+        momentsMapper.updateCommentCount(momentId, 1);
+
+        // 更新 Redis 中的评论计数器
+        String countKey = MOMENTS_COUNT_KEY + momentId;
+        try {
+            Boolean exists = stringRedisTemplate.hasKey(countKey);
+            if (Boolean.TRUE.equals(exists)) {
+                stringRedisTemplate.opsForHash().increment(countKey, "comment", 1);
+            } else {
+                MomentsVO moment = momentsMapper.getById(momentId);
+                if (moment != null) {
+                    long ttl = calculateRandomTTL(MOMENTS_COUNT_KEY_TTL);
+                    stringRedisTemplate.opsForHash().put(countKey, "like", String.valueOf(moment.getLikeCount()));
+                    stringRedisTemplate.opsForHash().put(countKey, "comment", String.valueOf(moment.getCommentCount()));
+                    stringRedisTemplate.expire(countKey, ttl, TimeUnit.SECONDS);
+                }
+            }
+        } catch (Exception e) {
+            log.error("更新评论计数器失败，momentId: {}", momentId, e);
+        }
+
+        return reply;
+    }
+
+    /**
+     * 点赞评论
+     *
+     * @param commentId 评论ID
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void likeComment(Long commentId) {
+        if (commentId == null || commentId <= 0) {
+            log.warn("无效的 commentId: {}", commentId);
+            return;
+        }
+
+        Long userId = UserHolder.getUser().getId();
+        String likeSetKey = MOMENTS_COMMENT_LIKE_KEY + commentId;
+
+        try {
+            // 判断用户是否已点赞
+            Boolean isMember = stringRedisTemplate.opsForSet().isMember(likeSetKey, userId.toString());
+
+            if (Boolean.TRUE.equals(isMember)) {
+                // 已点赞，取消点赞
+                stringRedisTemplate.opsForSet().remove(likeSetKey, userId.toString());
+                momentsMapper.likeComment(commentId, -1);
+                log.info("用户 {} 取消点赞评论 {} 成功", userId, commentId);
+            } else {
+                // 未点赞，执行点赞
+                stringRedisTemplate.opsForSet().add(likeSetKey, userId.toString());
+                momentsMapper.likeComment(commentId, 1);
+                log.info("用户 {} 点赞评论 {} 成功", userId, commentId);
+            }
+        } catch (Exception e) {
+            log.error("点赞评论操作失败，commentId: {}, userId: {}", commentId, userId, e);
+            throw new RuntimeException("点赞评论操作失败", e);
+        }
     }
 
     /**

@@ -123,8 +123,12 @@ public class MomentsController {
      */
     @Operation(summary = "查看评论的下级回复列表")
     @GetMapping("/comment/reply/{commentId}")
-    public String commentReply(@PathVariable("commentId") Long commentId) {
-        return "查看评论的下级回复列表成功";
+    public Result<PageResult<MomentsCommentsVO>> commentReply(@PathVariable("commentId") Long commentId,
+                                                               @RequestParam(defaultValue = "1") int page,
+                                                               @RequestParam(defaultValue = "5") int pageSize) {
+        log.info("查看评论的下级回复列表，commentId: {}, page: {}, pageSize: {}", commentId, page, pageSize);
+        PageResult<MomentsCommentsVO> pageResult = momentsService.commentReplies(commentId, page, pageSize);
+        return Result.success(pageResult);
     }
 
     /**
@@ -146,15 +150,19 @@ public class MomentsController {
      * @return 发布评论下的回复结果
      */
     @Operation(summary = "发布评论下的回复")
-    @PostMapping("/comment/reply/publish/{commentId}")
-    public String publishCommentReply(@PathVariable("commentId") Long commentId) {
-        return "发布评论下的回复成功";
+    @PostMapping("/comment/reply/publish")
+    public Result<MomentsCommentsVO> publishCommentReply(@RequestBody MomentCommentsDTO momentCommentsDTO) {
+        log.info("发布评论下的回复：{}", momentCommentsDTO);
+        MomentsCommentsVO vo = momentsService.publishCommentReply(momentCommentsDTO);
+        return Result.success(vo);
     }
 
     @Operation(summary = "点赞评论")
     @PostMapping("/comment/like/{commentId}")
-    public String likeComment(@PathVariable("commentId") Long commentId) {
-        return "点赞评论成功";
+    public Result<Object> likeComment(@PathVariable("commentId") Long commentId) {
+        log.info("点赞评论，commentId: {}", commentId);
+        momentsService.likeComment(commentId);
+        return Result.success();
     }
 
     @Operation(summary = "删除帖子")
