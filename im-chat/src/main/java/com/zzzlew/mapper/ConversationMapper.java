@@ -7,6 +7,7 @@ import com.zzzlew.domain.entity.Conversation;
 import com.zzzlew.domain.entity.GroupConversation;
 import com.zzzlew.domain.vo.ConversationVO;
 import com.zzzlew.domain.vo.GroupMemberVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -145,4 +146,100 @@ public interface ConversationMapper {
      *
     */
     void incrGroupMemberCount(String groupId);
+
+    /**
+     * 群成员数量-1
+     */
+    void decrGroupMemberCount(String groupId);
+
+    /**
+     * 查询群主ID
+     */
+    Long selectGroupOwner(String conversationId);
+
+    /**
+     * 查询某成员在群中的角色
+     */
+    Integer selectMemberRole(String conversationId, Long userId);
+
+    /**
+     * 更新成员角色
+     */
+    void updateMemberRole(@Param("conversationId") String conversationId,
+                          @Param("userId") Long userId,
+                          @Param("role") Integer role);
+
+    /**
+     * 更新成员禁言状态
+     */
+    void updateMemberMute(@Param("conversationId") String conversationId,
+                          @Param("userId") Long userId,
+                          @Param("isMute") Integer isMute);
+
+    /**
+     * 踢出群成员
+     */
+    void kickGroupMember(@Param("conversationId") String conversationId,
+                         @Param("userId") Long userId);
+
+    /**
+     * 删除群所有成员
+     */
+    void deleteAllGroupMembers(String conversationId);
+
+    /**
+     * 删除群会话记录
+     */
+    void deleteGroupConversationRecords(String conversationId);
+
+    /**
+     * 删除群聊会话表记录
+     */
+    void deleteGroupConversationById(String conversationId);
+
+    /**
+     * 清除会话未读消息数
+     */
+    void clearUnreadCount(@Param("conversationId") String conversationId,
+                          @Param("userId") Long userId);
+
+    /**
+     * 更新群聊完整信息（名称、头像、描述）
+     */
+    void updateGroupInfoFull(@Param("conversationId") String conversationId,
+                             @Param("groupName") String groupName,
+                             @Param("groupAvatar") String groupAvatar,
+                             @Param("groupDesc") String groupDesc);
+
+    /**
+     * 转让群主
+     */
+    void transferGroupOwner(@Param("conversationId") String conversationId,
+                            @Param("newOwnerId") Long newOwnerId);
+
+    /**
+     * 查询群聊详情
+     */
+    GroupConversation selectGroupDetail(String conversationId);
+
+    /**
+     * 批量插入群成员
+     */
+    void batchInsertGroupMembers(@Param("groupId") String groupId,
+                                  @Param("userIds") List<Long> userIds,
+                                  @Param("role") Integer role);
+
+    /**
+     * 批量增加群成员数量
+     */
+    void incrGroupMemberCountBy(@Param("groupId") String groupId,
+                                 @Param("count") Integer count);
+
+    /**
+     * 批量插入会话记录
+     */
+    void batchInsertConversations(@Param("conversationId") String conversationId,
+                                   @Param("userIds") List<Long> userIds,
+                                   @Param("targetId") String targetId,
+                                   @Param("type") Integer type);
 }

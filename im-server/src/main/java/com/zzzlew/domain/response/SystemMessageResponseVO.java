@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * @Auther: zzzlew
@@ -50,6 +51,11 @@ public class SystemMessageResponseVO extends Message implements Serializable {
      * 结构：{"opId":1, "opName":"张三", "trId":2, "trName":"李四", "ext":{}}
      */
     private String content;
+
+    /**
+     * 发送时间
+     */
+    private LocalDateTime sendTime;
 
 
     @Override

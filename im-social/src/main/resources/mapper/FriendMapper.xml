@@ -40,4 +40,18 @@
           and friend_id = #{friendId}
     </delete>
 
+    <update id="updateFriendRemark">
+        update friend_relation
+        set remark = #{remark}
+        where user_id = #{userId}
+          and friend_id = #{friendId}
+    </update>
+
+    <update id="updateFriendRelationStatus">
+        update friend_relation
+        set relation_status = #{relationStatus}
+        where user_id = #{userId}
+          and friend_id = #{friendId}
+    </update>
+
 </mapper>

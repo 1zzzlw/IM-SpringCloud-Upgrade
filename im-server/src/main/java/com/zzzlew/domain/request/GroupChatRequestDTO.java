@@ -64,6 +64,26 @@ public class GroupChatRequestDTO extends Message implements Serializable {
     private LocalDateTime sendTime;
 
     /**
+     * 是否撤回 0：否 1：是
+     */
+    private Integer isRevoked;
+
+    /**
+     * 引用消息id
+     */
+    private Long quoteMsgId;
+
+    /**
+     * 引用消息内容
+     */
+    private String quoteContent;
+
+    /**
+     * 引用消息类型
+     */
+    private Integer quoteMsgType;
+
+    /**
      * 文件id
      */
     private String fileId;

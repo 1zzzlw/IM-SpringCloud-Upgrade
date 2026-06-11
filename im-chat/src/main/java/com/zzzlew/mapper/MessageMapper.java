@@ -37,8 +37,9 @@ public interface MessageMapper {
      * 保存消息
      *
      * @param messageDTO 消息DTO
+     * @return 受影响行数（INSERT IGNORE：0 表示已存在，1 表示新插入）
      */
-    void saveMessage(MessageDTO messageDTO);
+    int saveMessage(MessageDTO messageDTO);
 
     /**
      * 获取会话内的消息列表

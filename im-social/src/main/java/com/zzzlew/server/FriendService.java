@@ -27,4 +27,20 @@ public interface FriendService {
      * @param friendId 好友id
      */
     void deleteFriend(String friendId);
+
+    /**
+     * 更新好友备注
+     *
+     * @param friendId 好友id
+     * @param remark   备注
+     */
+    void updateRemark(String friendId, String remark);
+
+    /**
+     * 更新好友关系状态（拉黑/取消拉黑）
+     *
+     * @param friendId       好友id
+     * @param relationStatus 关系状态
+     */
+    void updateRelationStatus(String friendId, Integer relationStatus);
 }

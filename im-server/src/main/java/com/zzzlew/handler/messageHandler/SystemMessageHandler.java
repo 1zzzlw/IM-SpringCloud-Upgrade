@@ -12,6 +12,7 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -30,7 +31,18 @@ public class SystemMessageHandler implements MessageHandler<SystemMessageRequest
         log.info("收到系统消息：{}", systemMessageRequestDTO);
         List<Long> receiverIds = systemMessageRequestDTO.getReceiverIds();
         SystemMessageResponseVO systemMessageResponseVO = BeanUtil.copyProperties(systemMessageRequestDTO, SystemMessageResponseVO.class);
-        systemMessageResponseVO.setId(String.valueOf(IdUtil.getSnowflakeNextId()));
+        // 如果客户端已提供ID，复用该ID；否则生成新的雪花ID
+        String messageId;
+        if (systemMessageRequestDTO.getId() != null && systemMessageRequestDTO.getId() != 0) {
+            messageId = String.valueOf(systemMessageRequestDTO.getId());
+            log.info("系统消息复用客户端ID: {}", messageId);
+        } else {
+            messageId = String.valueOf(IdUtil.getSnowflakeNextId());
+            log.warn("系统消息客户端ID为空或0（received id={}），使用服务端雪花ID: {}", systemMessageRequestDTO.getId(), messageId);
+        }
+        systemMessageResponseVO.setId(messageId);
+        // 系统消息无客户端 sendTime，由服务端统一填充
+        systemMessageResponseVO.setSendTime(LocalDateTime.now());
         log.info("回应的系统消息：{}", systemMessageResponseVO);
         // 返回发送消息成功发送服务端的ACK消息
         ACKMessageResponseVO successACK = ACKMessagePackUtil.createSuccessACK(String.valueOf(systemMessageRequestDTO.getId()), systemMessageResponseVO.getId());

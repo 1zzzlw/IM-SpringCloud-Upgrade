@@ -71,4 +71,26 @@ public class FavoritesServiceImpl implements FavoritesService {
         return favoritesVOList;
     }
 
+    @Override
+    public void saveFavorite(FavoritesDTO favoritesDTO) {
+        Long userId = UserHolder.getUser().getId();
+        favoritesDTO.setUserId(userId);
+        log.info("用户 {} 保存收藏：{}", userId, favoritesDTO.getTitle());
+        favoritesMapper.saveFavorite(favoritesDTO);
+    }
+
+    @Override
+    public List<FavoritesVO> getAllFavorites() {
+        Long userId = UserHolder.getUser().getId();
+        log.info("用户 {} 查询所有收藏", userId);
+        return favoritesMapper.getAllFavorites(userId);
+    }
+
+    @Override
+    public void deleteFavorite(Long id) {
+        Long userId = UserHolder.getUser().getId();
+        log.info("用户 {} 删除收藏：{}", userId, id);
+        favoritesMapper.deleteFavorite(id, userId);
+    }
+
 }

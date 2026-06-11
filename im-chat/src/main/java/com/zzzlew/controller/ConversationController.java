@@ -2,6 +2,7 @@ package com.zzzlew.controller;
 
 import com.zzzlew.domain.dto.GroupApplyDTO;
 import com.zzzlew.domain.dto.GroupMemberDTO;
+import com.zzzlew.domain.entity.GroupConversation;
 import com.zzzlew.domain.vo.ConversationVO;
 import com.zzzlew.domain.vo.GroupMemberVO;
 import com.zzzlew.result.Result;
@@ -176,16 +177,35 @@ public class ConversationController {
 
 
     /**
-     * 更新群聊信息
-     * TODO 目前就是更新了一下群聊头像
+     * 更新群聊信息（完整：名称、头像、描述）
+     *
      * @param conversationId 群聊会话ID
-     * @param groupAvatar    群聊头像文件信息
+     * @param groupName      群名称
+     * @param groupAvatar    群头像
+     * @param groupDesc      群描述
      */
-    @Operation(summary = "更新群聊信息")
+    @Operation(summary = "更新群聊完整信息")
     @PostMapping("/updateGroupInfo")
-    public Result<Object> updateGroupInfo(@RequestParam("conversationId") String conversationId, @RequestParam("groupAvatar") String groupAvatar) {
-        log.info("更新群聊信息：{}, {}", conversationId, groupAvatar);
-        conversationService.updateGroupInfo(conversationId, groupAvatar);
+    public Result<Object> updateGroupInfo(
+            @RequestParam("conversationId") String conversationId,
+            @RequestParam(value = "groupName", required = false) String groupName,
+            @RequestParam(value = "groupAvatar", required = false) String groupAvatar,
+            @RequestParam(value = "groupDesc", required = false) String groupDesc) {
+        log.info("更新群聊信息：{}", conversationId);
+        conversationService.updateGroupInfoFull(conversationId, groupName, groupAvatar, groupDesc);
+        return Result.success();
+    }
+
+    /**
+     * 内部服务调用 — 更新群头像（无需用户鉴权，由 Feign 调用方保证合法性）
+     */
+    @Operation(summary = "内部服务调用-更新群头像", hidden = true)
+    @PostMapping("/internal/updateGroupAvatar")
+    public Result<Object> updateGroupAvatarInternal(
+            @RequestParam("conversationId") String conversationId,
+            @RequestParam("groupAvatar") String groupAvatar) {
+        log.info("内部调用-更新群头像：{}, {}", conversationId, groupAvatar);
+        conversationService.updateGroupAvatarInternal(conversationId, groupAvatar);
         return Result.success();
     }
 
@@ -200,6 +220,94 @@ public class ConversationController {
         log.info("查询会话信息：{}", conversationId);
         ConversationVO conversationVO = conversationService.queryConversation(conversationId);
         return Result.success(conversationVO);
+    }
+
+    /**
+     * 查询群聊详情
+     */
+    @Operation(summary = "查询群聊详情")
+    @GetMapping("/groupDetail/{conversationId}")
+    public Result<GroupConversation> getGroupDetail(@PathVariable String conversationId) {
+        log.info("查询群聊详情：{}", conversationId);
+        GroupConversation group = conversationService.getGroupDetail(conversationId);
+        return Result.success(group);
+    }
+
+    /**
+     * 踢出群成员（群主/管理员操作）
+     */
+    @Operation(summary = "踢出群成员")
+    @DeleteMapping("/kickMember")
+    public Result<Object> kickMember(@RequestParam("conversationId") String conversationId,
+                                     @RequestParam("targetUserId") Long targetUserId) {
+        log.info("踢出群成员：群={}, 目标用户={}", conversationId, targetUserId);
+        conversationService.kickMember(conversationId, targetUserId);
+        return Result.success();
+    }
+
+    /**
+     * 解散群聊（仅群主可操作）
+     */
+    @Operation(summary = "解散群聊")
+    @DeleteMapping("/dissolveGroup")
+    public Result<Object> dissolveGroup(@RequestParam("conversationId") String conversationId) {
+        log.info("解散群聊：{}", conversationId);
+        conversationService.dissolveGroup(conversationId);
+        return Result.success();
+    }
+
+    /**
+     * 设置/撤销管理员（仅群主可操作）
+     *
+     * @param role 1=设为管理员, 0=撤销管理员
+     */
+    @Operation(summary = "设置/撤销管理员")
+    @PostMapping("/setAdmin")
+    public Result<Object> setAdmin(@RequestParam("conversationId") String conversationId,
+                                   @RequestParam("targetUserId") Long targetUserId,
+                                   @RequestParam("role") Integer role) {
+        log.info("设置管理员：群={}, 目标用户={}, 角色={}", conversationId, targetUserId, role);
+        conversationService.setAdmin(conversationId, targetUserId, role);
+        return Result.success();
+    }
+
+    /**
+     * 禁言/解除禁言成员
+     *
+     * @param isMute 1=禁言, 0=解除禁言
+     */
+    @Operation(summary = "禁言/解除禁言成员")
+    @PostMapping("/muteMember")
+    public Result<Object> muteMember(@RequestParam("conversationId") String conversationId,
+                                     @RequestParam("targetUserId") Long targetUserId,
+                                     @RequestParam("isMute") Integer isMute) {
+        log.info("禁言成员：群={}, 目标用户={}, isMute={}", conversationId, targetUserId, isMute);
+        conversationService.muteMember(conversationId, targetUserId, isMute);
+        return Result.success();
+    }
+
+    /**
+     * 转让群主（仅群主可操作）
+     */
+    @Operation(summary = "转让群主")
+    @PostMapping("/transferOwner")
+    public Result<Object> transferOwner(@RequestParam("conversationId") String conversationId,
+                                        @RequestParam("newOwnerId") Long newOwnerId) {
+        log.info("转让群主：群={}, 新群主={}", conversationId, newOwnerId);
+        conversationService.transferOwner(conversationId, newOwnerId);
+        return Result.success();
+    }
+
+    /**
+     * 批量邀请成员入群（群内拉人）
+     */
+    @Operation(summary = "批量邀请成员入群")
+    @PostMapping("/batchInvite")
+    public Result<Object> batchInviteMembers(@RequestParam("conversationId") String conversationId,
+                                             @RequestBody List<Long> userIds) {
+        log.info("批量邀请成员入群：群={}, 用户列表={}", conversationId, userIds);
+        conversationService.batchInviteMembers(conversationId, userIds);
+        return Result.success();
     }
 
 }

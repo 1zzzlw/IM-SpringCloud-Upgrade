@@ -1,7 +1,5 @@
 package com.zzzlew.domain.response;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.zzzlew.domain.Message;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -72,6 +70,16 @@ public class PrivateChatResponseVO extends Message implements Serializable {
      * 引用消息id
      */
     private Long quoteMsgId;
+
+    /**
+     * 引用消息内容
+     */
+    private String quoteContent;
+
+    /**
+     * 引用消息类型
+     */
+    private Integer quoteMsgType;
 
     /**
      * 文件id

@@ -52,4 +52,32 @@ public class FriendController {
         friendService.deleteFriend(friendId);
         return Result.success();
     }
+
+    /**
+     * 更新好友备注
+     *
+     * @param friendId 好友id
+     * @param remark   备注
+     */
+    @Operation(summary = "更新好友备注")
+    @PutMapping("/remark")
+    public Result<Object> updateRemark(String friendId, String remark) {
+        log.info("更新好友备注, 好友id: {}, 备注: {}", friendId, remark);
+        friendService.updateRemark(friendId, remark);
+        return Result.success();
+    }
+
+    /**
+     * 更新好友关系状态
+     *
+     * @param friendId       好友id
+     * @param relationStatus 关系状态
+     */
+    @Operation(summary = "更新好友关系状态")
+    @PutMapping("/status")
+    public Result<Object> updateRelationStatus(String friendId, Integer relationStatus) {
+        log.info("更新好友关系状态, 好友id: {}, 状态: {}", friendId, relationStatus);
+        friendService.updateRelationStatus(friendId, relationStatus);
+        return Result.success();
+    }
 }

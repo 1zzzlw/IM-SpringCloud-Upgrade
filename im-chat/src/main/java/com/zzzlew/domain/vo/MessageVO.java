@@ -85,6 +85,16 @@ public class MessageVO implements Serializable {
     private Long quoteMsgId;
 
     /**
+     * 引用消息内容
+     */
+    private String quoteContent;
+
+    /**
+     * 引用消息类型
+     */
+    private Integer quoteMsgType;
+
+    /**
      * 文件id
      */
     private String fileId;

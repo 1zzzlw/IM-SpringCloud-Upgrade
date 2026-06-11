@@ -32,16 +32,25 @@ public class PrivateChatHandler implements MessageHandler<PrivateChatRequestDTO>
         // 获得当前登录用户id
         Long userId = ChannelManageUtil.getUser(ctx.channel()).getId();
         privateChatRequestDTO.setSenderId(userId);
-        // 重置发送时间，让数据库可以自动填充
-        privateChatRequestDTO.setSendTime(null);
+        // sendTime 由客户端提供（雪花ID对应的时间戳），保证 WS 推送、DB 存储、ACK 回传三者时间一致
+        // 仅在客户端未提供时才由服务端填充
         // 获得接收者id
         Long receiverId = privateChatRequestDTO.getReceiverId();
         log.info("私信消息:{}", privateChatRequestDTO);
         // 封装回应消息
         PrivateChatResponseVO privateChatResponseVO = BeanUtil.copyProperties(privateChatRequestDTO, PrivateChatResponseVO.class);
-        privateChatResponseVO.setSendTime(LocalDateTime.now());
-        // 生成服务端的唯一id
-        privateChatResponseVO.setId(String.valueOf(IdUtil.getSnowflakeNextId()));
+        // 优先使用客户端的 sendTime，保证 WS 推送和 DB 存储时间一致；仅在未提供时由服务端填充
+        if (privateChatResponseVO.getSendTime() == null) {
+            privateChatResponseVO.setSendTime(LocalDateTime.now());
+        }
+        // 如果客户端已提供ID（文件消息经REST API预存），复用该ID；否则生成新的雪花ID
+        String messageId;
+        if (privateChatRequestDTO.getId() != null && privateChatRequestDTO.getId() != 0) {
+            messageId = String.valueOf(privateChatRequestDTO.getId());
+        } else {
+            messageId = String.valueOf(IdUtil.getSnowflakeNextId());
+        }
+        privateChatResponseVO.setId(messageId);
         log.info("已向接收者{}的channel写入私聊消息:{}", receiverId, privateChatResponseVO);
         // 返回发送消息成功发送服务端的ACK消息
         ACKMessageResponseVO successACK = ACKMessagePackUtil.createSuccessACK(String.valueOf(privateChatRequestDTO.getId()), privateChatResponseVO.getId());

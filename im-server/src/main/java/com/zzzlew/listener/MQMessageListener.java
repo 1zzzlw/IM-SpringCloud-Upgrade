@@ -31,19 +31,20 @@ public class MQMessageListener {
     }
 
     /**
-     * 发送消息给指定用户（同步等待，带重试机制）
+     * 发送消息给指定用户（不抛异常，避免 MQ 重试导致重复投递）
+     * 发送失败时，消息已通过离线存储路径持久化，用户上线后可通过离线消息机制获取
      */
     private void sendToUser(Long userId, Message message) {
         Channel channel = ChannelManageUtil.getChannel(userId);
         if (channel == null || !channel.isActive()) {
-            log.warn("用户 {} 的Channel不存在或未激活", userId);
-            throw new RuntimeException("Channel不可用，触发MQ重试");
+            log.warn("用户 {} 的Channel不存在或未激活，消息将由离线机制投递", userId);
+            return;
         }
 
         // 检查Channel是否可写
         if (!channel.isWritable()) {
-            log.warn("用户 {} 的Channel写缓冲区已满", userId);
-            throw new RuntimeException("Channel不可写，触发MQ重试");
+            log.warn("用户 {} 的Channel写缓冲区已满，消息将由离线机制投递", userId);
+            return;
         }
 
         try {
@@ -52,21 +53,20 @@ public class MQMessageListener {
             boolean success = future.await(3000);
 
             if (!success) {
-                log.error("用户 {} 消息发送超时(3秒)", userId);
-                throw new RuntimeException("发送超时，触发MQ重试");
+                log.error("用户 {} 消息发送超时(3秒)，消息将由离线机制投递", userId);
+                return;
             }
 
             if (!future.isSuccess()) {
-                log.error("用户 {} 消息发送失败: {}", userId, future.cause().getMessage());
-                throw new RuntimeException("发送失败，触发MQ重试", future.cause());
+                log.error("用户 {} 消息发送失败: {}，消息将由离线机制投递", userId, future.cause().getMessage());
+                return;
             }
 
             log.info("消息已发送给用户: {}", userId);
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            log.error("用户 {} 消息发送被中断", userId, e);
-            throw new RuntimeException("发送被中断，触发MQ重试", e);
+            log.error("用户 {} 消息发送被中断，消息将由离线机制投递", userId, e);
         }
     }
 

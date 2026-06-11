@@ -72,6 +72,16 @@ public class GroupChatResponseVO extends Message implements Serializable {
     private Long quoteMsgId;
 
     /**
+     * 引用消息内容
+     */
+    private String quoteContent;
+
+    /**
+     * 引用消息类型
+     */
+    private Integer quoteMsgType;
+
+    /**
      * 文件名
      */
     private String fileName;

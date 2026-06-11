@@ -33,18 +33,26 @@ public class GroupChatHandler implements MessageHandler<GroupChatRequestDTO> {
         // 获得当前登录用户id
         Long userId = ChannelManageUtil.getUser(ctx.channel()).getId();
         groupChatRequestDTO.setSenderId(userId);
-        // 重置发送时间，数据库可以自动填充
-        groupChatRequestDTO.setSendTime(null);
+        // sendTime 由客户端提供，保证 WS 推送、DB 存储、ACK 回传三者时间一致
+        // 仅在客户端未提供时才由服务端填充
         // 获得接收者id列表
         List<Long> receiverIds = groupChatRequestDTO.getReceiverIds();
         String receiverId = groupChatRequestDTO.getReceiverId();
-        LocalDateTime sendTime = LocalDateTime.now();
         GroupChatResponseVO groupChatResponseVO =
                 BeanUtil.copyProperties(groupChatRequestDTO, GroupChatResponseVO.class);
         groupChatResponseVO.setReceiverId(receiverId);
-        groupChatResponseVO.setSendTime(sendTime);
-        // 生成服务端的唯一id
-        groupChatResponseVO.setId(String.valueOf(IdUtil.getSnowflakeNextId()));
+        // 优先使用客户端的 sendTime，保证 WS 推送和 DB 存储时间一致；仅在未提供时由服务端填充
+        if (groupChatResponseVO.getSendTime() == null) {
+            groupChatResponseVO.setSendTime(LocalDateTime.now());
+        }
+        // 如果客户端已提供ID（文件消息经REST API预存），复用该ID；否则生成新的雪花ID
+        String messageId;
+        if (groupChatRequestDTO.getId() != null && groupChatRequestDTO.getId() != 0) {
+            messageId = String.valueOf(groupChatRequestDTO.getId());
+        } else {
+            messageId = String.valueOf(IdUtil.getSnowflakeNextId());
+        }
+        groupChatResponseVO.setId(messageId);
         log.info("群聊回应的消息为: {}", groupChatResponseVO);
         // 返回发送消息成功发送服务端的ACK消息
         ACKMessageResponseVO successACK = ACKMessagePackUtil.createSuccessACK(String.valueOf(groupChatRequestDTO.getId()), groupChatResponseVO.getId());

@@ -25,15 +25,13 @@ public class MQMessageListener {
 
     /**
      * 监听本集群的消息队列
+     * 所有消息类型均持久化（INSERT IGNORE 自动处理已存在的记录，如文件消息经REST API预存的情况）
      */
     @RabbitListener(queues = QUEUE_STORGE_PREFIX)
     public void handleClusterMessage(ClusterMessageWrapper<MessageDTO> wrapper) {
         log.info("收到集群消息: {}", wrapper.getMessage());
         MessageDTO messageDTO = wrapper.getMessage();
-        if (messageDTO.getMsgType() == 1 || messageDTO.getMsgType() == 99) {
-            // 保存消息到数据库
-            messageService.sendMessage(messageDTO);
-        }
+        messageService.sendMessage(messageDTO);
     }
 
 }

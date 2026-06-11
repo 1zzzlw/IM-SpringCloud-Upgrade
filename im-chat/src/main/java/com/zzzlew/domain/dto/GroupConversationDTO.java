@@ -31,4 +31,19 @@ public class GroupConversationDTO {
      */
     private Long ownerId;
 
+    /**
+     * 当前成员数量（创建时为1，即群主）
+     */
+    private Integer memberCount;
+
+    /**
+     * 最大成员数量
+     */
+    private Integer maxMember;
+
+    /**
+     * 群聊描述
+     */
+    private String groupDesc;
+
 }

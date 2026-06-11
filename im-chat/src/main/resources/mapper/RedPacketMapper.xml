@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzzlew.mapper.RedPacketMapper">
+
+    <insert id="saveRedPacket" parameterType="com.zzzlew.domain.entity.RedPacket">
+        insert into red_packet (id, conversation_id, sender_id, total_amount, total_count,
+                                remain_amount, remain_count, type, greeting, status)
+        values (#{id}, #{conversationId}, #{senderId}, #{totalAmount}, #{totalCount},
+                #{remainAmount}, #{remainCount}, #{type}, #{greeting}, #{status})
+    </insert>
+
+    <select id="selectRedPacketById" resultType="com.zzzlew.domain.entity.RedPacket">
+        select * from red_packet where id = #{id}
+    </select>
+
+    <!-- 扣减红包：剩余金额和个数，仅在 remain_count > 0 时成功 -->
+    <update id="deductRedPacket">
+        update red_packet
+        set remain_amount = remain_amount - #{amount},
+            remain_count  = remain_count - 1
+        where id = #{redPacketId}
+          and remain_count > 0
+          and status = 0
+    </update>
+
+    <select id="countGrabRecord" resultType="java.lang.Integer">
+        select count(*) from red_packet_record
+        where red_packet_id = #{redPacketId} and user_id = #{userId}
+    </select>
+
+    <insert id="saveRedPacketRecord" parameterType="com.zzzlew.domain.entity.RedPacketRecord">
+        insert into red_packet_record (red_packet_id, user_id, amount)
+        values (#{redPacketId}, #{userId}, #{amount})
+    </insert>
+
+    <select id="selectRecordsByRedPacketId"
+            resultType="com.zzzlew.domain.entity.RedPacketRecord">
+        select * from red_packet_record
+        where red_packet_id = #{redPacketId}
+        order by created_at asc
+    </select>
+
+    <update id="updateRedPacketStatus">
+        update red_packet set status = #{status} where id = #{id}
+    </update>
+
+</mapper>

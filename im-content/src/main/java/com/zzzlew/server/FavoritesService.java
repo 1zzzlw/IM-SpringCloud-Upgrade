@@ -42,4 +42,25 @@ public interface FavoritesService {
      */
     List<FavoritesVO> getNote();
 
+    /**
+     * 保存收藏（支持所有类型）
+     *
+     * @param favoritesDTO 收藏信息
+     */
+    void saveFavorite(FavoritesDTO favoritesDTO);
+
+    /**
+     * 获取当前用户所有收藏
+     *
+     * @return 收藏列表
+     */
+    List<FavoritesVO> getAllFavorites();
+
+    /**
+     * 删除收藏
+     *
+     * @param id 收藏ID
+     */
+    void deleteFavorite(Long id);
+
 }

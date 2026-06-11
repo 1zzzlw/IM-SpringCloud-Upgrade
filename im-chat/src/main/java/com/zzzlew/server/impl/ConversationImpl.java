@@ -26,6 +26,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -176,7 +178,8 @@ public class ConversationImpl implements ConversationService {
 
     @Override
     public void clearConversationUnreadCounts(String conversationId) {
-        // TODO 清除会话中未读消息计数
+        Long userId = UserHolder.getUser().getId();
+        conversationMapper.clearUnreadCount(conversationId, userId);
     }
 
     @Override
@@ -200,6 +203,7 @@ public class ConversationImpl implements ConversationService {
     public void deleteGroupMember(String conversationId) {
         Long userId = UserHolder.getUser().getId();
         conversationMapper.deleteGroupMember(conversationId, userId);
+        conversationMapper.decrGroupMemberCount(conversationId);
     }
 
     @Override
@@ -250,6 +254,9 @@ public class ConversationImpl implements ConversationService {
         groupConversationDTO.setGroupName(groupCreateDTO.getGroupName());
         groupConversationDTO.setGroupAvatar(groupAvatar);
         groupConversationDTO.setOwnerId(userId);
+        groupConversationDTO.setMemberCount(1); // 群主自己
+        groupConversationDTO.setMaxMember(200);
+        groupConversationDTO.setGroupDesc("");
 
         conversationMapper.insertGroupConversation(groupConversationDTO);
 
@@ -276,6 +283,135 @@ public class ConversationImpl implements ConversationService {
     @Override
     public ConversationVO queryConversation(String conversationId) {
         return conversationMapper.selectGroupConversation(conversationId);
+    }
+
+    @Override
+    public void kickMember(String conversationId, Long targetUserId) {
+        Long currentUserId = UserHolder.getUser().getId();
+        // 检查操作者是否是群主或管理员
+        Integer currentRole = conversationMapper.selectMemberRole(conversationId, currentUserId);
+        if (currentRole == null || currentRole == 0) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "只有群主或管理员才能踢人");
+        }
+        // 不能踢群主
+        Long ownerId = conversationMapper.selectGroupOwner(conversationId);
+        if (targetUserId.equals(ownerId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "不能踢出群主");
+        }
+        // 管理员不能踢管理员
+        Integer targetRole = conversationMapper.selectMemberRole(conversationId, targetUserId);
+        if (currentRole == 1 && targetRole != null && targetRole == 1) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "管理员不能踢出其他管理员");
+        }
+        conversationMapper.kickGroupMember(conversationId, targetUserId);
+        conversationMapper.decrGroupMemberCount(conversationId);
+    }
+
+    @Transactional
+    @Override
+    public void dissolveGroup(String conversationId) {
+        Long currentUserId = UserHolder.getUser().getId();
+        Long ownerId = conversationMapper.selectGroupOwner(conversationId);
+        if (!currentUserId.equals(ownerId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "只有群主才能解散群聊");
+        }
+        // 删除所有群成员
+        conversationMapper.deleteAllGroupMembers(conversationId);
+        // 删除群会话记录（conversation表中该群相关记录）
+        conversationMapper.deleteGroupConversationRecords(conversationId);
+        // 删除群聊会话表记录
+        conversationMapper.deleteGroupConversationById(conversationId);
+    }
+
+    @Override
+    public void setAdmin(String conversationId, Long targetUserId, Integer role) {
+        Long currentUserId = UserHolder.getUser().getId();
+        Long ownerId = conversationMapper.selectGroupOwner(conversationId);
+        if (!currentUserId.equals(ownerId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "只有群主才能设置管理员");
+        }
+        conversationMapper.updateMemberRole(conversationId, targetUserId, role);
+    }
+
+    @Override
+    public void muteMember(String conversationId, Long targetUserId, Integer isMute) {
+        Long currentUserId = UserHolder.getUser().getId();
+        Integer currentRole = conversationMapper.selectMemberRole(conversationId, currentUserId);
+        if (currentRole == null || currentRole == 0) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "只有群主或管理员才能禁言");
+        }
+        // 不能禁言群主
+        Long ownerId = conversationMapper.selectGroupOwner(conversationId);
+        if (targetUserId.equals(ownerId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "不能禁言群主");
+        }
+        conversationMapper.updateMemberMute(conversationId, targetUserId, isMute);
+    }
+
+    @Transactional
+    @Override
+    public void transferOwner(String conversationId, Long newOwnerId) {
+        Long currentUserId = UserHolder.getUser().getId();
+        Long ownerId = conversationMapper.selectGroupOwner(conversationId);
+        if (!currentUserId.equals(ownerId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "只有群主才能转让群主");
+        }
+        // 新群主必须是群成员
+        Integer targetRole = conversationMapper.selectMemberRole(conversationId, newOwnerId);
+        if (targetRole == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "目标用户不是群成员");
+        }
+        // 转让群主
+        conversationMapper.transferGroupOwner(conversationId, newOwnerId);
+        // 原群主变为普通成员（role=0），新群主变为群主（role=2）
+        conversationMapper.updateMemberRole(conversationId, currentUserId, 0);
+        conversationMapper.updateMemberRole(conversationId, newOwnerId, 2);
+    }
+
+    @Override
+    public void updateGroupInfoFull(String conversationId, String groupName, String groupAvatar, String groupDesc) {
+        Long currentUserId = UserHolder.getUser().getId();
+        Integer currentRole = conversationMapper.selectMemberRole(conversationId, currentUserId);
+        // 只有群主和管理员可以修改群信息
+        if (currentRole == null || currentRole == 0) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "只有群主或管理员才能修改群信息");
+        }
+        conversationMapper.updateGroupInfoFull(conversationId, groupName, groupAvatar, groupDesc);
+    }
+
+    @Override
+    public GroupConversation getGroupDetail(String conversationId) {
+        return conversationMapper.selectGroupDetail(conversationId);
+    }
+
+    @Override
+    @Transactional
+    public void batchInviteMembers(String conversationId, List<Long> userIds) {
+        if (userIds == null || userIds.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "邀请成员列表不能为空");
+        }
+
+        // 权限校验：调用者必须是群成员
+        Long currentUserId = UserHolder.getUser().getId();
+        Integer callerRole = conversationMapper.selectMemberRole(conversationId, currentUserId);
+        if (callerRole == null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "您不是该群成员");
+        }
+
+        // 批量插入群成员（role=0 普通成员，INSERT IGNORE 自动跳过已存在的成员）
+        conversationMapper.batchInsertGroupMembers(conversationId, userIds, 0);
+
+        // 批量创建会话记录
+        conversationMapper.batchInsertConversations(conversationId, userIds, conversationId, 1);
+
+        // 更新群成员数量（按实际插入数量）
+        conversationMapper.incrGroupMemberCountBy(conversationId, userIds.size());
+    }
+
+    @Override
+    public void updateGroupAvatarInternal(String conversationId, String groupAvatar) {
+        // 内部服务调用，不校验用户权限，直接更新群头像
+        conversationMapper.updateGroupInfoFull(conversationId, null, groupAvatar, null);
     }
 
 

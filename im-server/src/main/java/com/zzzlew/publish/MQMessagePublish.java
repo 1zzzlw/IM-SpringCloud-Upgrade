@@ -187,12 +187,36 @@ public class MQMessagePublish {
     public void recordOfflineMessageMarker(Long userId, Message message) {
         String offlineMessageKey = USER_OFFLINE_MESSAGE_CONTENT_KEY + userId;
         String messageJson = JSON.toJSONString(message);
-        long timestamp = System.currentTimeMillis();
+
+        // 使用消息雪花ID作为score（而非wall-clock时间），保证离线消息按发送顺序投递
+        long score = extractMessageSnowflakeId(message);
 
         // 执行Lua脚本
-        Long count = stringRedisTemplate.execute(storeOfflineMessageScript, Collections.singletonList(offlineMessageKey), messageJson, String.valueOf(timestamp), String.valueOf(USER_OFFLINE_MESSAGE_KEY_TTL));
+        Long count = stringRedisTemplate.execute(storeOfflineMessageScript, Collections.singletonList(offlineMessageKey), messageJson, String.valueOf(score), String.valueOf(USER_OFFLINE_MESSAGE_KEY_TTL));
 
         log.debug("用户 {} 离线消息已存储，当前消息数: {}", userId, count);
+    }
+
+    /**
+     * 从消息响应中提取雪花ID作为排序score
+     */
+    private long extractMessageSnowflakeId(Message message) {
+        String id = null;
+        if (message instanceof PrivateChatResponseVO) {
+            id = ((PrivateChatResponseVO) message).getId();
+        } else if (message instanceof GroupChatResponseVO) {
+            id = ((GroupChatResponseVO) message).getId();
+        } else if (message instanceof SystemMessageResponseVO) {
+            id = ((SystemMessageResponseVO) message).getId();
+        }
+        if (id != null && !id.isEmpty()) {
+            try {
+                return Long.parseLong(id);
+            } catch (NumberFormatException e) {
+                log.warn("消息ID无法解析为long: {}, 回退为当前时间戳", id);
+            }
+        }
+        return System.currentTimeMillis();
     }
 
     /**

@@ -67,7 +67,7 @@
     <select id="selectGroupMemberListByConversationId"
             resultType="com.zzzlew.domain.vo.GroupMemberVO"
             parameterType="java.lang.String">
-        select gm.user_id, gm.role, ua.username, ua.avatar
+        select gm.user_id, gm.role, gm.is_mute, ua.username, ua.avatar
         from group_member gm
                  join user_auth ua on gm.user_id =
                                       ua.user_id
@@ -87,8 +87,8 @@
 
     <insert id="insertGroupConversation"
             parameterType="com.zzzlew.domain.dto.GroupConversationDTO">
-        insert into group_conversation (id, group_name, group_avatar, owner_id)
-        values (#{id}, #{groupName}, #{groupAvatar}, #{ownerId})
+        insert into group_conversation (id, group_name, group_avatar, owner_id, member_count, max_member, group_desc)
+        values (#{id}, #{groupName}, #{groupAvatar}, #{ownerId}, #{memberCount}, #{maxMember}, #{groupDesc})
     </insert>
 
     <insert id="insertGroupMember"
@@ -118,7 +118,7 @@
 
     <select id="selectGroupConversationListByConversationIdList"
             resultType="com.zzzlew.domain.entity.GroupConversation">
-        select id, group_name, group_avatar, member_count
+        select id, group_name, group_avatar, member_count, max_member, is_mute_all, group_desc, owner_id
         from group_conversation
         where id in
         <foreach collection="groupIdList" item="groupId" open="(" close=")" separator=",">
@@ -134,8 +134,109 @@
     </select>
 
     <delete id="deleteGroupMember">
-        delete group_member
+        delete from group_member
         where group_id = #{conversationId} and user_id = #{userId}
     </delete>
+
+    <!-- 群成员数量-1 -->
+    <update id="decrGroupMemberCount">
+        update group_conversation
+        set member_count = member_count - 1
+        where id = #{groupId}
+    </update>
+
+    <!-- 查询群主ID -->
+    <select id="selectGroupOwner" resultType="java.lang.Long">
+        select owner_id from group_conversation where id = #{conversationId}
+    </select>
+
+    <!-- 查询某成员在群中的角色 -->
+    <select id="selectMemberRole" resultType="java.lang.Integer">
+        select role from group_member where group_id = #{conversationId} and user_id = #{userId}
+    </select>
+
+    <!-- 更新成员角色 -->
+    <update id="updateMemberRole">
+        update group_member set role = #{role}
+        where group_id = #{conversationId} and user_id = #{userId}
+    </update>
+
+    <!-- 更新成员禁言状态 -->
+    <update id="updateMemberMute">
+        update group_member set is_mute = #{isMute}
+        where group_id = #{conversationId} and user_id = #{userId}
+    </update>
+
+    <!-- 踢出群成员 -->
+    <delete id="kickGroupMember">
+        delete from group_member
+        where group_id = #{conversationId} and user_id = #{userId}
+    </delete>
+
+    <!-- 解散群聊：删除群成员、群会话记录、群会话 -->
+    <delete id="deleteAllGroupMembers">
+        delete from group_member where group_id = #{conversationId}
+    </delete>
+
+    <delete id="deleteGroupConversationRecords">
+        delete from conversation where target_id = #{conversationId} and type = 1
+    </delete>
+
+    <delete id="deleteGroupConversationById">
+        delete from group_conversation where id = #{conversationId}
+    </delete>
+
+    <!-- 清除会话未读计数 -->
+    <update id="clearUnreadCount">
+        update conversation set unread_count = 0
+        where id = #{conversationId} and user_id = #{userId}
+    </update>
+
+    <!-- 更新群聊完整信息 -->
+    <update id="updateGroupInfoFull">
+        update group_conversation
+        <set>
+            <if test="groupName != null">group_name = #{groupName},</if>
+            <if test="groupAvatar != null">group_avatar = #{groupAvatar},</if>
+            <if test="groupDesc != null">group_desc = #{groupDesc},</if>
+        </set>
+        where id = #{conversationId}
+    </update>
+
+    <!-- 转让群主 -->
+    <update id="transferGroupOwner">
+        update group_conversation set owner_id = #{newOwnerId}
+        where id = #{conversationId}
+    </update>
+
+    <!-- 查询群聊详情（含描述等完整信息） -->
+    <select id="selectGroupDetail" resultType="com.zzzlew.domain.entity.GroupConversation">
+        select * from group_conversation where id = #{conversationId}
+    </select>
+
+    <!-- 批量插入群成员 -->
+    <insert id="batchInsertGroupMembers">
+        insert ignore into group_member (group_id, user_id, role)
+        values
+        <foreach collection="userIds" item="uid" separator=",">
+            (#{groupId}, #{uid}, #{role})
+        </foreach>
+    </insert>
+
+    <!-- 批量增加群成员数量 -->
+    <update id="incrGroupMemberCountBy">
+        update group_conversation
+        set member_count = member_count + #{count}
+        where id = #{groupId}
+    </update>
+
+    <!-- 批量插入会话记录 -->
+    <insert id="batchInsertConversations">
+        insert ignore into conversation (id, user_id, target_id, type)
+        values
+        <foreach collection="userIds" item="uid" separator=",">
+            (#{conversationId}, #{uid}, #{targetId}, #{type})
+        </foreach>
+    </insert>
 
 </mapper>

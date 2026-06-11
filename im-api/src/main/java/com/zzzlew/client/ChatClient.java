@@ -27,7 +27,7 @@ public interface ChatClient {
     @PostMapping("/conversation/inviteFriend")
     Result<Object> inviteFriends(@RequestBody GroupMemberDTO groupMemberDTO);
 
-    @PostMapping("/conversation/updateGroupInfo")
+    @PostMapping("/conversation/internal/updateGroupAvatar")
     Result<Object> updateGroupInfo(@RequestParam("conversationId") String conversationId,
                                    @RequestParam("groupAvatar") String groupAvatar);
 

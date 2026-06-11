@@ -71,4 +71,41 @@ public class FavoritesController {
         List<FavoritesVO> favoritesVOList = favoritesService.getNote();
         return Result.success(favoritesVOList);
     }
+
+    /**
+     * 保存收藏（支持所有类型：文本、图片、视频、文件等）
+     *
+     * @param favoritesDTO 收藏信息
+     * @return 操作结果
+     */
+    @PostMapping("/save")
+    public Result<Object> saveFavorite(@RequestBody FavoritesDTO favoritesDTO) {
+        log.info("保存收藏：{}", favoritesDTO);
+        favoritesService.saveFavorite(favoritesDTO);
+        return Result.success();
+    }
+
+    /**
+     * 获取当前用户所有收藏（包含所有类型）
+     *
+     * @return 收藏列表
+     */
+    @GetMapping("/list")
+    public Result<List<FavoritesVO>> listFavorites() {
+        List<FavoritesVO> favoritesVOList = favoritesService.getAllFavorites();
+        return Result.success(favoritesVOList);
+    }
+
+    /**
+     * 删除收藏
+     *
+     * @param id 收藏ID
+     * @return 操作结果
+     */
+    @DeleteMapping("/delete/{id}")
+    public Result<Object> deleteFavorite(@PathVariable Long id) {
+        log.info("删除收藏：{}", id);
+        favoritesService.deleteFavorite(id);
+        return Result.success();
+    }
 }

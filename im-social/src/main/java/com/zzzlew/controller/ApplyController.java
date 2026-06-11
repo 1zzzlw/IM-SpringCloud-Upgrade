@@ -111,8 +111,8 @@ public class ApplyController {
      * @param dealGroupDTO 入群申请处理信息
      */
     @Operation(summary = "同意入群申请")
-    @PostMapping("/groupApply/deal")
-    public Result<ConversationVO> dealGroupApply(@RequestBody DealGroupDTO dealGroupDTO,
+    @PostMapping(value = "/groupApply/deal", consumes = "multipart/form-data")
+    public Result<ConversationVO> dealGroupApply(@ModelAttribute DealGroupDTO dealGroupDTO,
                                                  @RequestParam(value = "groupAvatarBlob") MultipartFile groupAvatarBlob) {
         log.info("处理群聊申请：{}, {}", dealGroupDTO, groupAvatarBlob);
         ConversationVO conversationVO = applyService.dealGroupApply(dealGroupDTO, groupAvatarBlob);

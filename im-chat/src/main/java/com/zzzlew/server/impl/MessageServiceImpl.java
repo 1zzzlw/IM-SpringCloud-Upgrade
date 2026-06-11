@@ -109,7 +109,12 @@ public class MessageServiceImpl implements MessageService {
     @Transactional
     @Override
     public MessageVO sendMessage(MessageDTO messageDTO) {
-        messageDTO.setSendTime(null);
+        // 保留 Handler 设置的 sendTime，确保 WS 推送和 DB 存储时间一致
+        LocalDateTime sendTime = messageDTO.getSendTime();
+        if (sendTime == null) {
+            sendTime = LocalDateTime.now();
+            messageDTO.setSendTime(sendTime);
+        }
 
         Integer msgType = messageDTO.getMsgType();
         boolean isSystem = java.util.Objects.equals(msgType, 99);
@@ -125,12 +130,12 @@ public class MessageServiceImpl implements MessageService {
             messageDTO.setRemoteUrl(minIOConfigProperties.getEndpoint() + "/" + bucketName + "/" + remotePath);
         }
 
-        LocalDateTime sendTime = LocalDateTime.now();
-        // 入库
-        messageMapper.saveMessage(messageDTO);
+        // 入库（send_time 已在 DTO 中设置，与 WS 推送的时间一致）
+        // INSERT IGNORE：返回受影响行数，0 表示记录已存在（如文件消息经 REST API 预存）
+        int inserted = messageMapper.saveMessage(messageDTO);
 
-        // 系统消息：不更新会话最新消息/时间
-        if (!isSystem) {
+        // 仅在新插入时才更新会话状态，避免文件消息被 REST + MQ 双重调用导致 unread_count 重复递增
+        if (inserted > 0 && !isSystem) {
             String conversationId = messageDTO.getConversationId();
             if (conversationId.startsWith("g_")) {
                 List<String> receiverIds = conversationMapper.selectGroupNumber(conversationId);

@@ -69,4 +69,20 @@ public class FriendServiceImpl implements FriendService {
         friendMapper.deleteFriend(friendId1, userId);
     }
 
+    @Override
+    public void updateRemark(String friendId, String remark) {
+        Long userId = UserHolder.getUser().getId();
+        Long friendIdLong = Long.parseLong(friendId);
+        friendMapper.updateFriendRemark(userId, friendIdLong, remark);
+    }
+
+    @Override
+    public void updateRelationStatus(String friendId, Integer relationStatus) {
+        Long userId = UserHolder.getUser().getId();
+        Long friendIdLong = Long.parseLong(friendId);
+        // 更新双向关系状态以保持一致性
+        friendMapper.updateFriendRelationStatus(userId, friendIdLong, relationStatus);
+        friendMapper.updateFriendRelationStatus(friendIdLong, userId, relationStatus);
+    }
+
 }

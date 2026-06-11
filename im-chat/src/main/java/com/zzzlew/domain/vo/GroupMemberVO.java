@@ -32,4 +32,9 @@ public class GroupMemberVO implements Serializable {
       * 群成员头像
       */
     private String avatar;
+
+    /**
+     * 是否禁言 0:否 1:是
+     */
+    private Integer isMute;
 }

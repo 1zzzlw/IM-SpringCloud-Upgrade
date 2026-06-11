@@ -3,6 +3,7 @@ package com.zzzlew.server;
 
 import com.zzzlew.domain.dto.GroupApplyDTO;
 import com.zzzlew.domain.dto.GroupMemberDTO;
+import com.zzzlew.domain.entity.GroupConversation;
 import com.zzzlew.domain.vo.ConversationVO;
 import com.zzzlew.domain.vo.GroupMemberVO;
 import org.springframework.web.multipart.MultipartFile;
@@ -83,4 +84,49 @@ public interface ConversationService {
      * 查询会话
      */
     ConversationVO queryConversation(String conversationId);
+
+    /**
+     * 踢出群成员（群主/管理员操作）
+     */
+    void kickMember(String conversationId, Long targetUserId);
+
+    /**
+     * 解散群聊（仅群主可操作）
+     */
+    void dissolveGroup(String conversationId);
+
+    /**
+     * 设置/撤销管理员（仅群主可操作）
+     */
+    void setAdmin(String conversationId, Long targetUserId, Integer role);
+
+    /**
+     * 禁言/解除禁言成员
+     */
+    void muteMember(String conversationId, Long targetUserId, Integer isMute);
+
+    /**
+     * 转让群主（仅群主可操作）
+     */
+    void transferOwner(String conversationId, Long newOwnerId);
+
+    /**
+     * 更新群聊信息（名称、描述等）
+     */
+    void updateGroupInfoFull(String conversationId, String groupName, String groupAvatar, String groupDesc);
+
+    /**
+     * 查询群聊详情
+     */
+    GroupConversation getGroupDetail(String conversationId);
+
+    /**
+     * 批量邀请成员入群
+     */
+    void batchInviteMembers(String conversationId, List<Long> userIds);
+
+    /**
+     * 内部服务调用 — 更新群头像（跳过用户鉴权）
+     */
+    void updateGroupAvatarInternal(String conversationId, String groupAvatar);
 }
