@@ -36,4 +36,15 @@ public class RedisLuaScriptConfig {
         script.setResultType(Long.class);
         return script;
     }
+
+    /**
+     * 删除帖子清理缓存 Lua 脚本
+     */
+    @Bean
+    public DefaultRedisScript<Long> momentsDeleteScript() {
+        DefaultRedisScript<Long> script = new DefaultRedisScript<>();
+        script.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/moments_delete.lua")));
+        script.setResultType(Long.class);
+        return script;
+    }
 }

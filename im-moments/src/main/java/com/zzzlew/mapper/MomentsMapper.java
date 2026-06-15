@@ -103,4 +103,19 @@ public interface MomentsMapper {
      */
     Page<MomentsVO> listByHot();
 
+    /**
+     * 获取用户朋友圈
+     *
+     * @param userId 用户ID
+     * @return 用户朋友圈列表
+     */
+    Page<MomentsVO> queryUserMoments(Long userId);
+
+    /**
+     * 删除朋友圈
+     *
+     * @param momentId 朋友圈ID
+     */
+    void delete(Long momentId);
+
 }

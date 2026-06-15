@@ -1,8 +1,0 @@
-com\zzzlew\config\IMCommonRabbitMQConfig.class
-com\zzzlew\handler\GlobalExceptionHandler.class
-com\zzzlew\config\Knife4jConfig.class
-com\zzzlew\config\MinIOConfig.class
-com\zzzlew\interceptors\UserInfoInterceptor.class
-com\zzzlew\config\MinioBucketInit.class
-com\zzzlew\config\WebMvcConfig.class
-com\zzzlew\utils\UserHolder.class

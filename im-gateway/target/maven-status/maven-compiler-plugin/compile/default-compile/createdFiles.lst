@@ -1,4 +1,0 @@
-com\zzzlew\GatewayApplication.class
-com\zzzlew\properties\AuthProperties.class
-com\zzzlew\filters\AuthGlobalFilter.class
-com\zzzlew\config\ReactiveRedisConfig.class

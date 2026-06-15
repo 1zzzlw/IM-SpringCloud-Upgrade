@@ -24,4 +24,21 @@
           and type = 0
     </select>
 
+    <insert id="saveFavorite">
+        insert into favorites (user_id, title, content, source_username, type)
+        values (#{userId}, #{title}, #{content}, #{sourceUsername}, #{type})
+    </insert>
+
+    <select id="getAllFavorites" resultType="com.zzzlew.domain.vo.FavoritesVO">
+        select *
+        from favorites
+        where user_id = #{userId}
+        order by created_at desc
+    </select>
+
+    <delete id="deleteFavorite">
+        delete from favorites
+        where id = #{id} and user_id = #{userId}
+    </delete>
+
 </mapper>

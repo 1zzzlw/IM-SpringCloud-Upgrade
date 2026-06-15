@@ -34,12 +34,34 @@
 
     <insert id="saveMessage"
             parameterType="com.zzzlew.domain.dto.MessageDTO">
-        insert ignore into Message (id, conversation_id, sender_id, receiver_id, content, msg_type, sub_type,
+        insert
+        ignore into Message (id, conversation_id, sender_id, receiver_id, content, msg_type, sub_type, quote_msg_id,
+                             quote_content, quote_msg_type, is_revoked,
                              file_id, file_name, bucket, send_status, remote_path, file_size, preview_base64,
-                             local_path, remote_url)
-        values (#{id}, #{conversationId}, #{senderId}, #{receiverId}, #{content}, #{msgType}, #{subType},
-                #{fileId}, #{fileName}, #{bucket}, #{sendStatus}, #{remotePath}, #{fileSize}, #{previewBase64},
-                #{localPath}, #{remoteUrl})
+                             local_path, remote_url, send_time)
+        values (
+        #{id},
+        #{conversationId},
+        #{senderId},
+        #{receiverId},
+        #{content},
+        #{msgType},
+        #{subType},
+        #{quoteMsgId},
+        #{quoteContent},
+        #{quoteMsgType},
+        #{isRevoked},
+        #{fileId},
+        #{fileName},
+        #{bucket},
+        #{sendStatus},
+        #{remotePath},
+        #{fileSize},
+        #{previewBase64},
+        #{localPath},
+        #{remoteUrl},
+        #{sendTime}
+        )
     </insert>
 
     <select id="getMessageList" resultType="com.zzzlew.domain.vo.MessageVO"

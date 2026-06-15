@@ -4,25 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="用ai完成了评论的功能，感觉体验还不错，效率很高，没有bug">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="接下来准备添加群红包功能，支付打赏功能来锻炼redis的分布式锁能力，以及删除帖子，修改帖子功能来锻炼缓存数据一致性的能力。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-api/src/main/java/com/zzzlew/client/ChatClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-api/src/main/java/com/zzzlew/client/ChatClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-api/target/classes/com/zzzlew/client/ChatClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-api/target/classes/com/zzzlew/client/ChatClient.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/controller/ConversationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/controller/ConversationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/dto/GroupConversationDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/dto/GroupConversationDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/dto/MessageDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/dto/MessageDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/entity/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/entity/Message.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/vo/GroupMemberVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/vo/GroupMemberVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/vo/MessageVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/vo/MessageVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/listener/MQMessageListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/listener/MQMessageListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/mapper/ConversationMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/mapper/ConversationMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/mapper/MessageMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/mapper/MessageMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/ConversationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/ConversationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/ConversationImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/ConversationImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/MessageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/MessageServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/resources/mapper/ConversationMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/resources/mapper/ConversationMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/resources/mapper/MessageMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/resources/mapper/MessageMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-api/target/im-api-1.0-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-api/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-api/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-api/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-api/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-api/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/im-auth-1.0-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/controller/ConversationController.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/controller/ConversationController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/domain/dto/GroupConversationDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/domain/dto/GroupConversationDTO.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/domain/dto/MessageDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/domain/dto/MessageDTO.class" afterDir="false" />
@@ -37,33 +33,59 @@
       <change beforePath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/server/impl/MessageServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/server/impl/MessageServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-chat/target/classes/mapper/ConversationMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/mapper/ConversationMapper.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-chat/target/classes/mapper/MessageMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/mapper/MessageMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-content/src/main/java/com/zzzlew/controller/FavoritesController.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/src/main/java/com/zzzlew/controller/FavoritesController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-content/src/main/java/com/zzzlew/mapper/FavoritesMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/src/main/java/com/zzzlew/mapper/FavoritesMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-content/src/main/java/com/zzzlew/server/FavoritesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/src/main/java/com/zzzlew/server/FavoritesService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-content/src/main/java/com/zzzlew/server/impl/FavoritesServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/src/main/java/com/zzzlew/server/impl/FavoritesServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-content/src/main/resources/mapper/FavoritesMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/src/main/resources/mapper/FavoritesMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-base/target/common-base-1.0-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-base/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-base/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-base/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-base/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-base/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/common-model-1.0-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-redis/target/common-redis-1.0-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-redis/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-redis/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-redis/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-redis/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-redis/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-storage/target/common-storage-1.0-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-storage/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-storage/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-storage/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-storage/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-storage/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-web/target/common-web-1.0-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-web/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-web/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-web/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-web/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-web/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/im-content/target/classes/com/zzzlew/controller/FavoritesController.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/target/classes/com/zzzlew/controller/FavoritesController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-content/target/classes/com/zzzlew/mapper/FavoritesMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/target/classes/com/zzzlew/mapper/FavoritesMapper.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-content/target/classes/com/zzzlew/server/FavoritesService.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/target/classes/com/zzzlew/server/FavoritesService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-content/target/classes/com/zzzlew/server/impl/FavoritesServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/target/classes/com/zzzlew/server/impl/FavoritesServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-content/target/classes/mapper/FavoritesMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/target/classes/mapper/FavoritesMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/request/GroupChatRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/request/GroupChatRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/request/PrivateChatRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/request/PrivateChatRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/response/GroupChatResponseVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/response/GroupChatResponseVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/response/PrivateChatResponseVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/response/PrivateChatResponseVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/response/SystemMessageResponseVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/response/SystemMessageResponseVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/messageHandler/GroupChatHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/messageHandler/GroupChatHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/messageHandler/PrivateChatHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/messageHandler/PrivateChatHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/messageHandler/SystemMessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/messageHandler/SystemMessageHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/listener/MQMessageListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/listener/MQMessageListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/publish/MQMessagePublish.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/publish/MQMessagePublish.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/resources/store_offline_message.lua" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/resources/store_offline_message.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/controller/ApplyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/controller/ApplyController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/controller/FriendController.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/controller/FriendController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/mapper/FriendMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/mapper/FriendMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/server/FriendService.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/server/FriendService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/server/impl/FriendServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/server/impl/FriendServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/src/main/resources/mapper/FriendMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/src/main/resources/mapper/FriendMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/target/im-gateway.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/target/im-gateway.jar.original" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/config/RedisLuaScriptConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/config/RedisLuaScriptConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/controller/MomentsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/controller/MomentsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/mapper/MomentsMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/mapper/MomentsMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/MomentsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/MomentsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/impl/MomentsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/impl/MomentsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/resources/mapper/MomentsMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/resources/mapper/MomentsMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/controller/MomentsController.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/controller/MomentsController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/mapper/MomentsMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/mapper/MomentsMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/server/MomentsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/server/MomentsService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/server/impl/MomentsServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/server/impl/MomentsServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/target/classes/mapper/MomentsMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/mapper/MomentsMapper.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-social/target/classes/com/zzzlew/controller/ApplyController.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/target/classes/com/zzzlew/controller/ApplyController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-social/target/classes/com/zzzlew/controller/FriendController.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/target/classes/com/zzzlew/controller/FriendController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-social/target/classes/com/zzzlew/mapper/FriendMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/target/classes/com/zzzlew/mapper/FriendMapper.class" afterDir="false" />
@@ -136,11 +158,13 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
     &quot;Application.ContentApplication.executor&quot;: &quot;Run&quot;,
     &quot;Application.GatewayApplication.executor&quot;: &quot;Run&quot;,
     &quot;Application.ZzzImServerApplication.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.mqTest.springbootSend.executor&quot;: &quot;Debug&quot;,
     &quot;Maven.IM-SpringCloud [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.IM-SpringCloud [org.apache.maven.plugins:maven-clean-plugin:3.3.2:clean].executor&quot;: &quot;Run&quot;,
     &quot;Maven.IM-SpringCloud [package].executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
@@ -224,6 +248,8 @@
               <entry key="ContentApplication" value="STOPPED" />
               <entry key="GatewayApplication" value="STOPPED" />
               <entry key="IMNetyApplication" value="STOPPED" />
+              <entry key="MomentsApplication" value="STOPPED" />
+              <entry key="SocialApplication" value="STOPPED" />
             </map>
           </value>
         </entry>
@@ -304,20 +330,20 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Spring Boot.AuthApplication" />
+      <item itemvalue="Spring Boot.ChatApplication" />
+      <item itemvalue="Spring Boot.ContentApplication" />
+      <item itemvalue="Spring Boot.GatewayApplication" />
       <item itemvalue="Spring Boot.IMNetyApplication" />
       <item itemvalue="Spring Boot.SocialApplication" />
-      <item itemvalue="Spring Boot.ChatApplication" />
-      <item itemvalue="Spring Boot.GatewayApplication" />
-      <item itemvalue="Spring Boot.AuthApplication" />
-      <item itemvalue="Spring Boot.ContentApplication" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.SocialApplication" />
-        <item itemvalue="Spring Boot.ContentApplication" />
-        <item itemvalue="Spring Boot.ChatApplication" />
-        <item itemvalue="Spring Boot.AuthApplication" />
         <item itemvalue="Spring Boot.GatewayApplication" />
+        <item itemvalue="Spring Boot.ChatApplication" />
+        <item itemvalue="Spring Boot.ContentApplication" />
+        <item itemvalue="Spring Boot.AuthApplication" />
+        <item itemvalue="Spring Boot.SocialApplication" />
       </list>
     </recent_temporary>
   </component>
@@ -455,7 +481,8 @@
       <workItem from="1780992403813" duration="238000" />
       <workItem from="1780992652975" duration="21602000" />
       <workItem from="1781070268848" duration="15667000" />
-      <workItem from="1781163371426" duration="325000" />
+      <workItem from="1781163371426" duration="6569000" />
+      <workItem from="1781421856492" duration="396000" />
     </task>
     <task id="LOCAL-00001" summary="我最近为了加上MQ和Redis的功能，去理解沉淀了几天，虽然大部分时间都在休息吧但是我也有了思路，首先是我看了别人的一个IM项目，特别复杂，是用redis实现的消息队列，还有加锁等，对于现在大二的我来说可以说是特别难的，复杂的一个项目了。但是他的有一个设计不合理，感觉这个设计就是为了作为一个练习redis而出现的，就是Http和Ws没有解耦，是通过Http发送消息同时处理存储数据库和推送到消息队列中，Netty模块进行监听消息队列从而实现发送到对方的功能，所以整个项目高度使用了redis的消息队列实现了集群分布。但是我的项目是Http和WS解耦的项目，经过我的学习，发现，好像只需要redisson的发布订阅模式来实现广播的功能，就可以实现集群部署了。至于MQ消息队列的使用，对于我的项目感觉用到的地方很少，比如或未读和已读消息的处理，我仍然可以使用ws进行发送消息的改变状态。以及用户的在线状态，我可以登录成功的时候拉去一次，然后加上好友上线提醒的功能，这个我已经实现了，还有个是好友下线的提醒，这样就可以实现好友的在线状态的展示了。至于消息的撤回，引用，这个就是普通的http请求，以及消息状态的更新，前端的展示的问题了，和MQ的关系并不大。然后就是现在思考一下MQ可以怎么使用，我希望的是MQ不能让我的项目有很大的改动，这样就没必要了，MQ只是个通过异步处理的方式，提高项目性能的工具，首先能想到的就是http请求发送消息时存储到数据库的操作，这个可以异步处理。其他需要的地方我倒是还没有想到。">
       <option name="closed" value="true" />
@@ -825,7 +852,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781020832724</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="接下来准备添加群红包功能，支付打赏功能来锻炼redis的分布式锁能力，以及删除帖子，修改帖子功能来锻炼缓存数据一致性的能力。">
+      <option name="closed" value="true" />
+      <created>1781163855579</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1781163855579</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -843,7 +878,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="完成了好友申请处理的ws通知的代码，本来今天是准备完成多窗口缓存共享的问题的，但是好久没有想过这个问题了，所以暂时模拟不出来需要共享的场景了，就转向ws通知代码的完善了。目前是只写了好友申请的通知，还剩下群聊申请的通知，大概明天写完，然后找到需要共享窗口的场景，在完成一些多窗口的缓存共享问题。这就是前端的内容了。自此，这个项目小问题估计大部分都解决了，只剩下小功能了，还有一些优化的点，后端还要引入MQ，还有redis的优化等问题，以及全局异常处理的补充，还有很多的代码细节没有完成，慢慢来吧，等会在补一下八股，java基础" />
     <MESSAGE value="优化了登陆时redis操作的相关命令，使用lua脚本替代，大大的提高了吞吐量，响应时间以及redis的数据一致性" />
     <MESSAGE value="优化了一下。接下来想调整一下domain包里的类，太乱了" />
     <MESSAGE value="优化了一些小内容，异常类的补充处理。接下来继续把Netty剩余的部分复习完，源码看一下，就可以开始测试并发消息发送了，先是未优化之前的一次测试，然后是使用MQ消息队列加上消息重发机制ACK确认机制之后的测试。我留了是一周的时间完成。完成了话，我的项目基本上就完成了，其实还有很多预期的功能没有完成，但是没办法了。剩下一个月的时间，我就要练习算法和八股了。同时我还会补充一下我前端的小功能，当作兴趣爱好吧，让我的客户端界面更好看，我心情也会好一点" />
@@ -868,7 +902,8 @@
     <MESSAGE value="优化了点赞相关的问题，如果要实现排行，计数，感觉缓存问题挺多的，这里还需要锻炼，然后就是提交评论和分页查询评论，这里不能搞成游标查询，需要常规的分页查询，然后是list那里，我觉的应该需要写两种不同的分页查询方法了，一个是游标查询最新帖子，一个是分页查询最热帖子" />
     <MESSAGE value="继续完善朋友圈的功能，现在还剩发送评论，评论点赞的功能，我想尝试一下，ai写全栈了，我还没有这样试过，想体验一下，而且我也不想写了" />
     <MESSAGE value="用ai完成了评论的功能，感觉体验还不错，效率很高，没有bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="用ai完成了评论的功能，感觉体验还不错，效率很高，没有bug" />
+    <MESSAGE value="接下来准备添加群红包功能，支付打赏功能来锻炼redis的分布式锁能力，以及删除帖子，修改帖子功能来锻炼缓存数据一致性的能力。" />
+    <option name="LAST_COMMIT_MESSAGE" value="接下来准备添加群红包功能，支付打赏功能来锻炼redis的分布式锁能力，以及删除帖子，修改帖子功能来锻炼缓存数据一致性的能力。" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

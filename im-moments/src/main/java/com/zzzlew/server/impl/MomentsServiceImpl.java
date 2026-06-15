@@ -52,6 +52,8 @@ public class MomentsServiceImpl implements MomentsService {
     private DefaultRedisScript<Long> momentsLikeScript;
     @Resource
     private DefaultRedisScript<Long> momentsWarmupCacheScript;
+    @Resource
+    private DefaultRedisScript<Long> momentsDeleteScript;
 
     /**
      * 上传图片
@@ -733,6 +735,44 @@ public class MomentsServiceImpl implements MomentsService {
         } catch (Exception e) {
             log.error("点赞评论操作失败，commentId: {}, userId: {}", commentId, userId, e);
             throw new RuntimeException("点赞评论操作失败", e);
+        }
+    }
+
+    @Override
+    public PageResult<MomentsVO> queryUserMoments(int page, int pageSize) {
+        Long userId = UserHolder.getUser().getId();
+        PageHelper.startPage(page, pageSize);
+        Page<MomentsVO> pageResult = momentsMapper.queryUserMoments(userId);
+        return new PageResult<>(pageResult.getTotal(), pageResult.getResult());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(Long momentId) {
+        if (momentId == null || momentId <= 0) {
+            log.warn("无效的 momentId: {}", momentId);
+            return;
+        }
+        // 删除数据库
+        momentsMapper.delete(momentId);
+
+        // 执行 Lua 脚本原子性清理所有相关 Redis 缓存
+        try {
+            String idStr = String.valueOf(momentId);
+            Long deleted = stringRedisTemplate.execute(
+                    momentsDeleteScript,
+                    Arrays.asList(
+                            MOMENTS_INFO_LIST_KEY + idStr,   // KEYS[1] 帖子详情
+                            MOMENTS_COUNT_KEY + idStr,        // KEYS[2] 计数器
+                            MOMENTS_LIKE_KEY + idStr,         // KEYS[3] 点赞集合
+                            MOMENTS_LIST_NEW_KEY,             // KEYS[4] 最新排行榜
+                            MOMENTS_LIST_HOT_KEY              // KEYS[5] 热度排行榜
+                    ),
+                    idStr  // ARGV[1] momentId，用于从ZSet中ZREM
+            );
+            log.info("删除帖子 {} 的 Redis 缓存完成，清理 key 数: {}", momentId, deleted);
+        } catch (Exception e) {
+            log.error("删除帖子 {} 的 Redis 缓存失败", momentId, e);
         }
     }
 

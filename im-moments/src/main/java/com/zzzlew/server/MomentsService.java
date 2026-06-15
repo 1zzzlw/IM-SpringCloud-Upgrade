@@ -103,4 +103,20 @@ public interface MomentsService {
      * @param commentId 评论ID
      */
     void likeComment(Long commentId);
+
+    /**
+     * 查询用户朋友圈
+     *
+     * @param page     页码
+     * @param pageSize 每页大小
+     * @return 朋友圈列表
+     */
+    PageResult<MomentsVO> queryUserMoments(int page, int pageSize);
+
+    /**
+     * 删除朋友圈
+     *
+     * @param momentId 朋友圈ID
+     */
+    void delete(Long momentId);
 }

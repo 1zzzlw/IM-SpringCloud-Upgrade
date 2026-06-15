@@ -124,8 +124,8 @@ public class MomentsController {
     @Operation(summary = "查看评论的下级回复列表")
     @GetMapping("/comment/reply/{commentId}")
     public Result<PageResult<MomentsCommentsVO>> commentReply(@PathVariable("commentId") Long commentId,
-                                                               @RequestParam(defaultValue = "1") int page,
-                                                               @RequestParam(defaultValue = "5") int pageSize) {
+                                                              @RequestParam(defaultValue = "1") int page,
+                                                              @RequestParam(defaultValue = "5") int pageSize) {
         log.info("查看评论的下级回复列表，commentId: {}, page: {}, pageSize: {}", commentId, page, pageSize);
         PageResult<MomentsCommentsVO> pageResult = momentsService.commentReplies(commentId, page, pageSize);
         return Result.success(pageResult);
@@ -157,6 +157,11 @@ public class MomentsController {
         return Result.success(vo);
     }
 
+    /**
+     * 点赞评论
+     *
+     * @return 点赞评论结果
+     */
     @Operation(summary = "点赞评论")
     @PostMapping("/comment/like/{commentId}")
     public Result<Object> likeComment(@PathVariable("commentId") Long commentId) {
@@ -165,10 +170,27 @@ public class MomentsController {
         return Result.success();
     }
 
+    /**
+     * 查询用户个人帖子信息
+     *
+     * @return 查询结果
+     */
+    @Operation(summary = "查询用户个人帖子信息")
+    @GetMapping("/my")
+    public Result<PageResult<MomentsVO>> queryUserMoments(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        log.info("查询用户个人帖子信息，userId: {}, page: {}, pageSize: {}", page, pageSize);
+        PageResult<MomentsVO> pageResult = momentsService.queryUserMoments(page, pageSize);
+        return Result.success(pageResult);
+    }
+
     @Operation(summary = "删除帖子")
     @DeleteMapping("/delete/{momentId}")
-    public String delete(@PathVariable("momentId") Long momentId) {
-        return "删除帖子成功";
+    public Result<Object> delete(@PathVariable Long momentId) {
+        log.info("删除帖子，帖子id：{}", momentId);
+        momentsService.delete(momentId);
+        return Result.success();
     }
 
     @Operation(summary = "修改帖子")
