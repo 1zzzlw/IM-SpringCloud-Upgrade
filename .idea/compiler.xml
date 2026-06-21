@@ -19,6 +19,7 @@
         <module name="common-model" />
         <module name="im-chat" />
         <module name="common-web" />
+        <module name="im-pay" />
         <module name="im-content" />
         <module name="common-core" />
       </profile>
@@ -42,6 +43,7 @@
       <module name="im-content" options="-parameters" />
       <module name="im-gateway" options="-parameters" />
       <module name="im-moments" options="-parameters" />
+      <module name="im-pay" options="-parameters" />
       <module name="im-server" options="-parameters" />
       <module name="im-social" options="-parameters" />
       <module name="im-springboot" options="-parameters" />

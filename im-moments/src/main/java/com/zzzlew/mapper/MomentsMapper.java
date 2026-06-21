@@ -112,6 +112,13 @@ public interface MomentsMapper {
     Page<MomentsVO> queryUserMoments(Long userId);
 
     /**
+     * 更新朋友圈内容
+     *
+     * @param momentsDTO 朋友圈信息（id + content）
+     */
+    void update(MomentsDTO momentsDTO);
+
+    /**
      * 删除朋友圈
      *
      * @param momentId 朋友圈ID

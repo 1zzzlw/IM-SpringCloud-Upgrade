@@ -53,7 +53,12 @@ public class MomentsServiceImpl implements MomentsService {
     @Resource
     private DefaultRedisScript<Long> momentsWarmupCacheScript;
     @Resource
-    private DefaultRedisScript<Long> momentsDeleteScript;
+    private DefaultRedisScript<Long> momentsCommentLikeScript;
+    @Resource
+    private DefaultRedisScript<Long> momentsCommentCountIncrScript;
+
+    // ZSet 最新帖子列表最大保留条数
+    private static final long MOMENTS_LIST_NEW_MAX_SIZE = 2000L;
 
     /**
      * 上传图片
@@ -96,6 +101,11 @@ public class MomentsServiceImpl implements MomentsService {
         long score = momentsDTO.getId();
         String momentsId = String.valueOf(momentsDTO.getId());
         stringRedisTemplate.opsForZSet().add(MOMENTS_LIST_NEW_KEY, momentsId, score);
+        // 只保留最新的 N 条，超出的旧帖子降级到 DB 查询
+        Long size = stringRedisTemplate.opsForZSet().zCard(MOMENTS_LIST_NEW_KEY);
+        if (size != null && size > MOMENTS_LIST_NEW_MAX_SIZE) {
+            stringRedisTemplate.opsForZSet().removeRange(MOMENTS_LIST_NEW_KEY, 0, size - MOMENTS_LIST_NEW_MAX_SIZE - 1);
+        }
     }
 
     /**
@@ -442,6 +452,40 @@ public class MomentsServiceImpl implements MomentsService {
     }
 
     /**
+     * 原子性更新 Redis 评论计数，key 不存在时先从 DB 预热再重试
+     */
+    private void updateCommentCountInRedis(Long momentId, String countKey, int delta) {
+        Long result = stringRedisTemplate.execute(
+                momentsCommentCountIncrScript,
+                Collections.singletonList(countKey),
+                String.valueOf(delta)
+        );
+
+        if (result != null && result == -1L) {
+            // key 不存在，先预热再重试一次
+            MomentsVO moment = momentsMapper.getById(momentId);
+            if (moment == null) return;
+
+            long ttl = calculateRandomTTL(MOMENTS_COUNT_KEY_TTL);
+            Long warmupResult = stringRedisTemplate.execute(
+                    momentsWarmupCacheScript,
+                    Collections.singletonList(countKey),
+                    String.valueOf(moment.getLikeCount()),
+                    String.valueOf(moment.getCommentCount()),
+                    String.valueOf(ttl)
+            );
+            if (warmupResult != null && warmupResult >= 0) {
+                // 预热成功后再自增
+                stringRedisTemplate.execute(
+                        momentsCommentCountIncrScript,
+                        Collections.singletonList(countKey),
+                        String.valueOf(delta)
+                );
+            }
+        }
+    }
+
+    /**
      * 缓存预热并重试点赞操作
      */
     private void warmupCacheAndRetry(Long momentId, Long userId) {
@@ -551,25 +595,10 @@ public class MomentsServiceImpl implements MomentsService {
         // 更新数据库中的评论计数
         momentsMapper.updateCommentCount(momentId, 1);
 
-        // 更新 Redis 中的评论计数器
+        // 更新 Redis 中的评论计数器（原子性，避免 check-then-act 竞态）
         String countKey = MOMENTS_COUNT_KEY + momentId;
         try {
-            // 检查计数器是否存在
-            Boolean exists = stringRedisTemplate.hasKey(countKey);
-
-            if (Boolean.TRUE.equals(exists)) {
-                // 计数器存在，直接 +1
-                stringRedisTemplate.opsForHash().increment(countKey, "comment", 1);
-            } else {
-                // 计数器不存在，从数据库查询并预热
-                MomentsVO moment = momentsMapper.getById(momentId);
-                if (moment != null) {
-                    long ttl = calculateRandomTTL(MOMENTS_COUNT_KEY_TTL);
-                    stringRedisTemplate.opsForHash().put(countKey, "like", String.valueOf(moment.getLikeCount()));
-                    stringRedisTemplate.opsForHash().put(countKey, "comment", String.valueOf(moment.getCommentCount()));
-                    stringRedisTemplate.expire(countKey, ttl, TimeUnit.SECONDS);
-                }
-            }
+            updateCommentCountInRedis(momentId, countKey, 1);
         } catch (Exception e) {
             log.error("更新评论计数器失败，momentId: {}", momentId, e);
             // 不抛异常，数据库已更新即可
@@ -679,21 +708,10 @@ public class MomentsServiceImpl implements MomentsService {
         Long momentId = momentCommentsDTO.getMomentId();
         momentsMapper.updateCommentCount(momentId, 1);
 
-        // 更新 Redis 中的评论计数器
+        // 更新 Redis 中的评论计数器（原子性，避免 check-then-act 竞态）
         String countKey = MOMENTS_COUNT_KEY + momentId;
         try {
-            Boolean exists = stringRedisTemplate.hasKey(countKey);
-            if (Boolean.TRUE.equals(exists)) {
-                stringRedisTemplate.opsForHash().increment(countKey, "comment", 1);
-            } else {
-                MomentsVO moment = momentsMapper.getById(momentId);
-                if (moment != null) {
-                    long ttl = calculateRandomTTL(MOMENTS_COUNT_KEY_TTL);
-                    stringRedisTemplate.opsForHash().put(countKey, "like", String.valueOf(moment.getLikeCount()));
-                    stringRedisTemplate.opsForHash().put(countKey, "comment", String.valueOf(moment.getCommentCount()));
-                    stringRedisTemplate.expire(countKey, ttl, TimeUnit.SECONDS);
-                }
-            }
+            updateCommentCountInRedis(momentId, countKey, 1);
         } catch (Exception e) {
             log.error("更新评论计数器失败，momentId: {}", momentId, e);
         }
@@ -718,19 +736,23 @@ public class MomentsServiceImpl implements MomentsService {
         String likeSetKey = MOMENTS_COMMENT_LIKE_KEY + commentId;
 
         try {
-            // 判断用户是否已点赞
-            Boolean isMember = stringRedisTemplate.opsForSet().isMember(likeSetKey, userId.toString());
+            Long result = stringRedisTemplate.execute(
+                    momentsCommentLikeScript,
+                    Collections.singletonList(likeSetKey),
+                    userId.toString()
+            );
 
-            if (Boolean.TRUE.equals(isMember)) {
-                // 已点赞，取消点赞
-                stringRedisTemplate.opsForSet().remove(likeSetKey, userId.toString());
-                momentsMapper.likeComment(commentId, -1);
-                log.info("用户 {} 取消点赞评论 {} 成功", userId, commentId);
-            } else {
-                // 未点赞，执行点赞
-                stringRedisTemplate.opsForSet().add(likeSetKey, userId.toString());
+            if (result == null) {
+                log.error("评论点赞 Lua 脚本执行失败，commentId: {}, userId: {}", commentId, userId);
+                return;
+            }
+
+            if (result == 1) {
                 momentsMapper.likeComment(commentId, 1);
                 log.info("用户 {} 点赞评论 {} 成功", userId, commentId);
+            } else {
+                momentsMapper.likeComment(commentId, -1);
+                log.info("用户 {} 取消点赞评论 {} 成功", userId, commentId);
             }
         } catch (Exception e) {
             log.error("点赞评论操作失败，commentId: {}, userId: {}", commentId, userId, e);
@@ -756,24 +778,40 @@ public class MomentsServiceImpl implements MomentsService {
         // 删除数据库
         momentsMapper.delete(momentId);
 
-        // 执行 Lua 脚本原子性清理所有相关 Redis 缓存
+        // 直接清理所有相关 Redis 缓存，DEL 本身是原子的，无需 Lua 脚本
         try {
             String idStr = String.valueOf(momentId);
-            Long deleted = stringRedisTemplate.execute(
-                    momentsDeleteScript,
-                    Arrays.asList(
-                            MOMENTS_INFO_LIST_KEY + idStr,   // KEYS[1] 帖子详情
-                            MOMENTS_COUNT_KEY + idStr,        // KEYS[2] 计数器
-                            MOMENTS_LIKE_KEY + idStr,         // KEYS[3] 点赞集合
-                            MOMENTS_LIST_NEW_KEY,             // KEYS[4] 最新排行榜
-                            MOMENTS_LIST_HOT_KEY              // KEYS[5] 热度排行榜
-                    ),
-                    idStr  // ARGV[1] momentId，用于从ZSet中ZREM
-            );
-            log.info("删除帖子 {} 的 Redis 缓存完成，清理 key 数: {}", momentId, deleted);
+            stringRedisTemplate.delete(Arrays.asList(
+                    MOMENTS_INFO_LIST_KEY + idStr,
+                    MOMENTS_COUNT_KEY + idStr,
+                    MOMENTS_LIKE_KEY + idStr
+            ));
+            stringRedisTemplate.opsForZSet().remove(MOMENTS_LIST_NEW_KEY, idStr);
+            stringRedisTemplate.opsForZSet().remove(MOMENTS_LIST_HOT_KEY, idStr);
+            log.info("删除帖子 {} 的 Redis 缓存完成", momentId);
         } catch (Exception e) {
             log.error("删除帖子 {} 的 Redis 缓存失败", momentId, e);
         }
+    }
+
+    /**
+     * 更新帖子内容，缓存失效由 Canal 监听 binlog 异步处理
+     */
+    @Override
+    public void update(MomentsDTO momentsDTO) {
+        momentsMapper.update(momentsDTO);
+    }
+
+    @Override
+    public void reward(Long momentId, Integer count) {
+        // 打赏者身份与余额校验,确认登录用户,查询钱包余额是否足够
+
+        // 打赏者钱包扣减
+
+        // 异步操作
+        // 被打赏者钱包余额增加
+
+        // 生成打赏凭证,也就是生成记录到数据库
     }
 
     /**

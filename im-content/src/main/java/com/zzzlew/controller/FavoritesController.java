@@ -47,10 +47,10 @@ public class FavoritesController {
      * @return
      */
     @PostMapping("/saveNote")
-    public Result<Object> saveNote(@RequestBody FavoritesDTO favoritesDTO) {
+    public Result<Long> saveNote(@RequestBody FavoritesDTO favoritesDTO) {
         log.info("保存笔记：{}", favoritesDTO);
-        favoritesService.saveNote(favoritesDTO);
-        return Result.success();
+        Long id = favoritesService.saveNote(favoritesDTO);
+        return Result.success(id);
     }
 
     /**

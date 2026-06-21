@@ -38,12 +38,23 @@ public class RedisLuaScriptConfig {
     }
 
     /**
-     * 删除帖子清理缓存 Lua 脚本
+     * 评论点赞/取消点赞 Lua 脚本
      */
     @Bean
-    public DefaultRedisScript<Long> momentsDeleteScript() {
+    public DefaultRedisScript<Long> momentsCommentLikeScript() {
         DefaultRedisScript<Long> script = new DefaultRedisScript<>();
-        script.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/moments_delete.lua")));
+        script.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/moments_comment_like.lua")));
+        script.setResultType(Long.class);
+        return script;
+    }
+
+    /**
+     * 原子性评论计数增减 Lua 脚本
+     */
+    @Bean
+    public DefaultRedisScript<Long> momentsCommentCountIncrScript() {
+        DefaultRedisScript<Long> script = new DefaultRedisScript<>();
+        script.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/moments_comment_count_incr.lua")));
         script.setResultType(Long.class);
         return script;
     }

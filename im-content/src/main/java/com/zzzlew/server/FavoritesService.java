@@ -25,8 +25,9 @@ public interface FavoritesService {
      * 保存笔记
      *
      * @param favoritesDTO
+     * @return 生成的笔记ID
      */
-    void saveNote(FavoritesDTO favoritesDTO);
+    Long saveNote(FavoritesDTO favoritesDTO);
 
     /**
      * 更新笔记

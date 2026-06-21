@@ -51,10 +51,11 @@ public class FavoritesServiceImpl implements FavoritesService {
     }
 
     @Override
-    public void saveNote(FavoritesDTO favoritesDTO) {
+    public Long saveNote(FavoritesDTO favoritesDTO) {
         Long userId = UserHolder.getUser().getId();
         favoritesDTO.setUserId(userId);
         favoritesMapper.saveNote(favoritesDTO);
+        return favoritesDTO.getId();
     }
 
     @Override

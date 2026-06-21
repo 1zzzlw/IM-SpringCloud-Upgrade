@@ -95,8 +95,17 @@
         where id = #{commentId}
     </update>
 
-    <delete id="delete">
+    <update id="update">
+        update moments
+        set content = #{content}
+        where id = #{id}
+    </update>
 
+    <delete id="delete">
+        delete
+        from moments
+        where id =
+              #{momentId}
     </delete>
 
 </mapper>

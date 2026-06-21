@@ -185,6 +185,11 @@ public class MomentsController {
         return Result.success(pageResult);
     }
 
+    /**
+     * 删除帖子
+     *
+     * @return 删除结果
+     */
     @Operation(summary = "删除帖子")
     @DeleteMapping("/delete/{momentId}")
     public Result<Object> delete(@PathVariable Long momentId) {
@@ -193,16 +198,36 @@ public class MomentsController {
         return Result.success();
     }
 
+    /**
+     * 修改帖子
+     *
+     * @return 修改结果
+     */
     @Operation(summary = "修改帖子")
     @PutMapping("/update")
-    public String update(@RequestBody MomentsDTO momentsDTO) {
-        return "修改帖子成功";
+    public Result<Object> update(@RequestBody MomentsDTO momentsDTO) {
+        log.info("修改帖子：{}", momentsDTO);
+        momentsService.update(momentsDTO);
+        return Result.success();
     }
 
     @Operation(summary = "打赏")
-    @PostMapping("/reward/{momentId}")
-    public String reward(@PathVariable("momentId") Long momentId) {
-        return "打赏成功";
+    @PostMapping("/reward")
+    public Result<Object> reward(Long momentId, Integer count) {
+        log.info("打赏，帖子id：{}, 打赏金额: {}", momentId, count);
+        momentsService.reward(momentId, count);
+        return Result.success();
+    }
+
+    @Operation(summary = "搜索帖子")
+    @GetMapping("/search")
+    public Result<PageResult<MomentsVO>> search(@RequestParam String keyword,
+                                                @RequestParam(defaultValue = "1") int page,
+                                                @RequestParam(defaultValue = "20") int pageSize) {
+        log.info("搜索帖子，keyword: {}, page: {}, pageSize: {}", keyword, page, pageSize);
+        // PageResult<MomentsVO> pageResult = momentsService.search(keyword, page, pageSize);
+        // return Result.success(pageResult);
+        return Result.success();
     }
 
 }

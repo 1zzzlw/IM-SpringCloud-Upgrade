@@ -25,6 +25,7 @@
         <module>im-moments</module>
         <module>im-gateway</module>
         <module>im-api</module>
+        <module>im-pay</module>
     </modules>
 
     <properties>

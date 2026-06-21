@@ -6,7 +6,7 @@
 
 ## 核心技术栈
 
-- 后端：Java，SpringBoot，Netty，Redis，RabbitMQ，MySQL，Minio
+- 后端：Java，SpringBoot，Netty，Redis，RabbitMQ，MySQL，Minio，Canal，ElasticSearch
 - 前端： Vite/Vue3，TypeScript，JavaScript，Electron，WebSocket，SQLite3
 
 ## 相关环境
@@ -101,6 +101,35 @@ docker run -d \
 docker exec -it rabbitmq bash
 rabbitmq-plugins enable rabbitmq_management
 exit
+```
+
+### Canal部署
+
+```bash
+# 优先开启mysql的binlog日志功能，canal的原理就是模仿mysql的从节点，监听mysql的binlog日志，保持redis和数据库的数据一致性
+# mysql的配置文件中的关键设置
+log-bin=mysql-bin
+binlog_format=ROW
+server-id=1
+# mysql给canal添加用户权限
+CREATE USER 'canal'@'%' IDENTIFIED BY 'canal';
+# 注意权限问题，否则在后续的一些操作中会提示没有权限
+GRANT ALL PRIVILEGES ON *.* TO 'canal'@'%';
+FLUSH PRIVILEGES;
+
+# windows系统安装canal步骤 https://www.cnblogs.com/xfeiyun/p/17468158.html
+
+docker run -p 11111:11111 --name zzz-im-canal \
+  --network heima \
+  -e canal.destinations=zzz-im-canal \
+  -e canal.instance.master.address=mysql:3306 \
+  -e canal.instance.dbUsername=root \
+  -e canal.instance.dbPassword=123456 \
+  -e canal.instance.connectionCharset=UTF-8 \
+  -e canal.instance.tsdb.enable=true \
+  -e canal.instance.gtidon=false \
+  -e canal.instance.filter.regex=zzz-im-server\\..* \
+  -d canal/canal-server:v1.1.8
 ```
 
 ### 项目部署(SpringBoot + NettyServer)

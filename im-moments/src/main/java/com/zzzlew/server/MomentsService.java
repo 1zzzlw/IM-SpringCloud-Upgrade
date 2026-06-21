@@ -119,4 +119,19 @@ public interface MomentsService {
      * @param momentId 朋友圈ID
      */
     void delete(Long momentId);
+
+    /**
+     * 修改朋友圈
+     *
+     * @param momentsDTO 朋友圈内容
+     */
+    void update(MomentsDTO momentsDTO);
+
+    /**
+     * 朋友圈打赏
+     *
+     * @param momentId 朋友圈ID
+     * @param count    打赏金额
+     */
+    void reward(Long momentId, Integer count);
 }

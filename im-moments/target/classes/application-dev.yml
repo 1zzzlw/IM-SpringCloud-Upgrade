@@ -29,3 +29,7 @@ minio:
   imagePath: image
   videoPath: video
   expireIn: 180
+
+canal:
+  server: 127.0.0.1:11111
+  destination: zzz-im-canal

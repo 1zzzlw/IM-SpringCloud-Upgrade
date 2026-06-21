@@ -11,7 +11,7 @@
  Target Server Version : 80045
  File Encoding         : 65001
 
- Date: 06/04/2026 17:26:43
+ Date: 19/06/2026 21:02:42
 */
 
 SET NAMES utf8mb4;
@@ -33,11 +33,7 @@ CREATE TABLE `ai_message`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_user_created`(`user_id` ASC, `send_time` ASC) USING BTREE,
   INDEX `idx_personality`(`personality_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2040342432062783488 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = 'AI对话消息表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of ai_message
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 2040342432062783488 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = 'AI对话消息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for ai_personality
@@ -56,11 +52,7 @@ CREATE TABLE `ai_personality`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_user_name`(`user_id` ASC, `id` ASC) USING BTREE,
   INDEX `uk_active_userId`(`user_id` ASC, `is_active` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2029758029301420053 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = 'AI个性化配置表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of ai_personality
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 2029758029301420053 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = 'AI个性化配置表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for conversation
@@ -86,10 +78,6 @@ CREATE TABLE `conversation`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '会话表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of conversation
--- ----------------------------
-
--- ----------------------------
 -- Table structure for favorites
 -- ----------------------------
 DROP TABLE IF EXISTS `favorites`;
@@ -105,11 +93,7 @@ CREATE TABLE `favorites`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
   INDEX `idx_created_at`(`created_at` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '收藏表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of favorites
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '收藏表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for friend_apply
@@ -128,11 +112,7 @@ CREATE TABLE `friend_apply`  (
   UNIQUE INDEX `idx_unique_apply`(`from_user_id` ASC, `to_user_id` ASC) USING BTREE,
   INDEX `idx_to_dealt`(`to_user_id` ASC, `is_dealt` ASC) USING BTREE,
   INDEX `idx_from_user`(`from_user_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 106 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '好友申请流程表（双表设计配套）' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of friend_apply
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 107 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '好友申请流程表（双表设计配套）' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for friend_relation
@@ -150,11 +130,7 @@ CREATE TABLE `friend_relation`  (
   INDEX `idx_user_status`(`user_id` ASC, `relation_status` ASC) USING BTREE,
   INDEX `idx_friend_id`(`friend_id` ASC) USING BTREE,
   INDEX `idx_user_id_friend_id`(`user_id` ASC, `friend_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 135 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '好友关系核心表' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of friend_relation
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 138 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '好友关系核心表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for group_apply
@@ -173,11 +149,7 @@ CREATE TABLE `group_apply`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_member_id`(`member_id` ASC) USING BTREE,
   INDEX `idx_user_id_member_id`(`user_id` ASC, `member_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 98 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '群聊申请表' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of group_apply
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 99 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '群聊申请表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for group_conversation
@@ -199,10 +171,6 @@ CREATE TABLE `group_conversation`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '群聊表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of group_conversation
--- ----------------------------
-
--- ----------------------------
 -- Table structure for group_member
 -- ----------------------------
 DROP TABLE IF EXISTS `group_member`;
@@ -218,19 +186,15 @@ CREATE TABLE `group_member`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '群成员表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of group_member
+-- Table structure for message
 -- ----------------------------
-
--- ----------------------------
--- Table structure for Message
--- ----------------------------
-DROP TABLE IF EXISTS `Message`;
-CREATE TABLE `Message`  (
+DROP TABLE IF EXISTS `message`;
+CREATE TABLE `message`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '消息唯一ID（主键）',
   `conversation_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '会话ID（单聊：小ID_大ID；群聊：群ID）',
   `sender_id` bigint NOT NULL COMMENT '发送者ID（关联用户表）',
   `receiver_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '接收者ID（单聊：用户ID；群聊：群ID）',
-  `msg_type` tinyint NOT NULL COMMENT '消息类型（1=文本，2=图片，3=视频，4=音频，5=文件，6=语音，99=系统消息)',
+  `msg_type` tinyint NOT NULL COMMENT '消息类型（1=文本，2=图片，3=视频，4=音频，5=文件，6=红包，99=系统消息)',
   `sub_type` tinyint NULL DEFAULT NULL COMMENT '（1 = 撤回消息，2= 删除消息，3 = 添加好友成功，4 = 拉黑好友，5 = 取消拉黑，6=加入群聊，7=退出群聊，8=被踢出群聊，9=群聊解散，10=设为管理员，11=撤销管理员，12=禁言成员，13=取消禁言）',
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '消息内容（文本存字符串，媒体存URL+元信息）',
   `send_status` tinyint NOT NULL DEFAULT 0 COMMENT '发送状态（0=发送中，1=成功，2=失败）',
@@ -238,6 +202,8 @@ CREATE TABLE `Message`  (
   `send_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发送时间',
   `is_revoked` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否撤回（0=否，1=是）',
   `quote_msg_id` bigint NULL DEFAULT NULL COMMENT '引用的消息ID（回复功能）',
+  `quote_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '引用消息内容',
+  `quote_msg_type` tinyint NULL DEFAULT NULL COMMENT '引用消息类型',
   `file_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '文件唯一id',
   `file_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '文件名',
   `file_size` bigint NULL DEFAULT 0 COMMENT '文件大小（B）',
@@ -255,11 +221,86 @@ CREATE TABLE `Message`  (
   INDEX `idx_conversation_id_send_time`(`conversation_id` ASC, `send_time` ASC) USING BTREE COMMENT '加载最新消息时的联合索引',
   INDEX `idx_file_id`(`file_id` ASC) USING BTREE COMMENT '文件的唯一id索引',
   INDEX `idx_sender_id_conversation_id`(`conversation_id` ASC, `sender_id` ASC) USING BTREE COMMENT '会话id和发送id的联合索引，用于清空聊天记录'
-) ENGINE = InnoDB AUTO_INCREMENT = 7446111736024855688 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '消息表（单聊/群聊通用）' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 7470756287861444741 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '消息表（单聊/群聊通用）' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of Message
+-- Table structure for moment_comments
 -- ----------------------------
+DROP TABLE IF EXISTS `moment_comments`;
+CREATE TABLE `moment_comments`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `moment_id` bigint NOT NULL COMMENT '关联的动态ID',
+  `user_id` bigint NOT NULL COMMENT '评论者ID',
+  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '评论者昵称',
+  `avatar` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '评论者头像',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '评论内容',
+  `publish_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '评论时间',
+  `parent_id` bigint NULL DEFAULT 0 COMMENT '父评论ID（0表示一级评论）',
+  `reply_to_user_id` bigint NULL DEFAULT NULL COMMENT '被回复者的用户ID',
+  `reply_to_username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '被回复者的昵称',
+  `like_count` int NULL DEFAULT 0 COMMENT '点赞数',
+  `is_deleted` tinyint NULL DEFAULT 0 COMMENT '0未删除，1软删除',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_moment_id`(`moment_id` ASC) USING BTREE,
+  INDEX `idx_parent_id`(`parent_id` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '动态评论表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for moments
+-- ----------------------------
+DROP TABLE IF EXISTS `moments`;
+CREATE TABLE `moments`  (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` bigint NOT NULL,
+  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `avatar` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `publish_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `like_count` int NULL DEFAULT 0,
+  `comment_count` int NULL DEFAULT 0,
+  `is_deleted` tinyint NULL DEFAULT 0 COMMENT '0 未删除，1 软删除',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 104 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '朋友圈' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for red_packet
+-- ----------------------------
+DROP TABLE IF EXISTS `red_packet`;
+CREATE TABLE `red_packet`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '红包ID',
+  `message_id` bigint NOT NULL COMMENT '关联消息ID',
+  `sender_id` bigint NOT NULL COMMENT '发送人ID',
+  `receiver_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '单聊接收人',
+  `conversation_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '会话ID',
+  `chat_type` tinyint NOT NULL COMMENT '1单聊 2群聊',
+  `total_amount` decimal(18, 2) NOT NULL COMMENT '总金额',
+  `remain_amount` decimal(18, 2) NOT NULL COMMENT '剩余金额',
+  `total_count` int NOT NULL DEFAULT 1 COMMENT '红包总份数',
+  `remain_count` int NOT NULL DEFAULT 1 COMMENT '剩余份数',
+  `status` tinyint NOT NULL DEFAULT 0 COMMENT '\r\n0进行中\r\n1已领完\r\n2已过期\r\n3已撤回\r\n',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `expire_time` datetime NULL DEFAULT NULL COMMENT '过期时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_message_id`(`message_id` ASC) USING BTREE,
+  INDEX `idx_sender_id`(`sender_id` ASC) USING BTREE,
+  INDEX `idx_conversation_id`(`conversation_id` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '红包信息表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for red_packet_record
+-- ----------------------------
+DROP TABLE IF EXISTS `red_packet_record`;
+CREATE TABLE `red_packet_record`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '领取记录ID',
+  `packet_id` bigint NOT NULL COMMENT '红包ID',
+  `user_id` bigint NOT NULL COMMENT '领取用户ID',
+  `amount` decimal(18, 2) NOT NULL COMMENT '领取金额',
+  `receive_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_packet_user`(`packet_id` ASC, `user_id` ASC) USING BTREE,
+  INDEX `idx_packet_id`(`packet_id` ASC) USING BTREE,
+  INDEX `idx_user_id`(`user_id` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '红包领取记录表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for user_auth
@@ -278,11 +319,7 @@ CREATE TABLE `user_auth`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `account`(`account` ASC) USING BTREE,
   INDEX `user_id`(`user_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1077 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = COMPACT;
-
--- ----------------------------
--- Records of user_auth
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 1080 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户常用信息' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Table structure for user_info
@@ -308,7 +345,38 @@ CREATE TABLE `user_info`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 2017274130705027072 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户信息表（存储个人详细信息）' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of user_info
+-- Table structure for wallet
 -- ----------------------------
+DROP TABLE IF EXISTS `wallet`;
+CREATE TABLE `wallet`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '钱包ID',
+  `user_id` bigint NOT NULL COMMENT '用户ID',
+  `balance` decimal(18, 2) NOT NULL DEFAULT 0.00 COMMENT '余额',
+  `freeze_balance` decimal(18, 2) NOT NULL DEFAULT 0.00 COMMENT '冻结金额',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_user_id`(`user_id` ASC) USING BTREE,
+  INDEX `idx_user_id`(`user_id` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户钱包表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for wallet_record
+-- ----------------------------
+DROP TABLE IF EXISTS `wallet_record`;
+CREATE TABLE `wallet_record`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '流水ID',
+  `user_id` bigint NOT NULL COMMENT '用户ID',
+  `amount` decimal(18, 2) NOT NULL COMMENT '变动金额',
+  `type` tinyint NOT NULL COMMENT '\r\n1=充值\r\n2=提现\r\n3=打赏支出\r\n4=打赏收入\r\n5=红包支出\r\n6=红包收入\r\n7=转账支出\r\n8=转账收入\r\n',
+  `business_id` bigint NULL DEFAULT NULL COMMENT '业务ID',
+  `before_balance` decimal(18, 2) NOT NULL COMMENT '变更前余额',
+  `after_balance` decimal(18, 2) NOT NULL COMMENT '变更后余额',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
+  INDEX `idx_business_id`(`business_id` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '钱包流水表' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
