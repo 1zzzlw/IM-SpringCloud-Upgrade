@@ -25,10 +25,10 @@
             <artifactId>minio</artifactId>
         </dependency>
 
-        <!-- Spring Web (for MultipartFile) -->
+        <!-- Spring Web (for MultipartFile, no embedded Tomcat) -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
         </dependency>
     </dependencies>
 

@@ -25,6 +25,13 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
+        <!-- MinIO 存储（头像上传） -->
+        <dependency>
+            <groupId>com.zzzlew</groupId>
+            <artifactId>common-storage</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
         <!--api-->
         <dependency>
             <groupId>com.zzzlew</groupId>

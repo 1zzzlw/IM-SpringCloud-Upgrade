@@ -2,12 +2,14 @@ package com.zzzlew.config;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.ExchangeBuilder;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,6 +23,7 @@ import static com.zzzlew.constant.RabbitMQConstant.EXCHANGE;
  */
 @Slf4j
 @Configuration
+@ConditionalOnClass(AmqpTemplate.class)
 public class IMCommonRabbitMQConfig {
     // 定义共用的Topic交换机，所有模块共用
     @Bean(name = "imTopicExchange")

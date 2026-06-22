@@ -11,7 +11,7 @@
  Target Server Version : 80045
  File Encoding         : 65001
 
- Date: 19/06/2026 21:02:42
+ Date: 22/06/2026 03:11:44
 */
 
 SET NAMES utf8mb4;
@@ -93,7 +93,7 @@ CREATE TABLE `favorites`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
   INDEX `idx_created_at`(`created_at` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '收藏表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '收藏表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for friend_apply
@@ -221,7 +221,7 @@ CREATE TABLE `message`  (
   INDEX `idx_conversation_id_send_time`(`conversation_id` ASC, `send_time` ASC) USING BTREE COMMENT '加载最新消息时的联合索引',
   INDEX `idx_file_id`(`file_id` ASC) USING BTREE COMMENT '文件的唯一id索引',
   INDEX `idx_sender_id_conversation_id`(`conversation_id` ASC, `sender_id` ASC) USING BTREE COMMENT '会话id和发送id的联合索引，用于清空聊天记录'
-) ENGINE = InnoDB AUTO_INCREMENT = 7470756287861444741 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '消息表（单聊/群聊通用）' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 7473996337006514367 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '消息表（单聊/群聊通用）' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for moment_comments
@@ -258,7 +258,8 @@ CREATE TABLE `moments`  (
   `publish_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `like_count` int NULL DEFAULT 0,
   `comment_count` int NULL DEFAULT 0,
-  `is_deleted` tinyint NULL DEFAULT 0 COMMENT '0 未删除，1 软删除',
+  `reward_amount` int UNSIGNED NULL DEFAULT 0 COMMENT '打赏总金额',
+  `is_deleted` tinyint(3) UNSIGNED ZEROFILL NULL DEFAULT 000 COMMENT '0 未删除，1 软删除',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 104 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '朋友圈' ROW_FORMAT = Dynamic;
 
@@ -277,6 +278,7 @@ CREATE TABLE `red_packet`  (
   `remain_amount` decimal(18, 2) NOT NULL COMMENT '剩余金额',
   `total_count` int NOT NULL DEFAULT 1 COMMENT '红包总份数',
   `remain_count` int NOT NULL DEFAULT 1 COMMENT '剩余份数',
+  `type` tinyint NULL DEFAULT NULL,
   `status` tinyint NOT NULL DEFAULT 0 COMMENT '\r\n0进行中\r\n1已领完\r\n2已过期\r\n3已撤回\r\n',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `expire_time` datetime NULL DEFAULT NULL COMMENT '过期时间',

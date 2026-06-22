@@ -1,0 +1,12 @@
+{
+    "permissions": {
+        "allow": [
+            "Read",
+            "Write"
+        ],
+        "deny": [
+            "Bash(rm -rf *)"
+        ]
+    },
+    "autoCompactWindow": 800000
+}

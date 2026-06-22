@@ -27,7 +27,7 @@ spring:
         - id: im-chat
           uri: lb://im-chat
           predicates:
-            - Path=/ai-message/**, /conversation/**, /message/**
+            - Path=/ai-message/**, /conversation/**, /message/**, /redPacket/**
         - id: im-social
           uri: lb://im-social
           predicates:
@@ -40,6 +40,11 @@ spring:
           uri: lb://im-moments
           predicates:
             - Path=/moments/**
+        - id: im-pay
+          uri: lb://im-pay
+          predicates:
+            - Path=/wallet/**
+
 
 jwt:
   access-secret-key: qwertyuiopasdfghjklzxcvbnmqzzzlew

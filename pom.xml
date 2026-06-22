@@ -44,6 +44,7 @@
         <fastjson.version>1.2.83</fastjson.version>
         <jjwt.version>0.9.1</jjwt.version>
         <pagehelper>1.4.7</pagehelper>
+        <redisson.version>3.27.2</redisson.version>
     </properties>
 
     <dependencyManagement>
@@ -127,6 +128,13 @@
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>${pagehelper}</version>
+            </dependency>
+
+            <!-- Redisson 分布式锁 -->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
             </dependency>
 
             <!--spring-ai-->

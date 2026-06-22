@@ -125,4 +125,12 @@ public interface MomentsMapper {
      */
     void delete(Long momentId);
 
+    /**
+     * 更新帖子打赏金额
+     *
+     * @param momentId 帖子ID
+     * @param amount 打赏金额
+     */
+    void updateRewardAmount(Long momentId, java.math.BigDecimal amount);
+
 }

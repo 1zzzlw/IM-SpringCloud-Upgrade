@@ -1,0 +1,26 @@
+server:
+  port: 8086
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: im-pay
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    openfeign:
+      okhttp:
+        enabled: true
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.zzzlew.domain.entity
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com.zzzlew.mapper: debug
+    com.zzzlew.service: info

@@ -14,6 +14,12 @@
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
+        <!-- ===== 强制依赖：所有 REST 服务必需的 Web MVC 基础设施 ===== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
         <!--common-model (需要Result和DTO类)-->
         <dependency>
             <groupId>com.zzzlew</groupId>
@@ -25,13 +31,6 @@
         <dependency>
             <groupId>com.zzzlew</groupId>
             <artifactId>common-redis</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-        <!-- 依赖 common-storage -->
-        <dependency>
-            <groupId>com.zzzlew</groupId>
-            <artifactId>common-storage</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
@@ -47,16 +46,33 @@
             <artifactId>fastjson</artifactId>
         </dependency>
 
-        <!-- RabbitMQ -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>
-
         <!-- Hutool 工具类 -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
+        </dependency>
+
+        <!-- ===== 可选依赖（不传递）：@ConditionalOnClass 按需激活 ===== -->
+        <!-- 需要 MinIO 的服务显式引入 common-storage -->
+        <dependency>
+            <groupId>com.zzzlew</groupId>
+            <artifactId>common-storage</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- 需要 RabbitMQ 的服务显式引入 spring-boot-starter-amqp -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- 需要分布式锁的服务显式引入 redisson-spring-boot-starter -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

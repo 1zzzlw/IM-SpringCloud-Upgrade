@@ -54,4 +54,9 @@ public class MomentsVO {
      * 评论数
      */
     private Integer commentCount;
+
+    /**
+     * 累计打赏金额
+     */
+    private java.math.BigDecimal rewardAmount;
 }

@@ -213,9 +213,9 @@ public class MomentsController {
 
     @Operation(summary = "打赏")
     @PostMapping("/reward")
-    public Result<Object> reward(Long momentId, Integer count) {
-        log.info("打赏，帖子id：{}, 打赏金额: {}", momentId, count);
-        momentsService.reward(momentId, count);
+    public Result<Object> reward(@RequestParam Long momentId, @RequestParam java.math.BigDecimal amount) {
+        log.info("打赏，帖子id：{}, 打赏金额: {}", momentId, amount);
+        momentsService.reward(momentId, amount);
         return Result.success();
     }
 

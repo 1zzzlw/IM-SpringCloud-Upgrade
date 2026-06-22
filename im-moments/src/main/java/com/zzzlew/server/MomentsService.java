@@ -131,7 +131,7 @@ public interface MomentsService {
      * 朋友圈打赏
      *
      * @param momentId 朋友圈ID
-     * @param count    打赏金额
+     * @param amount   打赏金额
      */
-    void reward(Long momentId, Integer count);
+    void reward(Long momentId, java.math.BigDecimal amount);
 }

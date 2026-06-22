@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSON;
 import com.zzzlew.client.ChatClient;
+import com.zzzlew.client.PayClient;
 import com.zzzlew.client.SocialClient;
 import com.zzzlew.config.KaptchaConfig;
 import com.zzzlew.constant.JwtClaimsConstant;
@@ -63,6 +64,8 @@ public class UserServiceImpl implements UserService {
     private final SocialClient socialClient;
 
     private final ChatClient chatClient;
+
+    private final PayClient payClient;
 
     @Resource
     private UserMapper userMapper;
@@ -247,6 +250,9 @@ public class UserServiceImpl implements UserService {
         // 生成ai会话信息
         String conversationId = "ai_" + userId;
         chatClient.createConversation(conversationId, userId, "ai_system", 2);
+
+        // 初始化钱包
+        payClient.initWallet(userId);
 
         return userAuth;
     }

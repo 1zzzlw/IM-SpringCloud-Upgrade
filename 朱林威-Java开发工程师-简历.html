@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>朱林威 - Java开发工程师</title>
+  <style>
+    :root {
+      --text-primary: #333333;
+      --text-secondary: #666666;
+      --bg: #ffffff;
+      --accent: #003366;
+      --accent-light: #e8f0f8;
+      --border: #e0e0e0;
+      --tag-bg: #f0f4f8;
+      --tag-text: #334e68;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text-primary);
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .resume {
+      width: 210mm;
+      min-height: 297mm;
+      background: var(--bg);
+      padding: 28mm 22mm 20mm 22mm;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    /* ─── Header ─── */
+    .header {
+      text-align: center;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .header .name {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 3px;
+      margin-bottom: 5px;
+    }
+
+    .header .meta {
+      font-size: 13px;
+      color: var(--text-secondary);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 2px 16px;
+      margin-bottom: 2px;
+    }
+
+    .header .meta span {
+      white-space: nowrap;
+    }
+
+    .header .meta .separator {
+      color: #ccc;
+    }
+
+    .header .links {
+      font-size: 11px;
+      color: #888;
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 2px;
+    }
+
+    .header .links a {
+      color: #557799;
+      text-decoration: none;
+    }
+
+    .header .links a:hover {
+      text-decoration: underline;
+    }
+
+    .header .target {
+      margin-top: 8px;
+      font-size: 13.5px;
+      color: var(--accent);
+      font-weight: 600;
+      background: var(--accent-light);
+      display: inline-block;
+      padding: 2px 14px;
+      border-radius: 3px;
+    }
+
+    /* ─── Section ─── */
+    .section {
+      margin-bottom: 13px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent);
+      padding-bottom: 4px;
+      border-bottom: 1.5px solid var(--accent);
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    /* ─── Summary ─── */
+    .summary p {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ─── Skills ─── */
+    .skill-group {
+      margin-bottom: 5px;
+      font-size: 13px;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .skill-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .skill-label {
+      font-weight: 700;
+      color: var(--text-primary);
+      white-space: nowrap;
+      min-width: 100px;
+      font-size: 13px;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .skill-tag {
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      font-size: 12px;
+      padding: 1px 8px;
+      border-radius: 3px;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    /* ─── Project ─── */
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+
+    .project-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .project-role {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+    }
+
+    .project-duration {
+      font-size: 12px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .project-intro {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 7px;
+      line-height: 1.65;
+    }
+
+    .bullet-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .bullet-list li {
+      font-size: 13px;
+      color: var(--text-primary);
+      margin-bottom: 3px;
+      padding-left: 14px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .bullet-list li::before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 11px;
+    }
+
+    .bullet-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .highlight {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .tech-stack {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 5px;
+      font-style: italic;
+    }
+
+    /* ─── Education ─── */
+    .edu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .edu-info {
+      font-size: 13px;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .edu-date {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .edu-detail {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* ─── Print ─── */
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+
+      .resume {
+        width: 100%;
+        min-height: auto;
+        box-shadow: none;
+        padding: 12mm 15mm 10mm 15mm;
+        page-break-after: avoid;
+      }
+
+      @page {
+        size: A4;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="resume">
+
+    <!-- ═══ Header ═══ -->
+    <div class="header">
+      <div class="name">朱 林 威</div>
+      <div class="meta">
+        <span>河南师范大学 · 本科在读</span>
+        <span class="separator">|</span>
+        <span>19岁</span>
+        <span class="separator">|</span>
+        <span>18539312155</span>
+        <span class="separator">|</span>
+        <span>1400377637@qq.com</span>
+      </div>
+      <div class="links">
+        <span>后端：<a
+            href="https://github.com/1zzzlw/IM-SpringCloud-Upgrade">github.com/1zzzlw/IM-SpringCloud-Upgrade</a></span>
+        <span>前端：<a
+            href="https://github.com/1zzzlw/WeChat-Electron-vue-vite">github.com/1zzzlw/WeChat-Electron-vue-vite</a></span>
+      </div>
+      <div class="target">求职意向：Java 开发工程师（实习 / 校招）</div>
+    </div>
+
+    <!-- ═══ Professional Summary ═══ -->
+    <div class="section">
+      <div class="section-title">个人概述</div>
+      <div class="summary">
+        <p>
+          大二在读，从零独立构建了一个<span class="highlight">4.7 万行代码</span>的全栈即时通讯系统（后端 15 个微服务模块 + 前端 Electron 桌面客户端）。
+          熟练掌握 Spring Cloud Alibaba 微服务生态与 Netty 网络编程，具备<span class="highlight">自定义通信协议设计、Redis Lua
+            原子编程、分布式锁、消息队列集群路由</span>等实战经验。
+          对技术有强烈自驱力，追求从底层原理到业务落地的完整理解。
+        </p>
+      </div>
+    </div>
+
+    <!-- ═══ Skills ═══ -->
+    <div class="section">
+      <div class="section-title">专业技能</div>
+
+      <div class="skill-group">
+        <span class="skill-label">编程语言</span>
+        <span class="skill-tags">
+          <span class="skill-tag">Java</span>
+          <span class="skill-tag">TypeScript</span>
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">SQL</span>
+          <span class="skill-tag">Lua</span>
+        </span>
+      </div>
+
+      <div class="skill-group">
+        <span class="skill-label">框架与中间件</span>
+        <span class="skill-tags">
+          <span class="skill-tag">Spring Boot 3.2</span>
+          <span class="skill-tag">Spring Cloud Alibaba</span>
+          <span class="skill-tag">Netty</span>
+          <span class="skill-tag">MyBatis</span>
+          <span class="skill-tag">RabbitMQ</span>
+          <span class="skill-tag">Spring AI</span>
+          <span class="skill-tag">Vue 3</span>
+          <span class="skill-tag">Electron</span>
+        </span>
+      </div>
+
+      <div class="skill-group">
+        <span class="skill-label">数据库与缓存</span>
+        <span class="skill-tags">
+          <span class="skill-tag">MySQL</span>
+          <span class="skill-tag">Redis</span>
+          <span class="skill-tag">Redisson</span>
+          <span class="skill-tag">SQLite</span>
+          <span class="skill-tag">Canal</span>
+        </span>
+      </div>
+
+      <div class="skill-group">
+        <span class="skill-label">DevOps 与工具</span>
+        <span class="skill-tags">
+          <span class="skill-tag">Maven</span>
+          <span class="skill-tag">Git</span>
+          <span class="skill-tag">Docker</span>
+          <span class="skill-tag">Nacos</span>
+          <span class="skill-tag">Nginx</span>
+          <span class="skill-tag">MinIO</span>
+          <span class="skill-tag">WebSocket</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- ═══ Project Experience ═══ -->
+    <div class="section">
+      <div class="section-title">项目经历</div>
+
+      <div class="project-header">
+        <div>
+          <span class="project-name">仿微信全栈即时通讯系统</span>
+          <span class="project-role">— 独立全栈开发</span>
+        </div>
+        <span class="project-duration">2025.11 – 2026.06</span>
+      </div>
+
+      <div class="project-intro">
+        基于 Spring Cloud Alibaba 微服务架构的高并发 IM 系统，后端 <span class="highlight">215 个 Java 源文件、~15,000 行</span>核心代码，前端
+        Electron + Vue 3 桌面客户端 <span class="highlight">165 个源文件、~32,000 行</span>代码。涵盖私聊/群聊、朋友圈、红包/打赏/支付、AI
+        对话、好友管理等完整功能闭环。
+      </div>
+
+      <ul class="bullet-list">
+        <li>
+          <span class="highlight">自研 Netty 自定义通信协议：</span>设计 16 字节固定头 + 变长体二进制协议帧（魔数/版本/序列化算法/消息类型/序列号），实现 14 级 Pipeline
+          编排 — HTTP→WebSocket 升级、JWT 握手认证、粘包半包解码、心跳保活；策略模式支持 JSON/Java 双序列化切换；跨平台自适应（Linux Epoll / Windows
+          Nio），异步多线程消息投递，支持多节点集群部署与 RabbitMQ 消息路由。
+        </li>
+        <li>
+          <span class="highlight">Redis 深度应用与 Lua 原子编程：</span>手写 7 个业务 Lua 脚本 — Token
+          原子替换、抢红包二倍均值随机分配算法、朋友圈点赞/评论计数原子切换、缓存预热 SETNX 等；综合运用 String/Hash/Set/ZSet/List 五种数据结构；封装分布式锁工具（Redisson 可重入锁 +
+          幂等锁双模式）；Pipeline 批量优化 + 随机 TTL 防缓存雪崩。
+        </li>
+        <li>
+          <span class="highlight">红包/打赏/支付系统：</span>设计三层锁策略（MySQL 悲观行锁 + 乐观余额校验 + Redis 分布式幂等锁），按用户 ID 排序防死锁；手写 Lua
+          实现二倍均值法随机红包金额分配；MQ 驱动的异步转账 Saga 流程；7 种资金流水类型完整追踪。
+        </li>
+        <li>
+          <span class="highlight">微服务架构与全栈工程化：</span>搭建 9 个业务模块 + 6 个公共模块的微服务架构，Nacos 注册中心/配置中心，Gateway 响应式网关双
+          Token（Access 1h + Refresh 1y）无感刷新，Feign 声明式 RESTful 跨服务调用，IP 限流 AOP；前端基于 Vue 3 + Electron 构建桌面客户端，64 个页面覆盖完整
+          IM 功能，WebSocket 实时通信，SQLite 本地数据库。
+        </li>
+        <li>
+          <span class="highlight">朋友圈与缓存一致性：</span>完整帖子发布/点赞/评论/打赏闭环；Canal 监听 MySQL binlog 异步删缓存 + Cache-Aside
+          读重建保证最终一致性；Lua 保证点赞/评论计数原子性；ZSet 热榜排行（Top 2000）。
+        </li>
+      </ul>
+
+      <div class="tech-stack">
+        技术栈：Java · Spring Boot 3.2 · Spring Cloud Alibaba 2023 · Netty · WebSocket · RabbitMQ · Redis · Redisson · MySQL
+        · MyBatis · Nacos · Canal · MinIO · Spring AI · Lua · Vue 3 · TypeScript · Electron · Pinia · SQLite · Docker ·
+        Nginx
+      </div>
+    </div>
+
+    <!-- ═══ Education ═══ -->
+    <div class="section">
+      <div class="section-title">教育背景</div>
+      <div class="edu-item">
+        <span class="edu-info">河南师范大学 · 计算机相关专业（本科在读）</span>
+        <span class="edu-date">2024.09 – 预计 2028.06</span>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+
+</html>

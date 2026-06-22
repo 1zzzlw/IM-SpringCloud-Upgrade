@@ -6,6 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.zzzlew.domain.dto.MomentCommentsDTO;
 import com.zzzlew.domain.dto.MomentCommentsPageQueryDTO;
 import com.zzzlew.domain.dto.MomentsDTO;
+import com.zzzlew.domain.dto.RewardMessageDTO;
 import com.zzzlew.domain.dto.UserBaseDTO;
 import com.zzzlew.domain.vo.MomentsCommentsVO;
 import com.zzzlew.domain.vo.MomentsVO;
@@ -17,6 +18,7 @@ import com.zzzlew.utils.MinIOFileStorgeUtil;
 import com.zzzlew.utils.UserHolder;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -24,10 +26,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
+import static com.zzzlew.constant.RabbitMQConstant.EXCHANGE;
+import static com.zzzlew.constant.RabbitMQConstant.ROUTING_KEY_REWARD_CREATE;
 import static com.zzzlew.constant.RedisConstant.*;
 
 /**
@@ -56,6 +61,9 @@ public class MomentsServiceImpl implements MomentsService {
     private DefaultRedisScript<Long> momentsCommentLikeScript;
     @Resource
     private DefaultRedisScript<Long> momentsCommentCountIncrScript;
+
+    @Resource
+    private RabbitTemplate rabbitTemplate;
 
     // ZSet 最新帖子列表最大保留条数
     private static final long MOMENTS_LIST_NEW_MAX_SIZE = 2000L;
@@ -803,15 +811,30 @@ public class MomentsServiceImpl implements MomentsService {
     }
 
     @Override
-    public void reward(Long momentId, Integer count) {
-        // 打赏者身份与余额校验,确认登录用户,查询钱包余额是否足够
+    public void reward(Long momentId, BigDecimal amount) {
+        if (amount == null || amount.compareTo(new BigDecimal("0.01")) < 0 || amount.compareTo(new BigDecimal("200")) > 0) {
+            throw new RuntimeException("打赏金额需在 0.01 ~ 200 之间");
+        }
 
-        // 打赏者钱包扣减
+        // 查帖子，获取作者 ID
+        MomentsVO moment = momentsMapper.getById(momentId);
+        if (moment == null) {
+            throw new RuntimeException("帖子不存在");
+        }
 
-        // 异步操作
-        // 被打赏者钱包余额增加
+        Long fromUserId = UserHolder.getUser().getId();
+        Long toUserId = moment.getUserId();
 
-        // 生成打赏凭证,也就是生成记录到数据库
+        if (fromUserId.equals(toUserId)) {
+            throw new RuntimeException("不能打赏自己的帖子");
+        }
+
+        // 幂等 key：打赏人_帖子_时间戳（允许同一人多次打赏不同金额）
+        String idempotentKey = fromUserId + "_" + momentId + "_" + System.currentTimeMillis();
+
+        RewardMessageDTO msg = new RewardMessageDTO(idempotentKey, momentId, fromUserId, toUserId, amount);
+        rabbitTemplate.convertAndSend(EXCHANGE, ROUTING_KEY_REWARD_CREATE, msg);
+        log.info("打赏请求已发送 MQ，momentId={}, from={}, amount={}", momentId, fromUserId, amount);
     }
 
     /**

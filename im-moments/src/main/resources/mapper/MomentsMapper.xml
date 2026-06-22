@@ -108,4 +108,10 @@
               #{momentId}
     </delete>
 
+    <update id="updateRewardAmount">
+        UPDATE moments 
+        SET reward_amount = reward_amount + #{amount}
+        WHERE id = #{momentId}
+    </update>
+
 </mapper>

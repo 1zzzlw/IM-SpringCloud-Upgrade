@@ -15,6 +15,17 @@ spring:
           max-idle: 10
           min-idle: 1
           time-between-eviction-runs: 10s
+  rabbitmq:
+    host: 39.106.183.13
+    port: 5672
+    username: admin
+    password: 123456
+    virtual-host: /
+    listener:
+      simple:
+        acknowledge-mode: manual
+        prefetch: 1
+
 minio:
   endpoint: http://39.106.183.13:9000
   accessKey: admin
@@ -33,3 +44,4 @@ minio:
 canal:
   server: 127.0.0.1:11111
   destination: zzz-im-canal
+
