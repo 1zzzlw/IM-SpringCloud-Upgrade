@@ -7,7 +7,7 @@ server:
 
 spring:
   profiles:
-    active: dev  # 默认启用本地环境
+    active: dev
   application:
     name: im-auth
   servlet:
@@ -18,18 +18,48 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: ${im.nacos.host}:8848
     openfeign:
       okhttp:
-        # 开启连接池功能
         enabled: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${im.mysql.host}:${im.mysql.port}/${im.mysql.database}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${im.mysql.username}
+    password: ${im.mysql.password}
+  data:
+    redis:
+      host: ${im.redis.host}
+      port: ${im.redis.port}
+      password: ${im.redis.password}
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 10
+          min-idle: 1
+          time-between-eviction-runs: 10s
 
 jwt:
-  access-secret-key: qwertyuiopasdfghjklzxcvbnmqzzzlew
-  fresh-secret-key: freshqwertyuiopzxcvbnmasdfqzzzlew
+  access-secret-key: ${im.jwt.access-secret}
+  fresh-secret-key: ${im.jwt.refresh-secret}
   access-expiration: 3600000
   refresh-expiration: 31536000000
   token-name: Authorization
+
+minio:
+  endpoint: ${im.minio.endpoint}
+  accessKey: ${im.minio.access-key}
+  secretKey: ${im.minio.secret-key}
+  avatarBucket: zzz-im-avatar
+  imageBucket: zzz-im-image
+  videoBucket: zzz-im-video
+  audioBucket: zzz-im-audio
+  fileBucket: zzz-im-file
+  favoriteBucket: zzz-im-favorite
+  momentsBucket: zzz-im-moment
+  imagePath: image
+  videoPath: video
+  expireIn: 180
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml

@@ -35,12 +35,16 @@ public class RedPacketGrabListener {
 
             log.info("红包到账：userId={}, redPacketId={}, amount={}", userId, redPacketId, amount);
 
-            // 查钱包（加锁）
+            // 查钱包（加锁），不存在则自动初始化
             Wallet wallet = walletMapper.selectByUserIdForUpdate(userId);
             if (wallet == null) {
-                log.error("用户 {} 钱包不存在，红包到账失败", userId);
-                channel.basicAck(deliveryTag, false);
-                return;
+                walletMapper.initWallet(userId);
+                wallet = walletMapper.selectByUserIdForUpdate(userId);
+                if (wallet == null) {
+                    log.error("用户 {} 钱包初始化失败，红包到账失败", userId);
+                    channel.basicNack(deliveryTag, false, true);
+                    return;
+                }
             }
 
             // 到账

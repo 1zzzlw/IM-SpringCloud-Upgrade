@@ -1,6 +1,10 @@
 im:
+  mysql:
+    host: 47.111.22.183
   redis:
     host: 47.111.22.183
   rabbitmq:
     host: 47.111.22.183
     username: rabbitmq
+  nacos:
+    host: 47.111.22.183

@@ -22,8 +22,11 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public Wallet getWallet(Long userId) {
-        walletMapper.initWallet(userId);
-        return walletMapper.selectByUserIdForUpdate(userId);
+        Wallet wallet = walletMapper.selectByUserId(userId);
+        if (wallet == null) {
+            throw new RuntimeException("钱包不存在，userId: " + userId);
+        }
+        return wallet;
     }
 
     @Override
@@ -32,8 +35,10 @@ public class WalletServiceImpl implements WalletService {
         if (amount == null || amount.compareTo(new BigDecimal("0.01")) < 0) {
             throw new RuntimeException("充值金额不合法");
         }
-        walletMapper.initWallet(userId);
         Wallet wallet = walletMapper.selectByUserIdForUpdate(userId);
+        if (wallet == null) {
+            throw new RuntimeException("钱包不存在，userId: " + userId);
+        }
         int rows = walletMapper.addBalance(userId, amount);
         if (rows == 0) throw new RuntimeException("充值失败");
         BigDecimal after = wallet.getBalance().add(amount);

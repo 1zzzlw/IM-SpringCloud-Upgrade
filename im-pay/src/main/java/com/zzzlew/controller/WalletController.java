@@ -45,7 +45,7 @@ public class WalletController {
     public Result<BigDecimal> getBalance() {
         Long userId = UserHolder.getUser().getId();
         Wallet wallet = walletService.getWallet(userId);
-        return Result.success(wallet == null ? BigDecimal.ZERO : wallet.getBalance());
+        return Result.success(wallet.getBalance());
     }
 
     @Operation(summary = "充值")

@@ -3,10 +3,8 @@ im:
     host: 39.106.183.13
     port: 6379
     password: 123456
-  rabbitmq:
-    host: 39.106.183.13
-    port: 5672
-    username: admin
-    password: 123456
+  nacos:
+    host: 127.0.0.1
   jwt:
     access-secret: qwertyuiopasdfghjklzxcvbnmqzzzlew
+    refresh-secret: freshqwertyuiopzxcvbnmasdfqzzzlew

@@ -1,47 +1,25 @@
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/zzz-im-server?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+im:
+  mysql:
+    host: 127.0.0.1
+    port: 3306
+    database: zzz-im-server
     username: root
     password: 123456
-  data:
-    redis:
-      host: 39.106.183.13
-      port: 6379
-      password: 123456
-      lettuce:
-        pool:
-          max-active: 10
-          max-idle: 10
-          min-idle: 1
-          time-between-eviction-runs: 10s
+  redis:
+    host: 39.106.183.13
+    port: 6379
+    password: 123456
   rabbitmq:
     host: 39.106.183.13
     port: 5672
     username: admin
     password: 123456
-    virtual-host: /
-    listener:
-      simple:
-        acknowledge-mode: manual
-        prefetch: 1
-
-minio:
-  endpoint: http://39.106.183.13:9000
-  accessKey: admin
-  secretKey: 12345678
-  avatarBucket: zzz-im-avatar
-  imageBucket: zzz-im-image
-  videoBucket: zzz-im-video
-  audioBucket: zzz-im-audio
-  fileBucket: zzz-im-file
-  favoriteBucket: zzz-im-favorite
-  momentsBucket: zzz-im-moment
-  imagePath: image
-  videoPath: video
-  expireIn: 180
-
-canal:
-  server: 127.0.0.1:11111
-  destination: zzz-im-canal
-
+  minio:
+    endpoint: http://39.106.183.13:9000
+    access-key: admin
+    secret-key: 12345678
+  nacos:
+    host: 127.0.0.1
+  canal:
+    server: 127.0.0.1:11111
+    destination: zzz-im-canal

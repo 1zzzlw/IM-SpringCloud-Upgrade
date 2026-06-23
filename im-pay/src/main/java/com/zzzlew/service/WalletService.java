@@ -9,7 +9,7 @@ import java.util.List;
 public interface WalletService {
 
     /**
-     * 查询钱包（不存在则自动初始化）
+     * 查询钱包
      */
     Wallet getWallet(Long userId);
 

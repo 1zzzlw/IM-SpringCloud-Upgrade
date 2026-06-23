@@ -8,8 +8,8 @@
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| `GET` | `/wallet/info` | 查询钱包（余额 + 冻结余额），不存在则自动初始化 |
-| `GET` | `/wallet/balance` | 只查余额（兼容旧接口），不存在则自动初始化 |
+| `GET` | `/wallet/info` | 查询钱包（余额 + 冻结余额） |
+| `GET` | `/wallet/balance` | 只查余额（兼容旧接口） |
 | `POST` | `/wallet/recharge` | 充值 `@Transactional`（写流水 type=1） |
 | `POST` | `/wallet/withdraw` | 提现 `@Transactional`（写流水 type=2） |
 | `GET` | `/wallet/records` | 分页查询流水（支持 type 过滤，0=全部） |

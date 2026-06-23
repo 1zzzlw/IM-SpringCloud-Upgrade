@@ -1,13 +1,16 @@
 server:
   port: 8080
+
 spring:
+  profiles:
+    active: dev
   application:
     name: im-gateway
   data:
     redis:
-      host: 39.106.183.13
-      port: 6379
-      password: 123456
+      host: ${im.redis.host}
+      port: ${im.redis.port}
+      password: ${im.redis.password}
       lettuce:
         pool:
           max-active: 10
@@ -17,7 +20,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: ${im.nacos.host}:8848
     gateway:
       routes:
         - id: im-auth
@@ -45,23 +48,21 @@ spring:
           predicates:
             - Path=/wallet/**
 
-
 jwt:
-  access-secret-key: qwertyuiopasdfghjklzxcvbnmqzzzlew
-  fresh-secret-key: freshqwertyuiopzxcvbnmasdfqzzzlew
+  access-secret-key: ${im.jwt.access-secret}
+  fresh-secret-key: ${im.jwt.refresh-secret}
   access-expiration: 3600000
   refresh-expiration: 31536000000
   token-name: Authorization
 
 auth:
-  # 排除路径（完全放行，不需要任何Token）
   excludePaths:
     # --- 登录注册相关 ---
-    - "/user/login"               # 登录接口
-    - "/user/pendingLogin"        # 自动登录的请求
-    - "/user/register"            # 注册接口
-    - "/user/verifyCode"         # 图片验证码接口
-    - "/user/phoneCode"           # 手机验证码接口
+    - "/user/login"
+    - "/user/pendingLogin"
+    - "/user/register"
+    - "/user/verifyCode"
+    - "/user/phoneCode"
     # --- 文件上传相关（分块上传在业务层校验） ---
     - "/message/checkUploaded"
     - "/message/uploadChunk"
@@ -76,9 +77,9 @@ auth:
     - "/error/**"
 
   refreshPaths:
-    - "/user/refreshToken/**" # 拦截刷新token的请求
-    - "/message/verifyUploadToken/**" # 拦截获取文件上传凭证的请求
-    - "/message/merge" # 拦截合并文件的请求
-    - "/message/init/list/**" # 拦截初始化消息表的请求（使用长期Token）
-    - "/conversation/init/list" # 拦截初始化会话表的请求（使用长期Token）
-    - "/friend/init/list" # 拦截初始化好友表的请求（使用长期Token）
+    - "/user/refreshToken/**"
+    - "/message/verifyUploadToken/**"
+    - "/message/merge"
+    - "/message/init/list/**"
+    - "/conversation/init/list"
+    - "/friend/init/list"

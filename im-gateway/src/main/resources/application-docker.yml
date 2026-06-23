@@ -1,6 +1,5 @@
 im:
   redis:
     host: 47.111.22.183
-  rabbitmq:
+  nacos:
     host: 47.111.22.183
-    username: rabbitmq

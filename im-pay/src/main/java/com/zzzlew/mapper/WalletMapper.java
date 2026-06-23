@@ -10,6 +10,11 @@ import java.util.List;
 public interface WalletMapper {
 
     /**
+     * 查询钱包（普通 SELECT，不加锁）
+     */
+    Wallet selectByUserId(@Param("userId") Long userId);
+
+    /**
      * 查询钱包（加行锁，for update）
      */
     Wallet selectByUserIdForUpdate(@Param("userId") Long userId);
