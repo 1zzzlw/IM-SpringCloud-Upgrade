@@ -13,7 +13,7 @@ public class RabbitMQConstant {
     // Netty集群的消息队列
     public static final String QUEUE_NETTY_PREFIX = "im-push-queue-";
     // Netty集群的消息队列的路由规则
-    public static final String QUEUE_NETTY_ROUTING_KEY= "im.push.";
+    public static final String QUEUE_NETTY_ROUTING_KEY = "im.push.";
     // SpringBoot监听的异步存储的消息队列
     public static final String QUEUE_STORGE_PREFIX = "im-storage-queue";
     // SpringBoot监听的异步存储的消息队列的路由规则

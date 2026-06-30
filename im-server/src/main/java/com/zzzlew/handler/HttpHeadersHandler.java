@@ -3,7 +3,7 @@ package com.zzzlew.handler;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.zzzlew.domain.UserBaseDTO;
+import com.zzzlew.domain.dto.UserBaseDTO;
 import com.zzzlew.utils.ChannelManageUtil;
 import com.zzzlew.utils.JwtUtil;
 import io.jsonwebtoken.Claims;

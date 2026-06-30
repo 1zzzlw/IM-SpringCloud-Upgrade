@@ -105,5 +105,5 @@ RabbitMQ Exchange: `im-topic-exchange`，每个 im-server 实例声明自己的�
 - `common-base`（JwtUtil、RabbitMQConstant）
 - `common-redis`（RedisConstant）
 - `netty-all` 4.1.94.Final
-- `redisson-spring-boot-starter` 3.21.3
+- `redisson-spring-boot-starter`（版本由父 POM 统一管理）
 - `spring-boot-starter-amqp`（RabbitMQ 集群通信）

@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="26.0.0">
+  <diagram name="支付系统-红包-打赏 全链路流程图">
+    <mxGraphModel dx="1600" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ============================================================ -->
+        <!-- BACKGROUND CONTAINERS - 3 subsystem regions                  -->
+        <!-- ============================================================ -->
+
+        <!-- Left: 红包系统 background -->
+        <mxCell id="bg-left" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE4EC;strokeColor=#C62828;strokeWidth=2;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="20" y="20" width="490" height="1340" as="geometry" />
+        </mxCell>
+        <mxCell id="title-left" value="&lt;b&gt;🧧 红包系统 (im-chat → im-pay)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#C62828;" vertex="1" parent="1">
+          <mxGeometry x="80" y="25" width="370" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Center: 钱包核心 background -->
+        <mxCell id="bg-center" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#1565C0;strokeWidth=2;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="530" y="20" width="450" height="1340" as="geometry" />
+        </mxCell>
+        <mxCell id="title-center" value="&lt;b&gt;💰 钱包核心 (im-pay)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#1565C0;" vertex="1" parent="1">
+          <mxGeometry x="610" y="25" width="290" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Right: 打赏系统 background -->
+        <mxCell id="bg-right" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#E65100;strokeWidth=2;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="20" width="490" height="1340" as="geometry" />
+        </mxCell>
+        <mxCell id="title-right" value="&lt;b&gt;🎁 打赏系统 (im-moments → im-pay → im-moments)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontColor=#E65100;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="25" width="450" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- LEFT COLUMN: 红包系统 RED PACKET                             -->
+        <!-- ============================================================ -->
+
+        <!-- Sub-header: 发红包 -->
+        <mxCell id="rp-sub-send" value="&lt;b&gt;一、发送红包&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontColor=#AD1457;" vertex="1" parent="1">
+          <mxGeometry x="35" y="65" width="120" height="25" as="geometry" />
+        </mxCell>
+
+        <!-- rp1: 发起发红包 -->
+        <mxCell id="rp1" value="用户发起发红包&lt;br&gt;POST /redPacket/send" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8BBD0;strokeColor=#C62828;fontSize=11;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="100" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- rp2: 金额校验 (diamond) -->
+        <mxCell id="rp2" value="金额校验" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="70" y="190" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- rp3: Feign扣款 -->
+        <mxCell id="rp3" value="Feign 调用 im-pay 扣款&lt;br&gt;POST /wallet/deduct" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8BBD0;strokeColor=#C62828;fontSize=11;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="300" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- rp4: 扣款结果 (diamond) -->
+        <mxCell id="rp4" value="扣款成功?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="70" y="390" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- rp5: 写DB+Redis -->
+        <mxCell id="rp5" value="写 red_packet 表 + 预热 Redis&lt;br&gt;Hash: remain_count/amount(fen)&lt;br&gt;TTL=24h" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8BBD0;strokeColor=#C62828;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="500" width="200" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- rp6: 发红包成功 -->
+        <mxCell id="rp6" value="✅ 红包发送成功" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;fontSize=12;arcSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="595" width="160" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- rp-err: 余额不足 -->
+        <mxCell id="rp-err" value="❌ 余额不足" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCDD2;strokeColor=#B71C1C;fontSize=11;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="290" y="400" width="120" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- rp-refund: 补偿退款 -->
+        <mxCell id="rp-refund" value="⚠️ DB/Redis异常&lt;br&gt;补偿退款 refund" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCDD2;strokeColor=#B71C1C;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="290" y="510" width="150" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Sub-header: 抢红包 -->
+        <mxCell id="rp-sub-grab" value="&lt;b&gt;二、抢红包&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontColor=#AD1457;" vertex="1" parent="1">
+          <mxGeometry x="35" y="670" width="120" height="25" as="geometry" />
+        </mxCell>
+
+        <!-- rp7: 抢红包入口 -->
+        <mxCell id="rp7" value="用户抢红包&lt;br&gt;POST /redPacket/grab/{id}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8BBD0;strokeColor=#C62828;fontSize=11;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="705" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- rp8: 缓存检查 (diamond) -->
+        <mxCell id="rp8" value="Redis 缓存&lt;br&gt;存在?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="70" y="795" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- rp-warmup: DB回灌 -->
+        <mxCell id="rp-warmup" value="分布式锁 warmup&lt;br&gt;SetNX lock → DB回灌Redis" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE082;strokeColor=#F9A825;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="280" y="800" width="170" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- rp9: Lua脚本 -->
+        <mxCell id="rp9" value="🔒 Lua 原子执行 (grab_red_packet.lua)&lt;br&gt;1.HMGET 检查 status=0&lt;br&gt;2.SISMEMBER 防重复领取&lt;br&gt;3.二倍均值法/均分 计算金额(分)&lt;br&gt;4.HINCRBY 扣减 + SADD 标记" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1BEE7;strokeColor=#7B1FA2;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="905" width="240" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- rp10: Lua结果 (diamond) -->
+        <mxCell id="rp10" value="Lua 返回?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1025" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- rp11: MQ到账 -->
+        <mxCell id="rp11" value="📨 发送 MQ 异步到账&lt;br&gt;RoutingKey: im.redpacket.grab&lt;br&gt;→ im-redpacket-grab-queue" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CE93D8;strokeColor=#7B1FA2;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="1135" width="210" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- rp12: 同步写DB -->
+        <mxCell id="rp12" value="同步写领取记录&lt;br&gt;+ DB扣减 remain_count/amount&lt;br&gt;领完 → 更新 status=1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8BBD0;strokeColor=#C62828;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="1225" width="210" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- rp-ok: 领取成功 -->
+        <mxCell id="rp-ok" value="✅ 领取成功，返回金额" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;fontSize=12;arcSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="1140" width="160" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- rp-fail nodes -->
+        <mxCell id="rp-fail1" value="❌ 已领取过" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCDD2;strokeColor=#B71C1C;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="300" y="1025" width="100" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="rp-fail2" value="❌ 已领完/过期" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCDD2;strokeColor=#B71C1C;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="300" y="1070" width="100" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- CENTER COLUMN: 钱包核心 WALLET                                -->
+        <!-- ============================================================ -->
+
+        <!-- w1: 初始化钱包 -->
+        <mxCell id="w1" value="用户注册 → 初始化钱包&lt;br&gt;wallet 表 (user_id UNIQUE)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BBDEFB;strokeColor=#1565C0;fontSize=11;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="580" y="70" width="280" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- w-divider1 -->
+        <mxCell id="w-div1" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=#90CAF9;" vertex="1" parent="1">
+          <mxGeometry x="570" y="140" width="350" height="10" as="geometry" />
+        </mxCell>
+
+        <!-- w2: 充值 -->
+        <mxCell id="w2" value="&lt;b&gt;充值&lt;/b&gt;  POST /wallet/recharge" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BBDEFB;strokeColor=#1565C0;fontSize=11;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="580" y="160" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="w2a" value="FOR UPDATE 行锁 → addBalance&lt;br&gt;→ 流水 type=1 (充值)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="580" y="210" width="200" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- w3: 提现 -->
+        <mxCell id="w3" value="&lt;b&gt;提现&lt;/b&gt;  POST /wallet/withdraw" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BBDEFB;strokeColor=#1565C0;fontSize=11;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="580" y="270" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="w3a" value="FOR UPDATE → 校验余额&lt;br&gt;→ deductBalance → 流水 type=2" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="580" y="320" width="200" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- w-divider2 -->
+        <mxCell id="w-div2" value="&lt;b&gt;内部接口 (供 Feign/MQ 调用)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#1565C0;" vertex="1" parent="1">
+          <mxGeometry x="570" y="380" width="280" height="25" as="geometry" />
+        </mxCell>
+
+        <!-- w4: 内部扣款 (红包发) -->
+        <mxCell id="w4" value="&lt;b&gt;扣款&lt;/b&gt;  POST /wallet/deduct&lt;br&gt;FOR UPDATE → deductBalance(乐观锁)&lt;br&gt;→ 流水 type=5 (红包支出)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#90CAF9;strokeColor=#1565C0;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="580" y="415" width="280" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- w5: 内部退款 -->
+        <mxCell id="w5" value="&lt;b&gt;退款&lt;/b&gt;  POST /wallet/refund&lt;br&gt;FOR UPDATE → addBalance&lt;br&gt;→ 流水 type=7 (退款)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#90CAF9;strokeColor=#1565C0;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="580" y="490" width="280" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- w-divider3 -->
+        <mxCell id="w-div3" value="&lt;b&gt;MQ 消费者 (打赏 &amp; 红包到账)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#1565C0;" vertex="1" parent="1">
+          <mxGeometry x="570" y="565" width="280" height="25" as="geometry" />
+        </mxCell>
+
+        <!-- w6: transferForReward -->
+        <mxCell id="w6" value="&lt;b&gt;打赏转账 transferForReward()&lt;/b&gt;&lt;br&gt;🔒 防死锁: 按userId升序锁双方&lt;br&gt;→ 扣款(from) + 加款(to)&lt;br&gt;→ 流水 type=3(支出) + type=4(收入)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#64B5F6;strokeColor=#1565C0;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="560" y="600" width="290" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- w7: RedPacketGrabListener -->
+        <mxCell id="w7" value="&lt;b&gt;RedPacketGrabListener&lt;/b&gt;&lt;br&gt;消费 im-redpacket-grab-queue&lt;br&gt;@Transactional: FOR UPDATE → addBalance&lt;br&gt;→ 流水 type=6 (红包收入)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#64B5F6;strokeColor=#1565C0;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="560" y="700" width="290" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- w8: RewardMessageListener -->
+        <mxCell id="w8" value="&lt;b&gt;RewardMessageListener&lt;/b&gt;&lt;br&gt;消费 im-reward-create-queue&lt;br&gt;Redisson 幂等(SetNX 300s)&lt;br&gt;→ transferForReward → 结果MQ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#64B5F6;strokeColor=#1565C0;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="560" y="800" width="290" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- RIGHT COLUMN: 打赏系统 REWARD                                -->
+        <!-- ============================================================ -->
+
+        <!-- rw1: 打赏帖子 -->
+        <mxCell id="rw1" value="用户打赏帖子&lt;br&gt;POST /moments/reward?momentId=&amp;amount=" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#E65100;fontSize=11;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="70" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- rw2: 校验 (diamond) -->
+        <mxCell id="rw2" value="校验金额&lt;br&gt;0.01≤amount≤200&lt;br&gt;不能给自己打赏" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="160" width="180" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- rw3: 幂等Key -->
+        <mxCell id="rw3" value="生成幂等 Key&lt;br&gt;{fromUserId}_{momentId}_{timestamp}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#E65100;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="280" width="240" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- rw4: 发MQ -->
+        <mxCell id="rw4" value="📨 发送 MQ 打赏请求&lt;br&gt;Exchange: im-topic-exchange&lt;br&gt;RoutingKey: im.reward.create&lt;br&gt;→ im-reward-create-queue" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCC80;strokeColor=#E65100;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="360" width="260" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- rw5: 消费打赏请求 -->
+        <mxCell id="rw5" value="&lt;b&gt;RewardMessageListener&lt;/b&gt; (im-pay) 消费&lt;br&gt;Redisson 幂等校验 SetNX 300s" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCC80;strokeColor=#E65100;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="455" width="260" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- rw6: 转账 (diamond) -->
+        <mxCell id="rw6" value="转账成功?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="535" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- rw7: 发结果MQ -->
+        <mxCell id="rw7" value="📨 发送打赏结果 MQ&lt;br&gt;RoutingKey: im.reward.result&lt;br&gt;→ im-reward-result-queue" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCC80;strokeColor=#E65100;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="640" width="260" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- rw8: 消费结果 -->
+        <mxCell id="rw8" value="&lt;b&gt;RewardResultListener&lt;/b&gt; (im-moments) 消费&lt;br&gt;Redis SetNX 幂等 (TTL=24h)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCC80;strokeColor=#E65100;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="725" width="260" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- rw9: 更新帖子 (diamond) -->
+        <mxCell id="rw9" value="打赏成功?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="805" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- rw10: 更新DB -->
+        <mxCell id="rw10" value="UPDATE moments&lt;br&gt;SET reward_amount += amount" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#E65100;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="905" width="240" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- rw11: 打赏完成 -->
+        <mxCell id="rw11" value="✅ 打赏完成" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;fontSize=12;arcSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="985" width="180" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- rw-err -->
+        <mxCell id="rw-err1" value="❌ 校验失败" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCDD2;strokeColor=#B71C1C;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1310" y="175" width="100" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="rw-err2" value="❌ 转账失败&lt;br&gt;发失败MQ结果" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCDD2;strokeColor=#B71C1C;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1310" y="540" width="120" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="rw-err3" value="📝 记录失败日志" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCDD2;strokeColor=#B71C1C;fontSize=10;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1310" y="810" width="110" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- EDGES: 红包系统内部                                           -->
+        <!-- ============================================================ -->
+
+        <mxCell id="e-rp1-2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="rp1" target="rp2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rp2-3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="rp2" target="rp3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rp3-4" value="扣款请求" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="rp3" target="rp4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rp4-5" value="成功" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fontColor=#2E7D32;strokeColor=#2E7D32;" edge="1" parent="1" source="rp4" target="rp5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rp5-6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="rp5" target="rp6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rp4-err" value="失败" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontColor=#C62828;strokeColor=#C62828;" edge="1" parent="1" source="rp4" target="rp-err">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rp5-refund" value="异常时" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontColor=#C62828;strokeColor=#C62828;dashed=1;" edge="1" parent="1" source="rp5" target="rp-refund">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 抢红包 edges -->
+        <mxCell id="e-rp7-8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="rp7" target="rp8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rp8-warmup" value="缓存过期" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontColor=#F9A825;strokeColor=#F9A825;" edge="1" parent="1" source="rp8" target="rp-warmup">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-warmup-rp8" value="回灌完成" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;entryX=1;entryY=0.5;fontColor=#F9A825;strokeColor=#F9A825;dashed=1;" edge="1" parent="1" source="rp-warmup" target="rp8">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="280" y="880" />
+              <mxPoint x="250" y="880" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-rp8-9" value="缓存存在" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#2E7D32;" edge="1" parent="1" source="rp8" target="rp9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rp9-10" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="rp9" target="rp10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rp10-11" value="金额(分)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#2E7D32;" edge="1" parent="1" source="rp10" target="rp11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rp11-12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="rp11" target="rp12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rp10-fail1" value="-1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;entryX=0;entryY=0.5;fontColor=#C62828;strokeColor=#C62828;" edge="1" parent="1" source="rp10" target="rp-fail1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rp10-fail2" value="-2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;entryX=0;entryY=0.5;fontColor=#C62828;strokeColor=#C62828;" edge="1" parent="1" source="rp10" target="rp-fail2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rp11-ok" value="MQ到账后" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0.5;entryY=0;fontColor=#2E7D32;strokeColor=#2E7D32;" edge="1" parent="1" source="rp11" target="rp-ok">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- EDGES: 钱包核心内部                                           -->
+        <!-- ============================================================ -->
+
+        <mxCell id="e-w1-2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="w1" target="w2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-w2-2a" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="w2" target="w2a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-w2a-3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="w2a" target="w3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-w3-3a" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="w3" target="w3a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-w3a-4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="w3a" target="w4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-w4-5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="w4" target="w5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-w5-6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="w5" target="w6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-w6-7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="w6" target="w7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-w7-8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="w7" target="w8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- EDGES: 打赏系统内部                                           -->
+        <!-- ============================================================ -->
+
+        <mxCell id="e-rw1-2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="rw1" target="rw2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rw2-3" value="通过" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#2E7D32;" edge="1" parent="1" source="rw2" target="rw3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rw2-err1" value="失败" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontColor=#C62828;strokeColor=#C62828;" edge="1" parent="1" source="rw2" target="rw-err1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rw3-4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="rw3" target="rw4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rw4-5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="rw4" target="rw5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rw5-6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="rw5" target="rw6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rw6-7" value="成功/失败" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="rw6" target="rw7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rw6-err2" value="异常" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontColor=#C62828;strokeColor=#C62828;dashed=1;" edge="1" parent="1" source="rw6" target="rw-err2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rw7-8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="rw7" target="rw8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rw8-9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="rw8" target="rw9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rw9-10" value="成功" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#2E7D32;" edge="1" parent="1" source="rw9" target="rw10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rw10-11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="rw10" target="rw11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rw9-err3" value="失败" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontColor=#C62828;strokeColor=#C62828;" edge="1" parent="1" source="rw9" target="rw-err3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- CROSS-SYSTEM EDGES: 红包 ↔ 钱包                              -->
+        <!-- ============================================================ -->
+
+        <!-- rp3 (Feign扣款) → w4 (deduct) -->
+        <mxCell id="e-cross1" value="Feign 调用" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.33;fontColor=#1565C0;strokeColor=#1565C0;strokeWidth=2;flowAnimation=1;" edge="1" parent="1" source="rp3" target="w4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="280" y="330" />
+              <mxPoint x="280" y="433" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- rp-refund → w5 (refund) -->
+        <mxCell id="e-cross2" value="补偿退款" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontColor=#C62828;strokeColor=#C62828;strokeWidth=2;dashed=1;" edge="1" parent="1" source="rp-refund" target="w5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="535" />
+              <mxPoint x="470" y="517" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- rp11 (MQ红包到账) → w7 (RedPacketGrabListener) -->
+        <mxCell id="e-cross3" value="MQ 异步到账&#xa;im.redpacket.grab" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontColor=#7B1FA2;strokeColor=#7B1FA2;strokeWidth=2;flowAnimation=1;" edge="1" parent="1" source="rp11" target="w7">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="290" y="1165" />
+              <mxPoint x="290" y="737" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- CROSS-SYSTEM EDGES: 打赏 ↔ 钱包                              -->
+        <!-- ============================================================ -->
+
+        <!-- rw4 (MQ打赏请求) → w8 (RewardMessageListener) -->
+        <mxCell id="e-cross4" value="MQ 打赏请求&#xa;im.reward.create" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;fontColor=#E65100;strokeColor=#E65100;strokeWidth=2;flowAnimation=1;" edge="1" parent="1" source="rw4" target="w8">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1010" y="392" />
+              <mxPoint x="1010" y="837" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- w8 → rw7 (打赏结果回调) -->
+        <mxCell id="e-cross5" value="MQ 结果回调&#xa;im.reward.result" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontColor=#E65100;strokeColor=#E65100;strokeWidth=2;flowAnimation=1;" edge="1" parent="1" source="w8" target="rw7">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="880" y="837" />
+              <mxPoint x="880" y="667" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- w6 (transferForReward) 与 rw5/w8 的关系 -->
+        <mxCell id="e-cross6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;entryX=0;entryY=1;strokeColor=#1565C0;strokeWidth=1;dashed=1;" edge="1" parent="1" source="w6" target="rw5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="705" y="580" />
+              <mxPoint x="1020" y="580" />
+              <mxPoint x="1020" y="480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ============================================================ -->
+        <!-- LEGEND / 图例                                                -->
+        <!-- ============================================================ -->
+
+        <mxCell id="legend-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#9E9E9E;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="1000" width="1" height="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

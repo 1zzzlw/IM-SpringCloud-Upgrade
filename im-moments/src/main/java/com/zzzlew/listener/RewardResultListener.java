@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.Resource;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,15 +31,13 @@ public class RewardResultListener {
     public void handleRewardResult(RewardResultDTO result, Message message, Channel channel) {
         long deliveryTag = message.getMessageProperties().getDeliveryTag();
         String idempotentKey = result.getIdempotentKey();
-        log.info("收到打赏结果：idempotentKey={}, success={}, momentId={}",
-                idempotentKey, result.isSuccess(), result.getMomentId());
+        log.info("收到打赏结果：idempotentKey={}, success={}, momentId={}", idempotentKey, result.isSuccess(), result.getMomentId());
 
         try {
             if (result.isSuccess()) {
                 // 幂等检查：同一结果只处理一次
                 String redisKey = REWARD_RESULT_IDEMPOTENT_PREFIX + idempotentKey;
-                Boolean firstTime = stringRedisTemplate.opsForValue()
-                        .setIfAbsent(redisKey, "1", 24, TimeUnit.HOURS);
+                Boolean firstTime = stringRedisTemplate.opsForValue().setIfAbsent(redisKey, "1", 24, TimeUnit.HOURS);
                 if (Boolean.TRUE.equals(firstTime)) {
                     momentsMapper.updateRewardAmount(result.getMomentId(), result.getAmount());
                     log.info("帖子 {} 打赏金额已更新 +{}", result.getMomentId(), result.getAmount());

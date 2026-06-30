@@ -173,7 +173,10 @@ public class RedPacketServiceImpl implements RedPacketService {
                 }
             } else {
                 // 其他线程正在回灌，短暂等待后重试
-                try { Thread.sleep(100); } catch (InterruptedException ignored) {}
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ignored) {
+                }
                 if (Boolean.FALSE.equals(stringRedisTemplate.hasKey(hashKey))) {
                     throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "红包缓存加载中，请稍后重试");
                 }
@@ -194,7 +197,7 @@ public class RedPacketServiceImpl implements RedPacketService {
         // 金额（分）转元
         BigDecimal amount = BigDecimal.valueOf(result).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
 
-        // 1. 先通过 MQ 异步到账（Lua 已提交，必须保证到账）
+        // 先通过 MQ 异步到账（Lua 已提交，必须保证到账）
         try {
             Map<String, Object> grabEvent = new HashMap<>();
             grabEvent.put("redPacketId", redPacketId);
@@ -208,7 +211,7 @@ public class RedPacketServiceImpl implements RedPacketService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "系统繁忙，请稍后重试");
         }
 
-        // 2. 同步写领取记录 + 同步更新 DB remain（让 warmup 安全）
+        // 同步写领取记录 + 同步更新 DB remain（让 warmup 安全）
         RedPacketRecord record = new RedPacketRecord();
         record.setRedPacketId(redPacketId);
         record.setUserId(userId);
@@ -216,7 +219,7 @@ public class RedPacketServiceImpl implements RedPacketService {
         redPacketMapper.saveRedPacketRecord(record);
         redPacketMapper.deductRedPacket(redPacketId, amount);
 
-        // 3. 检查是否领完，更新 DB 状态
+        // 检查是否领完，更新 DB 状态
         String remainCount = (String) stringRedisTemplate.opsForHash().get(hashKey, "remain_count");
         if ("0".equals(remainCount)) {
             redPacketMapper.updateRedPacketStatus(redPacketId, 1);

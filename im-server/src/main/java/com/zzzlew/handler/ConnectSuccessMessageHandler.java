@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zzzlew.constant.RedisConstant;
 import com.zzzlew.domain.Message;
-import com.zzzlew.domain.UserBaseDTO;
+import com.zzzlew.domain.dto.UserBaseDTO;
 import com.zzzlew.domain.response.LoginSuccessResponseVO;
 import com.zzzlew.domain.response.OnlineStatusListResponseVO;
 import com.zzzlew.publish.MQMessagePublish;

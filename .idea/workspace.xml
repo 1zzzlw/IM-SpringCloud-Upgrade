@@ -4,52 +4,36 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="支付系统,红包发送,打赏功能完成,还没有进行系统的测试">
+    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="更新了一下yml文件的写法.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/src/main/resources/application-docker.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/resources/application-docker.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/application-docker.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/application-docker.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/resources/application-docker.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/resources/application-docker.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/application-docker.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/application-docker.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-content/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-content/src/main/resources/application-docker.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/src/main/resources/application-docker.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-content/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-content/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/target/classes/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-content/target/classes/application-docker.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/target/classes/application-docker.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-content/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-gateway/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-gateway/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-moments/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-moments/src/main/resources/application-docker.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/resources/application-docker.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-moments/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-moments/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-moments/target/classes/application-docker.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/application-docker.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-moments/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-pay/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/im-pay/CLAUDE.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-pay/src/main/java/com/zzzlew/controller/WalletController.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-pay/src/main/java/com/zzzlew/controller/WalletController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-pay/src/main/java/com/zzzlew/listener/RedPacketGrabListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-pay/src/main/java/com/zzzlew/listener/RedPacketGrabListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-pay/src/main/java/com/zzzlew/mapper/WalletMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-pay/src/main/java/com/zzzlew/mapper/WalletMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-pay/src/main/java/com/zzzlew/service/WalletService.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-pay/src/main/java/com/zzzlew/service/WalletService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-pay/src/main/java/com/zzzlew/service/impl/WalletServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-pay/src/main/java/com/zzzlew/service/impl/WalletServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-pay/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-pay/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-pay/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-pay/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-pay/src/main/resources/mapper/WalletMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-pay/src/main/resources/mapper/WalletMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/resources/application-docker.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/resources/application-docker.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/src/main/resources/application-docker.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/src/main/resources/application-docker.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/target/classes/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/target/classes/application-docker.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/target/classes/application-docker.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/CLAUDE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/RedPacketServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/RedPacketServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-base/src/main/java/com/zzzlew/constant/RabbitMQConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-base/src/main/java/com/zzzlew/constant/RabbitMQConstant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/vo/ConversationVO$ConversationVOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/vo/ConversationVO$ConversationVOBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/vo/ConversationVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/vo/ConversationVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-content/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/listener/RewardResultListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/listener/RewardResultListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-pay/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-pay/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/CLAUDE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/UserBaseDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/ConnectSuccessMessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/ConnectSuccessMessageHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/HttpHeadersHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/HttpHeadersHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/QuitLoginHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/QuitLoginHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/utils/ChannelManageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/utils/ChannelManageUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-social/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/domain/vo/ConversationVO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-social/target/classes/com/zzzlew/domain/vo/ConversationVO$ConversationVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-social/target/classes/com/zzzlew/domain/vo/ConversationVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-social/target/classes/com/zzzlew/server/impl/ApplyServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/target/classes/com/zzzlew/server/impl/ApplyServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/朱林威-Java开发工程师-简历.html" beforeDir="false" afterPath="$PROJECT_DIR$/朱林威-Java开发工程师-简历.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/朱林威-Java开发工程师-简历.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/朱林威-Java开发工程师-简历.pdf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -204,6 +188,7 @@
               <entry key="ContentApplication" value="STOPPED" />
               <entry key="GatewayApplication" value="STOPPED" />
               <entry key="IMNetyApplication" value="STOPPED" />
+              <entry key="MomentsApplication" value="STOPPED" />
               <entry key="PayApplication" value="STOPPED" />
               <entry key="SocialApplication" value="STOPPED" />
             </map>
@@ -266,6 +251,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="MomentsApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="im-moments" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.zzzlew.MomentsApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="PayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="im-pay" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.zzzlew.PayApplication" />
@@ -293,20 +285,21 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Spring Boot.AuthApplication" />
-      <item itemvalue="Spring Boot.ChatApplication" />
-      <item itemvalue="Spring Boot.ContentApplication" />
-      <item itemvalue="Spring Boot.GatewayApplication" />
+      <item itemvalue="Spring Boot.MomentsApplication" />
       <item itemvalue="Spring Boot.IMNetyApplication" />
+      <item itemvalue="Spring Boot.GatewayApplication" />
       <item itemvalue="Spring Boot.PayApplication" />
       <item itemvalue="Spring Boot.SocialApplication" />
+      <item itemvalue="Spring Boot.ChatApplication" />
+      <item itemvalue="Spring Boot.AuthApplication" />
+      <item itemvalue="Spring Boot.ContentApplication" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.PayApplication" />
         <item itemvalue="Spring Boot.ChatApplication" />
-        <item itemvalue="Spring Boot.SocialApplication" />
+        <item itemvalue="Spring Boot.PayApplication" />
         <item itemvalue="Spring Boot.AuthApplication" />
+        <item itemvalue="Spring Boot.SocialApplication" />
         <item itemvalue="Spring Boot.ContentApplication" />
       </list>
     </recent_temporary>
@@ -460,14 +453,10 @@
       <workItem from="1782036808106" duration="3782000" />
       <workItem from="1782055065824" duration="11849000" />
       <workItem from="1782088787799" duration="5343000" />
-    </task>
-    <task id="LOCAL-00002" summary="写了一下广播的代码，实现了集群部署的功能，使用了redisson的订阅发布的模式，然后监听队列，广播消息到所有服务中，实现了Netty的集群部署。">
-      <option name="closed" value="true" />
-      <created>1770623895509</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1770623895509</updated>
+      <workItem from="1782204029607" duration="60000" />
+      <workItem from="1782228944787" duration="3083000" />
+      <workItem from="1782369903092" duration="2141000" />
+      <workItem from="1782727360585" duration="7917000" />
     </task>
     <task id="LOCAL-00003" summary="准备写右键菜单和在线状态">
       <option name="closed" value="true" />
@@ -853,7 +842,15 @@
       <option name="project" value="LOCAL" />
       <updated>1782098013337</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="更新了一下yml文件的写法.">
+      <option name="closed" value="true" />
+      <created>1782204064936</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1782204064937</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -871,7 +868,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="文档提交" />
     <MESSAGE value="优化前的最后一次测试，消息并发测试数据，接下来开始项目的整体优化，MQ的加入，ACK的加入，重发机制等等" />
     <MESSAGE value="初始化了MQ的消息队列，准备修改消息发送的代码" />
     <MESSAGE value="写了一些MQ的优化配置类，感觉用处不是很多，太麻烦了，后期需要的话我再优化吧，然后把Springboot的异步存储加上了。" />
@@ -896,7 +892,8 @@
     <MESSAGE value="红包功能，支付系统，帖子更新的缓存一致性，就差这三个了" />
     <MESSAGE value="继续完善功能,打赏,红包,支付系统" />
     <MESSAGE value="支付系统,红包发送,打赏功能完成,还没有进行系统的测试" />
-    <option name="LAST_COMMIT_MESSAGE" value="支付系统,红包发送,打赏功能完成,还没有进行系统的测试" />
+    <MESSAGE value="更新了一下yml文件的写法." />
+    <option name="LAST_COMMIT_MESSAGE" value="更新了一下yml文件的写法." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

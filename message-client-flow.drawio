@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="26.0.0">
+  <diagram name="多客户端消息流转">
+    <mxGraphModel dx="1800" dy="1400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1500" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ====== 5 SWIMLANES for 5 participants ====== -->
+
+        <!-- Lane 1: User A (Sender) -->
+        <mxCell id="lane-a" value="🟢 用户A — 发送方客户端" style="swimlane;startSize=28;fillColor=#E8F5E9;strokeColor=#2E7D32;strokeWidth=2;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="10" y="10" width="300" height="1420" as="geometry" />
+        </mxCell>
+
+        <!-- Lane 2: Server (Netty + Routing) -->
+        <mxCell id="lane-srv" value="🔵 服务端 — im-server Netty" style="swimlane;startSize=28;fillColor=#E3F2FD;strokeColor=#1565C0;strokeWidth=2;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="10" width="280" height="1420" as="geometry" />
+        </mxCell>
+
+        <!-- Lane 3: Infrastructure (MQ + DB + Redis) -->
+        <mxCell id="lane-infra" value="🟠 中间件 — MQ + 存储" style="swimlane;startSize=28;fillColor=#FFF3E0;strokeColor=#E65100;strokeWidth=2;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="610" y="10" width="240" height="1420" as="geometry" />
+        </mxCell>
+
+        <!-- Lane 4: User B (Private Chat Receiver) -->
+        <mxCell id="lane-b" value="🔴 用户B — 私聊接收方客户端" style="swimlane;startSize=28;fillColor=#FCE4EC;strokeColor=#C62828;strokeWidth=2;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="860" y="10" width="300" height="1420" as="geometry" />
+        </mxCell>
+
+        <!-- Lane 5: User C (Group Chat Receiver) -->
+        <mxCell id="lane-c" value="🟣 用户C — 群聊接收方客户端" style="swimlane;startSize=28;fillColor=#F3E5F5;strokeColor=#7B1FA2;strokeWidth=2;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="10" width="300" height="1420" as="geometry" />
+        </mxCell>
+
+        <!-- ====== SECTION TITLES (across all lanes, parent=1) ====== -->
+        <mxCell id="sec1-title" value="&lt;b&gt;═══ 场景一：私聊 — 用户A发送文本消息给在线用户B ═══&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#2E7D32;" vertex="1" parent="1">
+          <mxGeometry x="240" y="45" width="900" height="22" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sec2-title" value="&lt;b&gt;═══ 场景二：群聊 — 用户A发送消息给群组 (成员B在线, 成员C离线) ═══&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#7B1FA2;" vertex="1" parent="1">
+          <mxGeometry x="180" y="575" width="1100" height="22" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sec3-title" value="&lt;b&gt;═══ 场景三：文件上传 — 用户A发送文件消息给用户B ═══&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#E65100;" vertex="1" parent="1">
+          <mxGeometry x="240" y="1025" width="850" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- ================================================================== -->
+        <!-- SCENE 1: PRIVATE CHAT A -> B (y=70 ~ 540)                          -->
+        <!-- ================================================================== -->
+
+        <!-- - USER A STACK (lane-a, x rel: 10-40) - -->
+        <mxCell id="a1-input" value="✏️ ChatBase.vue&#xa;用户输入消息" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;fontSize=10;arcSize=8;" vertex="1" parent="lane-a">
+          <mxGeometry x="20" y="45" width="150" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="a1-pinia" value="&lt;b&gt;Pinia MessageStore&lt;/b&gt;&#xa;_sendOutgoing()&#xa;雪花ID → pending追踪" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#A5D6A7;strokeColor=#2E7D32;fontSize=9;arcSize=8;" vertex="1" parent="lane-a">
+          <mxGeometry x="20" y="110" width="165" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="a1-sqlite" value="&lt;b&gt;SQLite 本地写&lt;/b&gt;&#xa;message 表&#xa;sendStatus=0(发送中)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#81C784;strokeColor=#2E7D32;fontSize=9;arcSize=8;" vertex="1" parent="lane-a">
+          <mxGeometry x="20" y="185" width="165" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="a1-ipc" value="&lt;b&gt;IPC → Main Process&lt;/b&gt;&#xa;contextBridge&#xa;wsApi.sendMessage()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#A5D6A7;strokeColor=#2E7D32;fontSize=9;arcSize=8;" vertex="1" parent="lane-a">
+          <mxGeometry x="20" y="255" width="165" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="a1-ws" value="&lt;b&gt;WebSocket 发送&lt;/b&gt;&#xa;protocol.js 编码&#xa;16B头 + JSON body" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#A5D6A7;strokeColor=#2E7D32;fontSize=9;arcSize=8;" vertex="1" parent="lane-a">
+          <mxGeometry x="20" y="325" width="165" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ACK receive (A side) -->
+        <mxCell id="a1-ack" value="✅ 收到ACK(16)&#xa;sendStatus=1&#xa;SQLite 更新状态" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;fontSize=9;arcSize=8;dashed=1;" vertex="1" parent="lane-a">
+          <mxGeometry x="20" y="420" width="165" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- - SERVER STACK (lane-srv, x rel: 10-40) - -->
+        <mxCell id="s1-decode" value="&lt;b&gt;Netty Pipeline 解码&lt;/b&gt;&#xa;BinaryWSFrame → ByteBuf&#xa;ProtocolFrameDecoder&#xa;MessageCodecSharable" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BBDEFB;strokeColor=#1565C0;fontSize=9;arcSize=8;" vertex="1" parent="lane-srv">
+          <mxGeometry x="20" y="80" width="170" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="s1-dispatch" value="&lt;b&gt;MessageDispatcherHandler&lt;/b&gt;&#xa;type=1 → PrivateChatHandler" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#90CAF9;strokeColor=#1565C0;fontSize=9;arcSize=8;" vertex="1" parent="lane-srv">
+          <mxGeometry x="20" y="165" width="170" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="s1-handler" value="&lt;b&gt;PrivateChatHandler&lt;/b&gt;&#xa;取发送者 → 构建VO&#xa;发ACK(16)给A&#xa;返回MessageResult" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#90CAF9;strokeColor=#1565C0;fontSize=9;arcSize=8;" vertex="1" parent="lane-srv">
+          <mxGeometry x="20" y="230" width="170" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="s1-route" value="&lt;b&gt;MQMessagePublish&lt;/b&gt;&#xa;sendToCluster()&#xa;Redis HASH 查集群映射" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#64B5F6;strokeColor=#1565C0;fontSize=9;arcSize=8;" vertex="1" parent="lane-srv">
+          <mxGeometry x="20" y="310" width="170" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s1-choice" value="B在线?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=10;" vertex="1" parent="lane-srv">
+          <mxGeometry x="35" y="380" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="s1-local" value="在线: channel.writeAndFlush()&#xa;直接推送给B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;fontSize=9;arcSize=8;" vertex="1" parent="lane-srv">
+          <mxGeometry x="20" y="475" width="170" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- - INFRASTRUCTURE (lane-infra, x rel: 10-30) - -->
+        <mxCell id="i1-mq" value="&lt;b&gt;RabbitMQ&lt;/b&gt;&#xa;im-topic-exchange&#xa;→ im-storage-queue&#xa;(异步持久化)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCC80;strokeColor=#E65100;fontSize=9;arcSize=8;" vertex="1" parent="lane-infra">
+          <mxGeometry x="15" y="150" width="150" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="i1-mysql" value="&lt;b&gt;im-chat MQ消费&lt;/b&gt;&#xa;INSERT IGNORE&#xa;→ MySQL message 表&#xa;→ 更新会话未读数" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCC80;strokeColor=#E65100;fontSize=9;arcSize=8;" vertex="1" parent="lane-infra">
+          <mxGeometry x="15" y="240" width="150" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="i1-redis" value="&lt;b&gt;Redis&lt;/b&gt;&#xa;集群映射 HASH&#xa;在线状态 SET" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#FFCDD2;strokeColor=#B71C1C;fontSize=9;size=10;" vertex="1" parent="lane-infra">
+          <mxGeometry x="20" y="340" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- - USER B STACK (lane-b, x rel: 10-40) - -->
+        <mxCell id="b1-ws" value="&lt;b&gt;WebSocket 接收&lt;/b&gt;&#xa;Main: onMessage()&#xa;protocol.js 解码&#xa;→ IPC 广播到Renderer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8BBD0;strokeColor=#C62828;fontSize=9;arcSize=8;" vertex="1" parent="lane-b">
+          <mxGeometry x="20" y="80" width="165" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="b1-handler" value="&lt;b&gt;wsHandlers 分发&lt;/b&gt;&#xa;messageType=2 →&#xa;handleIncomingMessage()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F48FB1;strokeColor=#C62828;fontSize=9;arcSize=8;" vertex="1" parent="lane-b">
+          <mxGeometry x="20" y="160" width="165" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="b1-pinia" value="&lt;b&gt;Pinia MessageStore&lt;/b&gt;&#xa;addMessageMap()&#xa;追加到 messageMap[convId]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F48FB1;strokeColor=#C62828;fontSize=9;arcSize=8;" vertex="1" parent="lane-b">
+          <mxGeometry x="20" y="230" width="165" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="b1-sqlite" value="&lt;b&gt;SQLite 存储&lt;/b&gt;&#xa;Main进程直接写入&#xa;INSERT OR REPLACE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F48FB1;strokeColor=#C62828;fontSize=9;arcSize=8;" vertex="1" parent="lane-b">
+          <mxGeometry x="20" y="300" width="165" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="b1-ui" value="🖥️ &lt;b&gt;UI 渲染&lt;/b&gt;&#xa;ChatBase.vue 响应式更新&#xa;MessageContentManage 分发&#xa;(文本/图片/语音/视频/文件)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F48FB1;strokeColor=#C62828;fontSize=9;arcSize=8;" vertex="1" parent="lane-b">
+          <mxGeometry x="20" y="370" width="165" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- ================================================================== -->
+        <!-- SCENE 2: GROUP CHAT A -> B + C (y=600 ~ 980)                      -->
+        <!-- ================================================================== -->
+
+        <!-- - USER A group chat send (lane-a) - -->
+        <mxCell id="a2-input" value="✏️ ChatBase.vue (群聊)&#xa;用户输入群消息" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2E7D32;fontSize=10;arcSize=8;" vertex="1" parent="lane-a">
+          <mxGeometry x="20" y="605" width="150" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="a2-pinia" value="&lt;b&gt;Pinia MessageStore&lt;/b&gt;&#xa;_sendOutgoing()&#xa;wsType=3 (群聊)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#A5D6A7;strokeColor=#2E7D32;fontSize=9;arcSize=8;" vertex="1" parent="lane-a">
+          <mxGeometry x="20" y="670" width="165" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="a2-ws" value="&lt;b&gt;WebSocket 发送&lt;/b&gt;&#xa;protocol.js 编码&#xa;type=3 (GroupChatRequest)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#A5D6A7;strokeColor=#2E7D32;fontSize=9;arcSize=8;" vertex="1" parent="lane-a">
+          <mxGeometry x="20" y="735" width="165" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="a2-ack" value="✅ 收到ACK(16)&#xa;sendStatus=1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;fontSize=9;arcSize=8;dashed=1;" vertex="1" parent="lane-a">
+          <mxGeometry x="20" y="830" width="165" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- - SERVER group chat (lane-srv) - -->
+        <mxCell id="s2-handler" value="&lt;b&gt;GroupChatHandler&lt;/b&gt;&#xa;解析群成员列表&#xa;→ MessageResult.multiple(&#xa;  response, [B, C])" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#90CAF9;strokeColor=#1565C0;fontSize=9;arcSize=8;" vertex="1" parent="lane-srv">
+          <mxGeometry x="15" y="620" width="170" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="s2-route" value="&lt;b&gt;MQMessagePublish&lt;/b&gt;&#xa;批量查Redis集群映射:&#xa;HASH multiGet [B, C]&#xa;→ 三向路由分发" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#64B5F6;strokeColor=#1565C0;fontSize=9;arcSize=8;" vertex="1" parent="lane-srv">
+          <mxGeometry x="15" y="705" width="170" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="s2-choice-b" value="B?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=10;" vertex="1" parent="lane-srv">
+          <mxGeometry x="50" y="785" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s2-push-b" value="在线: 推送B" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;fontSize=9;arcSize=8;" vertex="1" parent="lane-srv">
+          <mxGeometry x="20" y="860" width="80" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s2-choice-c" value="C?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=10;" vertex="1" parent="lane-srv">
+          <mxGeometry x="120" y="785" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s2-offline-c" value="离线: Lua ZADD&#xa;Redis ZSet" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCDD2;strokeColor=#B71C1C;fontSize=9;arcSize=8;" vertex="1" parent="lane-srv">
+          <mxGeometry x="110" y="860" width="80" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- - INFRASTRUCTURE group (lane-infra) - -->
+        <mxCell id="i2-mq-storage" value="&lt;b&gt;MQ im.storage&lt;/b&gt;&#xa;→ im-storage-queue&#xa;→ im-chat 消费&#xa;INSERT IGNORE MySQL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCC80;strokeColor=#E65100;fontSize=9;arcSize=8;" vertex="1" parent="lane-infra">
+          <mxGeometry x="15" y="630" width="155" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="i2-redis-offline" value="&lt;b&gt;Redis&lt;/b&gt;&#xa;离线消息 ZSet&#xa;user:offline:message:&#xa;content:{userId}" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#FFCDD2;strokeColor=#B71C1C;fontSize=8;size=10;" vertex="1" parent="lane-infra">
+          <mxGeometry x="20" y="780" width="145" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="i2-canal" value="&lt;b&gt;C从离线到上线&lt;/b&gt;&#xa;ConnectSuccessHandler&#xa;→ ZRANGE + DEL&#xa;→ 推送离线消息给C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCC80;strokeColor=#E65100;fontSize=9;arcSize=8;dashed=1;" vertex="1" parent="lane-infra">
+          <mxGeometry x="15" y="870" width="155" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- - USER B group receive (lane-b) - -->
+        <mxCell id="b2-ws" value="&lt;b&gt;WebSocket 接收&lt;/b&gt;&#xa;messageType=4&#xa;(GroupChatResponseVO)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8BBD0;strokeColor=#C62828;fontSize=9;arcSize=8;" vertex="1" parent="lane-b">
+          <mxGeometry x="20" y="620" width="165" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="b2-handler" value="&lt;b&gt;wsHandlers&lt;/b&gt;&#xa;type=4 → handleIncoming&#xa;→ Pinia → SQLite → UI" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F48FB1;strokeColor=#C62828;fontSize=9;arcSize=8;" vertex="1" parent="lane-b">
+          <mxGeometry x="20" y="690" width="165" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="b2-ui" value="🖥️ UI渲染群消息" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F48FB1;strokeColor=#C62828;fontSize=9;arcSize=8;" vertex="1" parent="lane-b">
+          <mxGeometry x="20" y="760" width="165" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- - USER C group receive (lane-c) - -->
+        <mxCell id="c-offline" value="&lt;b&gt;❌ 用户C当前离线&lt;/b&gt;&#xa;消息暂存Redis ZSet&#xa;等待上线后推送" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1BEE7;strokeColor=#7B1FA2;fontSize=9;arcSize=8;dashed=1;" vertex="1" parent="lane-c">
+          <mxGeometry x="20" y="620" width="170" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="c-online" value="&lt;b&gt;用户C上线&lt;/b&gt;&#xa;HandshakeComplete&#xa;→ 推离线消息" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CE93D8;strokeColor=#7B1FA2;fontSize=9;arcSize=8;dashed=1;" vertex="1" parent="lane-c">
+          <mxGeometry x="20" y="700" width="170" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="c-ws" value="&lt;b&gt;WebSocket 接收&lt;/b&gt;&#xa;收到离线群消息" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CE93D8;strokeColor=#7B1FA2;fontSize=9;arcSize=8;" vertex="1" parent="lane-c">
+          <mxGeometry x="20" y="770" width="170" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="c-pinia" value="&lt;b&gt;Pinia → SQLite → UI&lt;/b&gt;&#xa;同B的接收流程" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CE93D8;strokeColor=#7B1FA2;fontSize=9;arcSize=8;" vertex="1" parent="lane-c">
+          <mxGeometry x="20" y="835" width="170" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- ================================================================== -->
+        <!-- SCENE 3: FILE UPLOAD A -> B (y=1050 ~ 1380)                       -->
+        <!-- ================================================================== -->
+
+        <!-- - USER A file select + upload (lane-a) - -->
+        <mxCell id="a3-select" value="📎 用户A选择文件/截图&#xa;filterFileKind() 分类&#xa;(Image/Voice/Video/File)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2E7D32;fontSize=9;arcSize=8;" vertex="1" parent="lane-a">
+          <mxGeometry x="20" y="1055" width="160" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="a3-fileinfo" value="&lt;b&gt;getFileInfo() Main&lt;/b&gt;&#xa;MD5 → fileId&#xa;base64预览(图片/视频)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#A5D6A7;strokeColor=#2E7D32;fontSize=9;arcSize=8;" vertex="1" parent="lane-a">
+          <mxGeometry x="20" y="1130" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="a3-chunk" value="&lt;b&gt;分块上传引擎&lt;/b&gt;&#xa;5MB/块 Piscina线程池&#xa;MessageQueue并发=2&#xa;断点续传 (checkUploaded)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#A5D6A7;strokeColor=#2E7D32;fontSize=9;arcSize=8;" vertex="1" parent="lane-a">
+          <mxGeometry x="20" y="1200" width="160" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="a3-sendfile" value="&lt;b&gt;上传完成 → 发送WS消息&lt;/b&gt;&#xa;sendFileMessage()&#xa;携带MinIO文件路径" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#A5D6A7;strokeColor=#2E7D32;fontSize=9;arcSize=8;" vertex="1" parent="lane-a">
+          <mxGeometry x="20" y="1285" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- - SERVER file handling (lane-srv) - -->
+        <mxCell id="s3-rest" value="&lt;b&gt;MessageController REST&lt;/b&gt;&#xa;1. verifyUploadToken (Redis凭证)&#xa;2. uploadChunk ×N (MinIO分块)&#xa;3. checkUploaded (断点)&#xa;4. mergeFile (合并清理)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BBDEFB;strokeColor=#1565C0;fontSize=9;arcSize=8;" vertex="1" parent="lane-srv">
+          <mxGeometry x="15" y="1055" width="175" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- - INFRASTRUCTURE MinIO + DB (lane-infra) - -->
+        <mxCell id="i3-minio" value="&lt;b&gt;MinIO 对象存储&lt;/b&gt;&#xa;临时: file-chunk/{hash}/&#xa;最终: zzz-im-{bucket}/" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#FFCDD2;strokeColor=#B71C1C;fontSize=8;size=10;" vertex="1" parent="lane-infra">
+          <mxGeometry x="15" y="1060" width="155" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="i3-mysql" value="&lt;b&gt;MySQL&lt;/b&gt;&#xa;INSERT IGNORE&#xa;message 表&#xa;(file元数据)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#FFCDD2;strokeColor=#B71C1C;fontSize=8;size=10;" vertex="1" parent="lane-infra">
+          <mxGeometry x="15" y="1170" width="155" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- - USER B file receive (lane-b) - -->
+        <mxCell id="b3-ws" value="&lt;b&gt;WebSocket 接收&lt;/b&gt;&#xa;文件消息 (type=5)&#xa;携带MinIO路径和元数据" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8BBD0;strokeColor=#C62828;fontSize=9;arcSize=8;" vertex="1" parent="lane-b">
+          <mxGeometry x="20" y="1060" width="165" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="b3-download" value="&lt;b&gt;下载文件&lt;/b&gt;&#xa;downloadFile() Main&#xa;Range断点续传&#xa;→ IPC进度回传Renderer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F48FB1;strokeColor=#C62828;fontSize=9;arcSize=8;" vertex="1" parent="lane-b">
+          <mxGeometry x="20" y="1140" width="165" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="b3-ui" value="🖥️ ChatFileView 渲染&#xa;文件图标+名称+大小&#xa;下载/打开按钮" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F48FB1;strokeColor=#C62828;fontSize=9;arcSize=8;" vertex="1" parent="lane-b">
+          <mxGeometry x="20" y="1220" width="165" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ====== EDGES: Scene 1 - Private Chat ====== -->
+        <mxCell id="e-a1-input-pinia" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a1-input" target="a1-pinia">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a1-pinia-sqlite" value="本地" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fontSize=8;" edge="1" parent="1" source="a1-pinia" target="a1-sqlite">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a1-sqlite-ipc" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a1-sqlite" target="a1-ipc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a1-ipc-ws" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a1-ipc" target="a1-ws">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- A WS -> Netty decode -->
+        <mxCell id="e-a1ws-s1decode" value="WS Binary Frame&#xa;type=1 PrivateChatRequest" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.3;strokeColor=#2E7D32;strokeWidth=2;fontSize=8;fontColor=#2E7D32;" edge="1" parent="1" source="a1-ws" target="s1-decode">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s1decode-dispatch" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="s1-decode" target="s1-dispatch">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s1dispatch-handler" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="s1-dispatch" target="s1-handler">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s1handler-route" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="s1-handler" target="s1-route">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s1route-choice" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="s1-route" target="s1-choice">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s1choice-local" value="在线" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fontSize=8;strokeColor=#2E7D32;" edge="1" parent="1" source="s1-choice" target="s1-local">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Server -> B (direct push) -->
+        <mxCell id="e-s1local-b1ws" value="直接推送" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#C62828;strokeWidth=2;fontSize=8;fontColor=#C62828;" edge="1" parent="1" source="s1-local" target="b1-ws">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- B internal flow -->
+        <mxCell id="e-b1ws-handler" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="b1-ws" target="b1-handler">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-b1handler-pinia" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="b1-handler" target="b1-pinia">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-b1pinia-sqlite" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="b1-pinia" target="b1-sqlite">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-b1sqlite-ui" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="b1-sqlite" target="b1-ui">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ACK back to A -->
+        <mxCell id="e-s1handler-a1ack" value="ACK(16)回执" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;entryX=1;entryY=0.5;strokeColor=#2E7D32;strokeWidth=2;fontSize=8;fontColor=#2E7D32;dashed=1;" edge="1" parent="1" source="s1-handler" target="a1-ack">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="310" y="320" />
+              <mxPoint x="310" y="445" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- MQ persistence path (server -> infra) -->
+        <mxCell id="e-s1route-mq" value="im.storage" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.3;entryX=0;entryY=0.3;strokeColor=#E65100;strokeWidth=1.5;fontSize=8;fontColor=#E65100;dashed=1;" edge="1" parent="1" source="s1-route" target="i1-mq">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-i1mq-sql" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="i1-mq" target="i1-mysql">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s1route-redis" value="查集群" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.7;entryX=0;entryY=0.5;strokeColor=#B71C1C;strokeWidth=1;fontSize=8;fontColor=#B71C1C;dashed=1;" edge="1" parent="1" source="s1-route" target="i1-redis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ====== EDGES: Scene 2 - Group Chat ====== -->
+        <mxCell id="e-a2-input-pinia" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a2-input" target="a2-pinia">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a2-pinia-ws" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a2-pinia" target="a2-ws">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- A WS -> Server GroupChatHandler -->
+        <mxCell id="e-a2ws-s2handler" value="WS type=3&#xa;GroupChatRequest" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#7B1FA2;strokeWidth=2;fontSize=8;fontColor=#7B1FA2;" edge="1" parent="1" source="a2-ws" target="s2-handler">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s2handler-route" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="s2-handler" target="s2-route">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Server route -> B / C decisions -->
+        <mxCell id="e-s2route-b" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;entryX=0.5;entryY=0;fontSize=8;strokeColor=#C62828;" edge="1" parent="1" source="s2-route" target="s2-choice-b">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s2route-c" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;entryX=0.5;entryY=0;fontSize=8;strokeColor=#7B1FA2;" edge="1" parent="1" source="s2-route" target="s2-choice-c">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s2choiceb-pushb" value="在线" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fontSize=8;strokeColor=#2E7D32;" edge="1" parent="1" source="s2-choice-b" target="s2-push-b">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s2choicec-offline" value="离线" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fontSize=8;strokeColor=#B71C1C;" edge="1" parent="1" source="s2-choice-c" target="s2-offline-c">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Server push -> B (group) -->
+        <mxCell id="e-s2push-b2ws" value="推送群消息" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#C62828;strokeWidth=2;fontSize=8;fontColor=#C62828;" edge="1" parent="1" source="s2-push-b" target="b2-ws">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-b2ws-handler" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="b2-ws" target="b2-handler">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-b2handler-ui" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="b2-handler" target="b2-ui">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Offline -> Redis ZSet -->
+        <mxCell id="e-s2offline-redis" value="Lua ZADD" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#B71C1C;strokeWidth=1.5;fontSize=8;fontColor=#B71C1C;dashed=1;" edge="1" parent="1" source="s2-offline-c" target="i2-redis-offline">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Redis -> C (online push) -->
+        <mxCell id="e-i2canal-c" value="ZRANGE+DEL&#xa;上线推离线" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#7B1FA2;strokeWidth=2;fontSize=8;fontColor=#7B1FA2;dashed=1;" edge="1" parent="1" source="i2-canal" target="c-online">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-c-offline-online" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=1;" edge="1" parent="1" source="c-offline" target="c-online">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-c-online-ws" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="c-online" target="c-ws">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-c-ws-pinia" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="c-ws" target="c-pinia">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ACK for group back to A -->
+        <mxCell id="e-s2handler-a2ack" value="ACK(16)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;entryX=1;entryY=0.5;strokeColor=#2E7D32;strokeWidth=1.5;fontSize=8;fontColor=#2E7D32;dashed=1;" edge="1" parent="1" source="s2-handler" target="a2-ack">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="310" y="700" />
+              <mxPoint x="310" y="850" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- MQ storage for group message -->
+        <mxCell id="e-s2route-mq" value="im.storage" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#E65100;strokeWidth=1.5;fontSize=8;fontColor=#E65100;dashed=1;" edge="1" parent="1" source="s2-route" target="i2-mq-storage">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ====== EDGES: Scene 3 - File Upload ====== -->
+        <mxCell id="e-a3select-info" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a3-select" target="a3-fileinfo">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a3info-chunk" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a3-fileinfo" target="a3-chunk">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a3chunk-send" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="a3-chunk" target="a3-sendfile">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- A -> Server REST upload -->
+        <mxCell id="e-a3chunk-s3rest" value="HTTP REST&#xa;分块上传" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#E65100;strokeWidth=2;fontSize=8;fontColor=#E65100;" edge="1" parent="1" source="a3-chunk" target="s3-rest">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Server -> MinIO -->
+        <mxCell id="e-s3rest-minio" value="存储分块+合并" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#E65100;strokeWidth=1.5;fontSize=8;fontColor=#E65100;" edge="1" parent="1" source="s3-rest" target="i3-minio">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- File message via WS: A -> Server -> B -->
+        <mxCell id="e-a3send-s1" value="WS文件消息" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#2E7D32;strokeWidth=1.5;fontSize=8;fontColor=#2E7D32;dashed=1;" edge="1" parent="1" source="a3-sendfile" target="lane-srv">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="310" y="1300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Server persistence to MySQL for file msg -->
+        <mxCell id="e-s3rest-mysql" value="INSERT IGNORE" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=1;entryX=0;entryY=0.5;strokeColor=#E65100;strokeWidth=1;fontSize=8;fontColor=#E65100;dashed=1;" edge="1" parent="1" source="s3-rest" target="i3-mysql">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="595" y="1160" />
+              <mxPoint x="595" y="1203" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Server -> B file message -->
+        <mxCell id="e-s3-b3ws" value="推送文件消息" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#C62828;strokeWidth=2;fontSize=8;fontColor=#C62828;" edge="1" parent="1" source="s3-rest" target="b3-ws">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="610" y="1088" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-b3ws-download" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="b3-ws" target="b3-download">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-b3download-ui" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="b3-download" target="b3-ui">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ====== LEGEND ====== -->
+        <mxCell id="legend-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#9E9E9E;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="1055" width="300" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-t" value="&lt;b&gt;图例&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="1060" width="40" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="leg1" value="── 同步调用（跨进程/网络）" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="1082" width="170" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="leg2" value="- - 异步/回调/MQ" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="1082" width="110" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="leg3" value="🟢 A客户端  🔵 服务端  🟠 MQ/存储  🔴 B客户端  🟣 C客户端" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="1103" width="280" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="leg4" value="&lt;b&gt;消息类型色:&lt;/b&gt; 🟢私聊  🟣群聊  🟠文件  🔴推送" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="1124" width="270" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="leg5" value="⏱️ 前端5s超时sendStatus=0→2(失败) | ACK=16确认" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="1145" width="280" height="16" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

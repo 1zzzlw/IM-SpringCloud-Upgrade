@@ -1,7 +1,7 @@
 package com.zzzlew.handler;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.zzzlew.domain.UserBaseDTO;
+import com.zzzlew.domain.dto.UserBaseDTO;
 import com.zzzlew.domain.response.QuitLoginResponseVO;
 import com.zzzlew.publish.MQMessagePublish;
 import com.zzzlew.result.MessageResult;

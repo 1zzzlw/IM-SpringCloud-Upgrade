@@ -1,6 +1,6 @@
 package com.zzzlew.utils;
 
-import com.zzzlew.domain.UserBaseDTO;
+import com.zzzlew.domain.dto.UserBaseDTO;
 import io.netty.channel.Channel;
 
 import java.util.concurrent.ConcurrentHashMap;

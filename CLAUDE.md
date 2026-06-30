@@ -137,7 +137,94 @@ Gateway AuthGlobalFilter → 校验JWT → 查Redis获取用户信息
 - MinIO: `39.106.183.13:9000`（远程，dev环境）
 - Canal: 监听 MySQL binlog，用于 im-moments 缓存同步
 
-## 子模块指南
+## 架构约束
+
+以下规则在**任何模块重构、依赖调整、新增模块**时必须遵守，违反会导致运行时问题。
+
+### 依赖方向约束
+
+```
+im-api / im-common  ←  被依赖层（不可依赖业务模块）
+       ↑
+  业务模块 (im-auth, im-chat, im-content, im-social, im-moments, im-pay, im-server, im-gateway)
+```
+
+- **im-common 子模块之间**：`common-model` ← `common-base` ← `common-redis` ← `common-web`，单向不可逆
+- **im-api** 只依赖 `common-model` + `common-base`，不依赖 `common-web` 或任何业务模块
+- **业务模块之间** 只能通过 Feign（im-api）互相调用，不可直接依赖对方的 Maven 坐标
+
+### common-web 使用边界
+
+| 模块类型 | 应依赖 | 不应依赖 | 原因 |
+|---------|--------|---------|------|
+| REST 微服务（im-auth/chat/content/social/moments/pay） | `common-web` ✅ | — | 需要 WebMvcConfig、拦截器、全局异常处理 |
+| Netty 服务（im-server） | `common-model` + `common-base` + `common-redis` | `common-web` ❌ | 会引入嵌入式 Tomcat，与 Netty 冲突 |
+| Gateway（im-gateway） | `common-model` + `common-redis` | `common-web` ❌ | WebFlux 与 Spring MVC 互斥 |
+
+### im-common 子模块选择指南
+
+| 需要的能力 | 引入的模块 | 注意 |
+|-----------|-----------|------|
+| Result / DTO / VO | `common-model` | 无 Spring 依赖，可被任何模块使用 |
+| 常量 / 枚举 / 异常 / UserHolder / JwtUtil | `common-base` | 传递引入 common-model |
+| Redis 缓存 / JWT 属性 | `common-redis` | 传递引入 common-base + common-model |
+| WebMvcConfig / 拦截器 / 全局异常处理 | `common-web` | ⚠️ 会引入 Tomcat，仅 REST 服务使用 |
+| MinIO 文件存储 | `common-storage` | 独立模块，按需显式引入 |
+| 分布式锁（Redisson） | `redisson-spring-boot-starter` | 按需显式引入，父 POM 统一管理版本 3.27.2 |
+| RabbitMQ | `spring-boot-starter-amqp` | 按需显式引入，会激活 common-web 中的 `IMCommonRabbitMQConfig` |
+
+**原则**：只引入你真正需要的。多引入一个 `common-web` 就会拉进 Tomcat + Knife4j + Hutool + Fastjson。
+
+## 已知技术债务
+
+以下是最近一次架构审查（2026-06-23）发现的问题。已修复的标记为 ✅，未修复的待后续重构时处理。
+
+### ✅ 已修复（2026-06-23）
+
+| # | 问题 | 修复内容 |
+|---|------|---------|
+| 1 | `UserBaseDTO` 重复 | 删除 `im-server/.../domain/UserBaseDTO.java`，4 处 import 改为 `com.zzzlew.domain.dto.UserBaseDTO`（common-model） |
+| 2 | `ConversationVO` 重复 | 删除 `im-social/.../domain/vo/ConversationVO.java`，包名相同无需改 import，自动走 common-model 传递依赖 |
+| 3 | Redisson 版本不一致 | `im-server/pom.xml` 移除硬编码版本号，改为继承父 POM 管理的 3.27.2 |
+| 4 | 6 个模块缺少 `spring-boot-maven-plugin` | `im-auth/chat/content/social/moments/pay` 的 pom.xml 添加 `<build>` 段，`spring-boot:repackage` 目标已验证通过 |
+
+### 🟢 低危：冗余显式依赖
+
+| 模块 | 冗余依赖 | 原因 |
+|------|---------|------|
+| im-gateway | `jaxb-api:2.3.1` | 已通过 `common-redis → common-base` 传递引入，版本相同，重复声明无害 |
+
+### 🟢 低危：多余的 @ConditionalOnClass
+
+`common-web` 中的 `Knife4jConfig.java` 使用了 `@ConditionalOnClass(GroupedOpenApi.class)`，但 knife4j 是 common-web 的强制依赖（非 optional），该条件注解永远为 true。无害，但语义不正确。
+
+## 架构变更审查清单
+
+当进行以下任何一种操作时，在提交前逐项确认：
+
+### 新建模块时
+- [ ] 只引入了实际需要的 im-common 子模块（而非整个 common-web 或 common-core）
+- [ ] 如果是非 REST 模块，确认没有传递引入 `spring-boot-starter-web`（Tomcat）
+- [ ] 显式声明了 `spring-boot-starter-amqp` / `redisson-spring-boot-starter` / `common-storage`（而非依赖 common-web 的可选传递）
+- [ ] 版本号跟随父 POM 管理，不在子模块硬编码（除非有充分理由）
+- [ ] 添加了 `spring-boot-maven-plugin`（如果是可运行服务）
+
+### 调整依赖关系时
+- [ ] 改动不破坏依赖方向：`im-common/im-api ← 业务模块`
+- [ ] 没有出现循环依赖
+- [ ] 没有业务模块直接依赖另一个业务模块的 Maven 坐标
+- [ ] 运行 `mvn dependency:tree -pl <changed-module>` 确认无意外传递依赖
+
+### 添加/移动 Domain 类时
+- [ ] 跨模块共享的 DTO/VO/Entity 放在 `common-model`
+- [ ] 仅单模块使用的 DTO/VO/Entity 保留在业务模块内
+- [ ] **搜索全项目**确认没有同名类已在其他模块存在（避免重复）
+- [ ] 如果是将类迁移到 common-model，**删除所有模块中的旧副本**并更新所有 import
+
+### 重构现有模块时
+- [ ] 处理了"已知技术债务"中相关的条目
+- [ ] 重构后运行 `mvn clean compile -pl <module> -am` 确认编译通过
+- [ ] 如果涉及 im-common 子模块改动，运行全量编译 `mvn clean compile`（所有模块都可能受影响）
 
 各模块有独立的 CLAUDE.md，深入描述模块内部的端点、类、架构细节：
 
