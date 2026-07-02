@@ -4,6 +4,17 @@
 
 钱包/支付微服务，端口 **8087**，Nacos 注册名 `im-pay`。负责钱包管理、余额操作、打赏转账、红包到账。**无 Feign 客户端依赖**（不被其他服务调用的场景），所有外部调用通过 HTTP 或 MQ。
 
+## 技术标签
+
+- 三层资金安全锁策略（MySQL 悲观锁 FOR UPDATE → 乐观锁 WHERE balance ≥ amount → Redisson 分布式锁幂等）
+- MQ 异步转账架构（打赏转账 + 红包到账，支付与业务解耦）
+- 流水不可变审计记录（before_balance → after_balance 完整资金追溯链）
+- 事务内双层校验（先 SELECT FOR UPDATE 锁行，再 UPDATE WHERE balance ≥ amount 二次拦截溢出）
+- Redisson SetNX 分布式锁幂等（MQ 消息级别防重复消费，30s TTL）
+- 钱包余额冻结字段预留（freeze_balance 支持 TCC 两阶段提交扩展）
+
+> 我设计并实现了一套基于"悲观锁 + 乐观锁 + 分布式锁"三层防护的支付钱包微服务，通过 SELECT FOR UPDATE 串行化并发钱包操作，通过 WHERE balance ≥ amount 乐观条件二次拦截余额溢出，通过 Redisson SetNX 实现 MQ 消息级别幂等防重复消费，配合 before/after balance 完整流水记录实现资金操作的可追溯与可审计，本质上是一个**具备强一致性和可审计性的金融级资金管理微服务**。
+
 ## 端点一览（`/wallet`）
 
 | 方法 | 路径 | 说明 |

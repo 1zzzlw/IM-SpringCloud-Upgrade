@@ -4,36 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="更新了一下yml文件的写法.">
+    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/CLAUDE.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/RedPacketServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/RedPacketServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-base/src/main/java/com/zzzlew/constant/RabbitMQConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-base/src/main/java/com/zzzlew/constant/RabbitMQConstant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/vo/ConversationVO$ConversationVOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/vo/ConversationVO$ConversationVOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/vo/ConversationVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/target/classes/com/zzzlew/domain/vo/ConversationVO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-content/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-moments/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/listener/RewardResultListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/listener/RewardResultListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-pay/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-pay/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-api/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/im-api/CLAUDE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/CLAUDE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/CLAUDE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-base/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-base/CLAUDE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-core/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-core/CLAUDE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-model/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/CLAUDE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-redis/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-redis/CLAUDE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-storage/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-storage/CLAUDE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-web/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-web/CLAUDE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-content/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/CLAUDE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/CLAUDE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/CLAUDE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-pay/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/im-pay/CLAUDE.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-server/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/CLAUDE.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/UserBaseDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/ConnectSuccessMessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/ConnectSuccessMessageHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/HttpHeadersHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/HttpHeadersHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/QuitLoginHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/QuitLoginHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/utils/ChannelManageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/utils/ChannelManageUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/domain/vo/ConversationVO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/target/classes/com/zzzlew/domain/vo/ConversationVO$ConversationVOBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/target/classes/com/zzzlew/domain/vo/ConversationVO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/target/classes/com/zzzlew/server/impl/ApplyServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/target/classes/com/zzzlew/server/impl/ApplyServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-social/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/CLAUDE.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/朱林威-Java开发工程师-简历.html" beforeDir="false" afterPath="$PROJECT_DIR$/朱林威-Java开发工程师-简历.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/朱林威-Java开发工程师-简历.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/朱林威-Java开发工程师-简历.pdf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -457,14 +445,11 @@
       <workItem from="1782228944787" duration="3083000" />
       <workItem from="1782369903092" duration="2141000" />
       <workItem from="1782727360585" duration="7917000" />
-    </task>
-    <task id="LOCAL-00003" summary="准备写右键菜单和在线状态">
-      <option name="closed" value="true" />
-      <created>1770902739279</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1770902739279</updated>
+      <workItem from="1782824194642" duration="373000" />
+      <workItem from="1782824577594" duration="224000" />
+      <workItem from="1782892388554" duration="122000" />
+      <workItem from="1782921077752" duration="700000" />
+      <workItem from="1782975033176" duration="5732000" />
     </task>
     <task id="LOCAL-00004" summary="在线状态完成，右键菜单前端完成部分，后端还没有开始写业务操作">
       <option name="closed" value="true" />
@@ -850,7 +835,15 @@
       <option name="project" value="LOCAL" />
       <updated>1782204064937</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="优化部分模块的冗余代码吧,共同类放在common模块.这些天没有看项目,没有看八股,感觉什么都没有学.只不过是稍微看一些agent视频,用一下agent的功能,还有期末考试.这个项目,我越来越陌生,但是还是没有得到我想要的结果.越来越久,我就忘的更多,我这一年好像就浪费掉了.感觉,没有意义了,没有意义了.我又选错道路了吗,我还是像那样总是走在错误的道路上啊.">
+      <option name="closed" value="true" />
+      <created>1782824417172</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1782824417172</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -868,7 +861,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="优化前的最后一次测试，消息并发测试数据，接下来开始项目的整体优化，MQ的加入，ACK的加入，重发机制等等" />
     <MESSAGE value="初始化了MQ的消息队列，准备修改消息发送的代码" />
     <MESSAGE value="写了一些MQ的优化配置类，感觉用处不是很多，太麻烦了，后期需要的话我再优化吧，然后把Springboot的异步存储加上了。" />
     <MESSAGE value="优化了系统消息，还有publish代码，之前有一个错误就是，根据对方id查对方的Netty集群，应该一下子查完的，不应该每次循环都查询一次redis，这样太浪费性能了，这次优化了一下，并用上了spring的异步处理，避免了Netty的长时间阻塞" />
@@ -893,7 +885,8 @@
     <MESSAGE value="继续完善功能,打赏,红包,支付系统" />
     <MESSAGE value="支付系统,红包发送,打赏功能完成,还没有进行系统的测试" />
     <MESSAGE value="更新了一下yml文件的写法." />
-    <option name="LAST_COMMIT_MESSAGE" value="更新了一下yml文件的写法." />
+    <MESSAGE value="优化部分模块的冗余代码吧,共同类放在common模块.这些天没有看项目,没有看八股,感觉什么都没有学.只不过是稍微看一些agent视频,用一下agent的功能,还有期末考试.这个项目,我越来越陌生,但是还是没有得到我想要的结果.越来越久,我就忘的更多,我这一年好像就浪费掉了.感觉,没有意义了,没有意义了.我又选错道路了吗,我还是像那样总是走在错误的道路上啊." />
+    <option name="LAST_COMMIT_MESSAGE" value="优化部分模块的冗余代码吧,共同类放在common模块.这些天没有看项目,没有看八股,感觉什么都没有学.只不过是稍微看一些agent视频,用一下agent的功能,还有期末考试.这个项目,我越来越陌生,但是还是没有得到我想要的结果.越来越久,我就忘的更多,我这一年好像就浪费掉了.感觉,没有意义了,没有意义了.我又选错道路了吗,我还是像那样总是走在错误的道路上啊." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

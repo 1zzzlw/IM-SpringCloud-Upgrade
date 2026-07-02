@@ -4,6 +4,16 @@
 
 **Feign API 库（JAR）**，不是可运行服务。定义所有跨服务 REST 调用的 `@FeignClient` 接口 + 共享的 `DefaultFeignConfig`（日志 + 用户上下文传播）。
 
+## 技术标签
+
+- Feign 声明式 HTTP 客户端接口库（接口即契约，JAR 包模式解耦服务间调用）
+- 用户上下文跨服务传播（RequestInterceptor 从 ThreadLocal 读用户 → JSON 序列化 → 注入 user-info HTTP Header）
+- 显式配置引用模式（@FeignClient(configuration=…) 按需引用，避免全局 @Configuration 组件扫描污染）
+- 接口聚合层设计（4 个 FeignClient 覆盖 Auth / Chat / Social / Pay 四服务的对外 API）
+- 零 Spring Boot 依赖（无启动类、无配置文件，纯接口 + 配置的轻量 JAR）
+
+> 我设计了一个基于 Feign 声明式 HTTP 客户端的微服务接口聚合库（JAR 包模式），通过 RequestInterceptor 实现用户上下文的跨服务自动传播（从 ThreadLocal 读取 → JSON 序列化 → 注入 HTTP Header），通过显式配置引用而非 @Configuration 自动扫描避免全局组件污染，本质上是一个**解耦合、可传播用户上下文、零 Spring Boot 依赖的轻量级 RPC 接口聚合层**。
+
 ## Feign 客户端
 
 ### AuthClient → `im-auth`

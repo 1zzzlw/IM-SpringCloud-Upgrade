@@ -4,6 +4,17 @@
 
 Spring Cloud Gateway 网关，端口 **8080**，所有 REST 请求的入口。负责全局 Token 鉴权和路由转发。**不含** CORS 配置（依赖外部 Nginx）。
 
+## 技术标签
+
+- 基于 Spring Cloud Gateway 的统一 API 网关
+- GlobalFilter 全局鉴权拦截器（Order=0 最高优先级）
+- 双 Token 无感刷新机制（短期 Access + 长期 Refresh 分离校验）
+- Reactive Redis 响应式编程（WebFlux + Lettuce 非阻塞 I/O）
+- Nacos 服务发现 + Spring Cloud LoadBalancer 动态路由
+- 用户上下文请求头透传（user-info Header 链路传播）
+
+> 我设计并实现了一套基于 Spring Cloud Gateway 的统一 API 网关，通过 GlobalFilter 实现全局双 Token 鉴权与无感刷新，结合 Reactive Redis（WebFlux + Lettuce）实现非阻塞用户校验，通过 Nacos 服务发现实现动态路由转发，通过 HTTP Header 透传实现用户上下文跨服务传播，本质上是一个**高性能、响应式、非阻塞的微服务网关鉴权架构**。
+
 ## 路由表
 
 | 路径前缀 | 目标服务 |

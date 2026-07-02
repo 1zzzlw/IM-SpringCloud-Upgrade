@@ -4,6 +4,18 @@
 
 朋友圈（Moments）微服务，端口 **8085**，Nacos 注册名 `im-moments`。负责帖子发布、点赞、评论/回复、打赏、缓存管理、Canal 缓存一致性。
 
+## 技术标签
+
+- Redis 多层级缓存架构（ZSet 时间线 + String 详情 + Hash 计数 + Set 点赞集合，四种数据结构协同一体）
+- 4 个 Lua 脚本原子操作（点赞 SISMEMBER/SADD/SREM 切换 + HINCRBY 计数 + ZADD 热榜 + 缓存预热 SETNX）
+- 游标分页（lastId 偏移，解决传统分页在实时新增场景下的数据重复问题）
+- Canal + MySQL binlog 异步缓存失效（监听 UPDATE 事件 → DEL Redis 缓存，最终一致性）
+- Cache-Aside 缓存模式（读未命中 → 查 DB → 回写缓存 + TTL 随机化 ±10% 防雪崩）
+- 评论二级嵌套结构（parent_id 区分顶级评论与回复，两级加载策略）
+- 打赏 MQ 异步解耦（发 MQ → im-pay 处理 → MQ 回调结果，幂等键防重）
+
+> 我设计并实现了一套基于 "Cache-Aside + Canal binlog 异步双写" 的朋友圈信息流系统，通过多层级 Redis 数据结构（ZSet 时间线 + Hash 计数 + Set 点赞集合）承载列表/详情/计数/点赞四种缓存形态，通过 4 个 Lua 脚本实现点赞切换、评论计数、缓存预热等原子操作消除并发竞态，通过 TTL 随机化 ±10% 防止缓存雪崩，通过 Canal 监听 MySQL binlog 实现异步缓存失效保证最终一致性，通过游标分页解决实时新增下的分页偏移问题，本质上是一个**高并发、最终一致的社交信息流微服务**。
+
 ## 端点一览（`/moments`）
 
 | 方法 | 路径 | 说明 |

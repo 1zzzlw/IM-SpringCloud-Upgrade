@@ -4,6 +4,18 @@
 
 Spring Web MVC 横切关注点模块。所有 REST 微服务的**核心依赖**。提供拦截器、全局异常处理、分布式锁、MinIO 配置、RabbitMQ 配置、Knife4j。
 
+## 技术标签
+
+- HandlerInterceptor + ThreadLocal 用户上下文拦截器（preHandle 解析 user-info 头 → afterCompletion 清理 ThreadLocal）
+- @RestControllerAdvice 全局异常处理（捕获 BaseException 及其子类 → 统一映射为 Result.error）
+- Redisson 分布式锁工具封装（标准 tryLock 阻塞锁 + executeIfAbsent SetNX 幂等锁两种语义）
+- @ConditionalOnClass 条件装配（MinIO / RabbitMQ / Redisson 按 classpath 存在性优雅激活）
+- MinIO 7 桶自动初始化（@PostConstruct 检查 + 创建桶 + 设置公共读策略）
+- Optional 依赖传递控制（common-storage / spring-amqp / redisson 标记 optional=true，按需引入不传递污染）
+- Knife4j API 文档自动配置（OpenAPI 3 规范，@ConditionalOnClass 保护）
+
+> 我设计了一套 Spring Web MVC 横切关注点聚合模块，通过 HandlerInterceptor + ThreadLocal 实现用户上下文的请求级生命周期管理（写入 → 业务使用 → 清理），通过 @RestControllerAdvice 统一异常处理将分层异常映射为 Result.error，通过 Redisson 封装标准分布式锁和 SetNX 幂等锁两种语义，通过 @ConditionalOnClass + optional 依赖实现 MinIO / RabbitMQ / Redisson 的优雅条件装配——"有则激活、无则跳过"，本质上是一个**"按需激活、不传递污染"的微服务横切关注点基础设施层**。
+
 ## 关键类
 
 ### Web 层配置

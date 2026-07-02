@@ -4,6 +4,17 @@
 
 认证/授权微服务，端口 **8081**，Nacos 注册名 `im-auth`。负责用户注册、登录、Token 生成与刷新、验证码、用户搜索。
 
+## 技术标签
+
+- 双 Token 认证体系（短期 Access Token + 长期 Refresh Token 分层过期）
+- Redis Lua 脚本原子化登录（并发安全的旧 Token 清理 + 新 Token 写入）
+- Kaptcha 图形验证码生成与 Redis 缓存校验（5min TTL）
+- AOP + ConcurrentHashMap + AtomicInteger 进程内接口限流
+- ThreadLocal 用户上下文管理（UserHolder 请求级隔离）
+- Feign 声明式跨服务调用（登录后加载好友列表 + 注册后创建会话）
+
+> 我设计并实现了一套基于双 Token 机制的认证中心，通过 Redis Lua 脚本实现原子化登录——在高并发下并发安全地清理旧会话、写入新 Token 对，结合 AOP 切面 + ConcurrentHashMap 实现接口级进程内限流，通过 ThreadLocal 管理请求级用户上下文，本质上是一个**具备并发安全性和基础防护能力的统一认证微服务**。
+
 ## 端点一览（`/user`）
 
 | 方法 | 路径 | 说明 |

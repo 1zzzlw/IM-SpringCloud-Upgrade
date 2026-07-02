@@ -2,7 +2,23 @@
 
 ## 模块职责
 
-Netty WebSocket 服务端，**不是 REST 服务**——没有 HTTP Controller。负责实时消息收发、集群路由、在线状态管理、离线消息存储。默认 WebSocket 端口 **8000**，集群 ID 从 `ws.mq` JVM 系统属性或 `netty.websocket.cluster-id` 配置读取。
+Netty WebSocket 服务端，**不是 REST 服务**——没有 HTTP Controller。负责实时消息收发、集群路由、在线状态管理、离线消息存储。默认
+WebSocket 端口 **8000**，集群 ID 从 `ws.mq` JVM 系统属性或 `netty.websocket.cluster-id` 配置读取。
+
+## 技术标签
+
+- 自定义应用层二进制协议（定长 16 字节头部 + 变长正文体，解决 TCP 粘包半包）
+- 基于 Netty 的 Pipeline 责任链编解码架构（14 级 Handler 链路，入站/出站分离）
+- 策略模式实现序列化解耦（JSON / Java / Kryo / Protobuf，Serializer.Algorithm 枚举可插拔切换）
+- 基于消息类型码的分发器路由设计（MessageDispatcherHandler + Map<Integer, MessageHandler> 策略映射）
+- 可插拔的消息序列化机制（MessageToMessageCodec 编解码器与业务逻辑零耦合）
+- 集群间 RabbitMQ 消息路由（三向路由：本地 Channel 直发 / 远程 MQ 投递 / 离线 Redis ZSet 暂存）
+- Redis Lua 脚本原子离线消息存储（ZADD 按雪花 ID 排序，20s TTL 自动过期）
+- 心跳保活与断线检测（IdleStateHandler 90s 读空闲 + 自定义 HeartBeatHandler 关闭连接）
+- 在线状态生命周期管理（上线通知好友 + 下线广播 + 集群映射注册/清理）
+- Linux Epoll / Windows NIO 平台自适应（NettyPlatformOptimizer 自动探测并启用最优传输层）
+
+> 我设计并实现了一套基于 Netty 的自定义二进制消息协议，采用固定头变长体解决粘包半包，结合策略模式实现序列化可插拔，结合分发器模式实现多消息类型路由，结合 RabbitMQ 实现集群间三向消息路由（本地直发 / 远程MQ投递 / 离线Redis暂存），结合心跳机制管理在线状态生命周期，本质上是一个**协议层、编解码层、业务分发层、集群路由层四层解耦的高性能即时通讯通信架构**。
 
 ## 自定义协议帧（16 字节头部）
 
@@ -12,39 +28,40 @@ Netty WebSocket 服务端，**不是 REST 服务**——没有 HTTP Controller�
 
 - 魔数：`[1, 2, 3, 4]`
 - `ProtocolFrameDecoder`：继承 `LengthFieldBasedFrameDecoder`（maxFrameLength=128KB, offset=12, lengthFieldLength=4）
-- `MessageCodecSharable`：`MessageToMessageCodec<ByteBuf, Message>`，策略模式支持 JSON/Java 序列化（`Serializer.Algorithm` 枚举）
+- `MessageCodecSharable`：`MessageToMessageCodec<ByteBuf, Message>`，策略模式支持 JSON/Java 序列化（`Serializer.Algorithm`
+  枚举）
 
 ## Netty Pipeline（按顺序）
 
-| # | Handler | 作用 |
-|---|---------|------|
-| 1 | `HttpServerCodec` | HTTP 编解码（WebSocket 握手） |
-| 2 | `HttpObjectAggregator(128KB)` | 聚合 HTTP 分块 |
-| 3 | `ChunkedWriteHandler` | 分块写入 |
-| 4 | `HttpHeadersHandler` | 从 URI QueryString 提取 JWT → 校验 → `ChannelManageUtil` 注册 |
-| 5 | `WebSocketServerProtocolHandler("/ws")` | WebSocket 升级 + ping/pong |
-| 6 | `BinaryWebSocketFrameToByteBufHandler` | 入站：`BinaryWebSocketFrame` → `ByteBuf` |
-| 7 | `ProtocolFrameDecoder` | 入站：粘包/半包处理 |
-| 8 | `ByteBufToBinaryWebSocketFrameHandler` | 出站：`ByteBuf` → `BinaryWebSocketFrame` |
-| 9 | `MessageCodecSharable` | 编解码：`ByteBuf` ↔ `Message` |
-| 10 | `MessageDispatcherHandler` | **核心调度**：按 type 路由到 `MessageHandler` |
-| 11 | `IdleStateHandler(90s)` | 90s 读空闲 → 触发心跳断开 |
-| 12 | `HeartBeatHandler` | `READER_IDLE` 事件 → 关闭 Channel |
-| 13 | `ConnectSuccessMessageHandler` | `HandshakeComplete` → 推送离线消息 + 通知在线 |
-| 14 | `QuitLoginHandler` | `channelInactive` → 通知离线 + 清理映射 |
+| #  | Handler                                 | 作用                                                     |
+|----|-----------------------------------------|--------------------------------------------------------|
+| 1  | `HttpServerCodec`                       | HTTP 编解码（WebSocket 握手）                                 |
+| 2  | `HttpObjectAggregator(128KB)`           | 聚合 HTTP 分块                                             |
+| 3  | `ChunkedWriteHandler`                   | 分块写入                                                   |
+| 4  | `HttpHeadersHandler`                    | 从 URI QueryString 提取 JWT → 校验 → `ChannelManageUtil` 注册 |
+| 5  | `WebSocketServerProtocolHandler("/ws")` | WebSocket 升级 + ping/pong                               |
+| 6  | `BinaryWebSocketFrameToByteBufHandler`  | 入站：`BinaryWebSocketFrame` → `ByteBuf`                  |
+| 7  | `ProtocolFrameDecoder`                  | 入站：粘包/半包处理                                             |
+| 8  | `ByteBufToBinaryWebSocketFrameHandler`  | 出站：`ByteBuf` → `BinaryWebSocketFrame`                  |
+| 9  | `MessageCodecSharable`                  | 编解码：`ByteBuf` ↔ `Message`                              |
+| 10 | `MessageDispatcherHandler`              | **核心调度**：按 type 路由到 `MessageHandler`                   |
+| 11 | `IdleStateHandler(90s)`                 | 90s 读空闲 → 触发心跳断开                                       |
+| 12 | `HeartBeatHandler`                      | `READER_IDLE` 事件 → 关闭 Channel                          |
+| 13 | `ConnectSuccessMessageHandler`          | `HandshakeComplete` → 推送离线消息 + 通知在线                    |
+| 14 | `QuitLoginHandler`                      | `channelInactive` → 通知离线 + 清理映射                        |
 
 ## 消息类型与 Handler 映射（`MessageDispatcherHandler`）
 
-| type | 请求类 | Handler |
-|------|--------|---------|
-| 0 | HeartRequestDTO | 直接处理（刷新 Redis TTL） |
-| 1 | PrivateChatRequestDTO | `PrivateChatHandler` → ACK + 单发 |
-| 3 | GroupChatRequestDTO | `GroupChatHandler` → ACK + 群发 |
-| 5 | FriendApplyRequestDTO | `FriendApplySendHandler` |
-| 7 | GroupApplyRequestDTO | `GroupApplySendHandler` |
-| 12 | SystemMessageRequestDTO | `SystemMessageHandler` → ACK + 群发 |
-| 14 | FriendApplyDealRequestDTO | `FriendApplyDealHandler` |
-| 17 | GroupApplyDealRequestDTO | `GroupApplyDealHandler` |
+| type | 请求类                       | Handler                           |
+|------|---------------------------|-----------------------------------|
+| 0    | HeartRequestDTO           | 直接处理（刷新 Redis TTL）                |
+| 1    | PrivateChatRequestDTO     | `PrivateChatHandler` → ACK + 单发   |
+| 3    | GroupChatRequestDTO       | `GroupChatHandler` → ACK + 群发     |
+| 5    | FriendApplyRequestDTO     | `FriendApplySendHandler`          |
+| 7    | GroupApplyRequestDTO      | `GroupApplySendHandler`           |
+| 12   | SystemMessageRequestDTO   | `SystemMessageHandler` → ACK + 群发 |
+| 14   | FriendApplyDealRequestDTO | `FriendApplyDealHandler`          |
+| 17   | GroupApplyDealRequestDTO  | `GroupApplyDealHandler`           |
 
 所有 Handler 返回 `MessageResult`（`response` + `receiverIds`），由 `MQMessagePublish.sendToCluster()` 分发。
 
@@ -79,7 +96,8 @@ RabbitMQ Exchange: `im-topic-exchange`，每个 im-server 实例声明自己的�
 
 ## 离线消息存储
 
-[store_offline_message.lua](src/main/resources/store_offline_message.lua)：ZADD 消息 JSON 到 `user:offline:message:content:{userId}`，score = 雪花 ID（保持发送顺序），TTL = 20s。
+[store_offline_message.lua](src/main/resources/store_offline_message.lua)：ZADD 消息 JSON 到
+`user:offline:message:content:{userId}`，score = 雪花 ID（保持发送顺序），TTL = 20s。
 
 ## 关键类
 
@@ -87,12 +105,14 @@ RabbitMQ Exchange: `im-topic-exchange`，每个 im-server 实例声明自己的�
 - [MessageDispatcherHandler.java](src/main/java/com/zzzlew/handler/MessageDispatcherHandler.java) — 消息路由调度中心
 - [MQMessagePublish.java](src/main/java/com/zzzlew/publish/MQMessagePublish.java) — 集群路由 + 离线存储
 - [MQMessageListener.java](src/main/java/com/zzzlew/listener/MQMessageListener.java) — 接收远程集群消息
-- [ChannelManageUtil.java](src/main/java/com/zzzlew/utils/ChannelManageUtil.java) — `Online_user: ConcurrentHashMap<Long, Channel>` + 反向映射
+- [ChannelManageUtil.java](src/main/java/com/zzzlew/utils/ChannelManageUtil.java) —
+  `Online_user: ConcurrentHashMap<Long, Channel>` + 反向映射
 - [MessageCodecSharable.java](src/main/java/com/zzzlew/protocol/MessageCodecSharable.java) — 编解码器
 - [Serializer.java](src/main/java/com/zzzlew/protocol/Serializer.java) — JSON/Java 可切换序列化
 - [Message.java](src/main/java/com/zzzlew/domain/Message.java) — 消息基类（含 type→class 映射）
 - [NettyConfig.java](src/main/java/com/zzzlew/config/NettyConfig.java) — 集群 ID/端口解析 + `getClusterQueueName()` Bean
-- [NettyPlatformOptimizer.java](src/main/java/com/zzzlew/utils/NettyPlatformOptimizer.java) — Linux(Epoll)/Windows(NIO) 自动适配
+- [NettyPlatformOptimizer.java](src/main/java/com/zzzlew/utils/NettyPlatformOptimizer.java) — Linux(Epoll)/Windows(NIO)
+  自动适配
 - [ThreadPoolConfig.java](src/main/java/com/zzzlew/config/ThreadPoolConfig.java) — `imAsyncExecutor` 线程池
 
 ## Docker 部署

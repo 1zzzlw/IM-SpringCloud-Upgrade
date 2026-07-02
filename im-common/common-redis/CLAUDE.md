@@ -4,6 +4,15 @@
 
 Redis 相关配置、常量、工具。依赖 `common-base`。
 
+## 技术标签
+
+- 全局 Redis Key 集中式命名管理（单一常量类覆盖全部 Key 模板与 TTL，避免跨模块 Key 冲突）
+- @ConfigurationProperties 类型安全配置注入（JwtProperties 绑定 jwt.* 配置，IDE 自动补全提示）
+- StringRedisTemplate 缓存客户端骨架（CacheClient Bean，提供统一缓存操作入口）
+- Redis Key 分层命名规范（login: / user: / netty: / moments: / red_packet: / FILE_ 命名空间隔离）
+
+> 我设计了一个集中式 Redis 基础设施模块，通过全局 Redis Key 常量类（RedisConstant）统一管理所有微服务的 Key 命名规范与 TTL，避免跨模块 Key 冲突与魔数散布，通过 @ConfigurationProperties 实现 JWT 密钥/过期时间的类型安全配置注入（编译期校验），本质上是一个 **Redis 配置与命名规范的"单一真相源"**。
+
 ## 关键类
 
 ### `constant/RedisConstant.java`
