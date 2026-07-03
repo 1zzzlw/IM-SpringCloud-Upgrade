@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 
 import static com.zzzlew.constant.RabbitMQConstant.EXCHANGE;
 import static com.zzzlew.constant.RabbitMQConstant.ROUTING_KEY_REDPACKET_GRAB;
+import static com.zzzlew.constant.RedisConstant.*;
 
 @Slf4j
 @Service
@@ -48,11 +49,6 @@ public class RedPacketServiceImpl implements RedPacketService {
     @Resource
     private RabbitTemplate rabbitTemplate;
 
-    private static final String RED_PACKET_HASH_PREFIX = "red_packet:";
-    private static final String RED_PACKET_GRAB_SET_PREFIX = "red_packet:%s:grabbed";
-    // 红包 Redis 缓存 24 小时
-    private static final long RED_PACKET_TTL = 24 * 60 * 60L;
-
     private static final DefaultRedisScript<Long> GRAB_SCRIPT;
 
     static {
@@ -61,17 +57,30 @@ public class RedPacketServiceImpl implements RedPacketService {
         GRAB_SCRIPT.setResultType(Long.class);
     }
 
+    /**
+     * 发送红包的方法
+     * 使用事务注解确保数据一致性，遇到任何异常都会回滚
+     *
+     * @param redPacketDTO 红包数据传输对象，包含红包的基本信息
+     * @return RedPacketVO 红包视图对象，包含创建后的红包信息
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public RedPacketVO sendRedPacket(RedPacketDTO redPacketDTO) {
+        // 获取当前用户ID
         Long userId = UserHolder.getUser().getId();
 
+        // 获取红包总金额
         // 金额校验
+        // 获取红包总数量
         BigDecimal totalAmount = redPacketDTO.getTotalAmount();
+        // 检查金额是否合法，不能小于0.01元
         int totalCount = redPacketDTO.getTotalCount();
         if (totalAmount == null || totalAmount.compareTo(new BigDecimal("0.01")) < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "红包金额不合法");
+            // 计算每个红包的最小金额（向下取整）
         }
+        // 检查每个红包的最小金额是否合法
         BigDecimal perMin = totalAmount.divide(BigDecimal.valueOf(totalCount), 2, RoundingMode.FLOOR);
         if (perMin.compareTo(new BigDecimal("0.01")) < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "红包平均金额不能低于0.01元");
@@ -86,6 +95,7 @@ public class RedPacketServiceImpl implements RedPacketService {
         deductDTO.setAmount(totalAmount);
         deductDTO.setBusinessId(redPacketId);
         deductDTO.setRemark("发送红包");
+        // 扣款
         Result<Void> deductResult = payClient.deduct(deductDTO);
         if (deductResult == null || deductResult.getCode() != 1) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, deductResult != null ? deductResult.getMsg() : "扣款失败");
@@ -105,6 +115,7 @@ public class RedPacketServiceImpl implements RedPacketService {
             redPacket.setType(redPacketDTO.getType() != null ? redPacketDTO.getType() : 0);
             redPacket.setGreeting(redPacketDTO.getGreeting());
             redPacket.setStatus(0);
+            // 写入数据库
             redPacketMapper.saveRedPacket(redPacket);
 
             // 预热 Redis Hash（金额存分，避免浮点精度问题）
@@ -120,7 +131,7 @@ public class RedPacketServiceImpl implements RedPacketService {
             stringRedisTemplate.opsForHash().putAll(hashKey, hashData);
             stringRedisTemplate.expire(hashKey, RED_PACKET_TTL, TimeUnit.SECONDS);
 
-            // 构建返回 VO
+            // 构建返回 VO，前端展示
             RedPacketVO vo = new RedPacketVO();
             vo.setId(redPacketId);
             vo.setSenderId(userId);
@@ -132,7 +143,7 @@ public class RedPacketServiceImpl implements RedPacketService {
             vo.setCreatedAt(redPacket.getCreatedAt());
             return vo;
         } catch (Exception e) {
-            // 补偿：DB 或 Redis 写入失败时退款
+            // 如果出现异常，需要进行补偿：DB 或 Redis 写入失败时退款
             log.error("红包创建失败（扣款已成功），尝试退款：userId={}, amount={}, redPacketId={}", userId, totalAmount, redPacketId, e);
             try {
                 DeductDTO refundDTO = new DeductDTO();
@@ -140,6 +151,7 @@ public class RedPacketServiceImpl implements RedPacketService {
                 refundDTO.setAmount(totalAmount);
                 refundDTO.setBusinessId(redPacketId);
                 refundDTO.setRemark("红包创建失败退款");
+                // 退款
                 Result<Void> refundResult = payClient.refund(refundDTO);
                 if (refundResult != null && refundResult.getCode() == 1) {
                     log.info("退款成功：userId={}, amount={}", userId, totalAmount);
@@ -153,22 +165,36 @@ public class RedPacketServiceImpl implements RedPacketService {
         }
     }
 
+
+    /**
+     * 抢红包方法
+     *
+     * @param redPacketId 红包ID
+     * @return 抢到的红包金额（元）
+     */
     @Override
     public BigDecimal grabRedPacket(Long redPacketId) {
+        // 获取当前用户ID
         Long userId = UserHolder.getUser().getId();
+        // 定义Redis中存储红包信息的哈希表键
         String hashKey = RED_PACKET_HASH_PREFIX + redPacketId;
+        // 定义Redis中存储抢红包用户集合的键
         String grabSetKey = String.format(RED_PACKET_GRAB_SET_PREFIX, redPacketId);
 
         // 如果 Redis 缓存过期，加分布式锁后从 DB 回灌（防并发覆盖）
         Boolean exists = stringRedisTemplate.hasKey(hashKey);
+        // 如果不存在，则回灌
         if (Boolean.FALSE.equals(exists)) {
+            // 定义回灌锁的键
             String warmupLockKey = "red_packet:warmup_lock:" + redPacketId;
-            Boolean locked = stringRedisTemplate.opsForValue()
-                    .setIfAbsent(warmupLockKey, "1", 10, TimeUnit.SECONDS);
+            // 加锁
+            Boolean locked = stringRedisTemplate.opsForValue().setIfAbsent(warmupLockKey, "1", 10, TimeUnit.SECONDS);
             if (Boolean.TRUE.equals(locked)) {
                 try {
+                    // 回灌
                     warmupRedisFromDB(redPacketId, hashKey);
                 } finally {
+                    // 解锁
                     stringRedisTemplate.delete(warmupLockKey);
                 }
             } else {
@@ -184,12 +210,12 @@ public class RedPacketServiceImpl implements RedPacketService {
         }
 
         // 执行 Lua 抢红包（原子）
-        Long result = stringRedisTemplate.execute(GRAB_SCRIPT, Arrays.asList(hashKey, grabSetKey),
-                String.valueOf(userId), String.valueOf(getTypeFromRedis(hashKey)));
+        Long result = stringRedisTemplate.execute(GRAB_SCRIPT, Arrays.asList(hashKey, grabSetKey), String.valueOf(userId), String.valueOf(getTypeFromRedis(hashKey)));
 
         if (result == null || result == -2L) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "红包已领完或不存在");
         }
+
         if (result == -1L) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "你已经领取过了");
         }
@@ -230,12 +256,23 @@ public class RedPacketServiceImpl implements RedPacketService {
         return amount;
     }
 
+
+    /**
+     * 获取红包详情信息
+     *
+     * @param redPacketId 红包ID
+     * @return RedPacketVO 红包详情视图对象
+     */
     @Override
     public RedPacketVO getRedPacketDetail(Long redPacketId) {
+        // 获取当前用户ID
         Long userId = UserHolder.getUser().getId();
+        // 根据红包ID查询红包信息
         RedPacket redPacket = redPacketMapper.selectRedPacketById(redPacketId);
+        // 如果红包不存在，抛出异常
         if (redPacket == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "红包不存在");
 
+        // 创建红包视图对象并设置基本信息
         RedPacketVO vo = new RedPacketVO();
         vo.setId(redPacket.getId());
         vo.setSenderId(redPacket.getSenderId());
@@ -248,20 +285,29 @@ public class RedPacketServiceImpl implements RedPacketService {
         vo.setStatus(redPacket.getStatus());
         vo.setCreatedAt(redPacket.getCreatedAt());
 
+        // 查看该用户是否已经领取该红包
         Integer count = redPacketMapper.countGrabRecord(redPacketId, userId);
         vo.setGrabbed(count != null && count > 0);
 
+        // 查看领取记录列表
         List<RedPacketRecord> records = redPacketMapper.selectRecordsByRedPacketId(redPacketId);
         if (records != null && !records.isEmpty()) {
+            // 提取所有领取用户ID
+            // 如果领取记录列表非空，就可以查询领取红的用户信息，用来展示
+            // 根据用户ID列表查询用户信息
             List<Long> userIds = records.stream().map(RedPacketRecord::getUserId).collect(Collectors.toList());
+            // 将用户信息转换为Map，方便快速查找
             List<UserAuth> userAuthList = authClient.getUserListByIds(userIds).getData();
             Map<Long, UserAuth> userMap = userAuthList == null ? new HashMap<>() : userAuthList.stream().collect(Collectors.toMap(UserAuth::getUserId, u -> u));
+            // 构建领取记录视图对象列表
 
             List<RedPacketVO.GrabRecordVO> recordVOs = new ArrayList<>();
             for (RedPacketRecord r : records) {
+                // 设置领取记录基本信息
                 RedPacketVO.GrabRecordVO recordVO = new RedPacketVO.GrabRecordVO();
                 recordVO.setUserId(r.getUserId());
                 recordVO.setAmount(r.getAmount());
+                // 获取用户信息并设置
                 recordVO.setCreatedAt(r.getCreatedAt());
                 UserAuth user = userMap.get(r.getUserId());
                 if (user != null) {
@@ -269,31 +315,46 @@ public class RedPacketServiceImpl implements RedPacketService {
                     recordVO.setAvatar(user.getAvatar());
                 }
                 recordVOs.add(recordVO);
+                // 设置领取记录列表
             }
             vo.setRecords(recordVOs);
+            // 如果当前用户已领取，设置其领取金额
 
             if (Boolean.TRUE.equals(vo.getGrabbed())) {
                 records.stream().filter(r -> r.getUserId().equals(userId)).findFirst().ifPresent(r -> vo.setGrabbedAmount(r.getAmount()));
             }
+            // 如果没有领取记录，设置空列表
         } else {
             vo.setRecords(new ArrayList<>());
         }
         return vo;
     }
 
+    /**
+     * 从数据库中预热Redis缓存中的红包数据
+     *
+     * @param redPacketId 红包ID
+     * @param hashKey     Redis中存储的哈希键名
+     */
     private void warmupRedisFromDB(Long redPacketId, String hashKey) {
+        // 从数据库查询红包信息
         RedPacket rp = redPacketMapper.selectRedPacketById(redPacketId);
+        // 如果红包不存在，直接返回
         if (rp == null) return;
+        // 将红包金额从元转换为分（1元=100分）
         long remainFen = rp.getRemainAmount().multiply(BigDecimal.valueOf(100)).longValue();
         long totalFen = rp.getTotalAmount().multiply(BigDecimal.valueOf(100)).longValue();
+        // 构建要存储到Redis的数据Map
         Map<String, String> data = new HashMap<>();
-        data.put("remain_count", String.valueOf(rp.getRemainCount()));
-        data.put("remain_amount", String.valueOf(remainFen));
-        data.put("total_count", String.valueOf(rp.getTotalCount()));
-        data.put("total_amount", String.valueOf(totalFen));
-        data.put("status", String.valueOf(rp.getStatus()));
-        data.put("type", String.valueOf(rp.getType()));
+        data.put("remain_count", String.valueOf(rp.getRemainCount()));    // 剩余红包数量
+        data.put("remain_amount", String.valueOf(remainFen));             // 剩余红包金额（分）
+        data.put("total_count", String.valueOf(rp.getTotalCount()));       // 红包总数量
+        data.put("total_amount", String.valueOf(totalFen));                // 红包总金额（分）
+        data.put("status", String.valueOf(rp.getStatus()));               // 红包状态
+        data.put("type", String.valueOf(rp.getType()));                   // 红包类型
+        // 将数据存入Redis哈希结构
         stringRedisTemplate.opsForHash().putAll(hashKey, data);
+        // 设置Redis中数据的过期时间
         stringRedisTemplate.expire(hashKey, RED_PACKET_TTL, TimeUnit.SECONDS);
     }
 

@@ -37,14 +37,17 @@ public class RewardMessageListener {
         try {
             // Redisson 幂等：TTL=300s，同一 key 只执行一次
             boolean executed = lockUtil.executeIfAbsent("reward:" + idempotentKey, 300, () -> {
+                // 更新用户的钱余额
                 walletService.transferForReward(
                         rewardMsg.getFromUserId(),
                         rewardMsg.getToUserId(),
                         rewardMsg.getAmount(),
                         rewardMsg.getMomentId()
                 );
+                // 封装打赏成功的对象
                 RewardResultDTO result = new RewardResultDTO(
                         idempotentKey, rewardMsg.getMomentId(), rewardMsg.getAmount(), true, null);
+                // 发送到打赏结果队列进行处理
                 rabbitTemplate.convertAndSend(EXCHANGE, ROUTING_KEY_REWARD_RESULT, result);
                 log.info("打赏处理成功：{}", idempotentKey);
             });
@@ -57,8 +60,10 @@ public class RewardMessageListener {
         } catch (Exception e) {
             log.error("打赏处理失败：{}", idempotentKey, e);
             try {
+                // 封装打赏失败的对象，并发送到打赏结果队列进行处理
                 RewardResultDTO result = new RewardResultDTO(
                         idempotentKey, rewardMsg.getMomentId(), rewardMsg.getAmount(), false, e.getMessage());
+                // 发送到打赏结果队列进行处理
                 rabbitTemplate.convertAndSend(EXCHANGE, ROUTING_KEY_REWARD_RESULT, result);
                 channel.basicAck(deliveryTag, false);
             } catch (Exception ex) {

@@ -63,4 +63,15 @@ public class RedisConstant {
 
     // 评论点赞列表，不需要过期时间
     public static final String MOMENTS_COMMENT_LIKE_KEY = "moments:comment:like:";
+
+    // 红包相关key
+    public static final String RED_PACKET_HASH_PREFIX = "red_packet:";
+    // 红包 Redis 缓存 24 小时
+    public static final long RED_PACKET_TTL = 24 * 60 * 60L;
+
+    // 抢红包的用户集合
+    public static final String RED_PACKET_GRAB_SET_PREFIX = "red_packet:%s:grabbed";
+
+    public static final String REWARD_RESULT_IDEMPOTENT_PREFIX = "reward:result:";
+
 }

@@ -13,6 +13,8 @@ import jakarta.annotation.Resource;
 
 import java.util.concurrent.TimeUnit;
 
+import static com.zzzlew.constant.RedisConstant.REWARD_RESULT_IDEMPOTENT_PREFIX;
+
 /**
  * 消费 im-pay 发回的打赏结果，成功则更新帖子累计打赏金额
  */
@@ -25,8 +27,6 @@ public class RewardResultListener {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
-    private static final String REWARD_RESULT_IDEMPOTENT_PREFIX = "reward:result:";
-
     @RabbitListener(queues = "im-reward-result-queue")
     public void handleRewardResult(RewardResultDTO result, Message message, Channel channel) {
         long deliveryTag = message.getMessageProperties().getDeliveryTag();
@@ -35,7 +35,7 @@ public class RewardResultListener {
 
         try {
             if (result.isSuccess()) {
-                // 幂等检查：同一结果只处理一次
+                // 幂等检查：同一结果只处理一次，再次进行一次消息防重复消费的判断
                 String redisKey = REWARD_RESULT_IDEMPOTENT_PREFIX + idempotentKey;
                 Boolean firstTime = stringRedisTemplate.opsForValue().setIfAbsent(redisKey, "1", 24, TimeUnit.HOURS);
                 if (Boolean.TRUE.equals(firstTime)) {

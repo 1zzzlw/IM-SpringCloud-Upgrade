@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="26.0.0">
+  <diagram name="发红包流程">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="950" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Swimlane: 客户端 -->
+        <mxCell id="lane-client" value="客户端" style="swimlane;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="200" height="880" as="geometry" />
+        </mxCell>
+        <mxCell id="n1" value="发起发红包请求&#xa;(金额/个数/类型/祝福语)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="lane-client">
+          <mxGeometry x="10" y="50" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="n-end-send" value="收到红包VO" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" vertex="1" parent="lane-client">
+          <mxGeometry x="10" y="790" width="180" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Swimlane: im-chat -->
+        <mxCell id="lane-chat" value="im-chat" style="swimlane;startSize=30;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="250" y="40" width="200" height="880" as="geometry" />
+        </mxCell>
+        <mxCell id="n2" value="金额校验&#xa;(总金额≥0.01 且 平均≥0.01)" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="lane-chat">
+          <mxGeometry x="20" y="45" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-fail" value="校验失败&#xa;返回错误" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="lane-chat">
+          <mxGeometry x="20" y="130" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="n3" value="雪花算法生成红包ID" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="lane-chat">
+          <mxGeometry x="20" y="200" width="160" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="n4" value="Feign 调用 PayClient.deduct()&#xa;发送 DeductDTO" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="lane-chat">
+          <mxGeometry x="20" y="270" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="n-check-deduct" value="扣款成功?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="lane-chat">
+          <mxGeometry x="30" y="440" width="140" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="n5" value="写 MySQL red_packet 表" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="lane-chat">
+          <mxGeometry x="20" y="530" width="160" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="n6" value="预热 Redis Hash&#xa;(金额以 分 为单位)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="lane-chat">
+          <mxGeometry x="20" y="600" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="n6-fail" value="DB/Redis 写入失败&#xa;→ 补偿退款" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="lane-chat">
+          <mxGeometry x="20" y="680" width="160" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="n7" value="返回红包VO给客户端" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;fontStyle=1;" vertex="1" parent="lane-chat">
+          <mxGeometry x="20" y="790" width="160" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Swimlane: im-pay -->
+        <mxCell id="lane-pay" value="im-pay" style="swimlane;startSize=30;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="460" y="40" width="200" height="880" as="geometry" />
+        </mxCell>
+        <mxCell id="n-pay1" value="WalletController.deduct()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="lane-pay">
+          <mxGeometry x="10" y="275" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="n-pay2" value="SELECT ... FOR UPDATE&#xa;行锁钱包" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontStyle=1;" vertex="1" parent="lane-pay">
+          <mxGeometry x="10" y="340" width="180" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="n-pay3" value="乐观扣款&#xa;UPDATE SET balance=balance-amt&#xa;WHERE balance &gt;= amt" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;fontStyle=1;" vertex="1" parent="lane-pay">
+          <mxGeometry x="10" y="410" width="180" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="n-pay4" value="写流水 type=5 (红包支出)&#xa;before/after balance" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=9;" vertex="1" parent="lane-pay">
+          <mxGeometry x="10" y="540" width="180" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="n-pay-refund" value="Feign refund() 补偿退款&#xa;加款 + 写流水 type=7" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" vertex="1" parent="lane-pay">
+          <mxGeometry x="10" y="685" width="180" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Swimlane: Redis -->
+        <mxCell id="lane-redis" value="Redis" style="swimlane;startSize=30;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="670" y="40" width="200" height="880" as="geometry" />
+        </mxCell>
+        <mxCell id="n-redis1" value="Hash: red_packet:{id}&#xa;remain_count / remain_amount(分)&#xa;total_count / total_amount(分)&#xa;status=0 / type" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=9;" vertex="1" parent="lane-redis">
+          <mxGeometry x="10" y="595" width="180" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- Swimlane: MySQL -->
+        <mxCell id="lane-mysql" value="MySQL" style="swimlane;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="880" y="40" width="200" height="880" as="geometry" />
+        </mxCell>
+        <mxCell id="n-db1" value="wallet 表&#xa;(balance 扣减)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="lane-mysql">
+          <mxGeometry x="25" y="410" width="150" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="n-db2" value="red_packet 表&#xa;(红包信息持久化)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="lane-mysql">
+          <mxGeometry x="25" y="530" width="150" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="n-db3" value="wallet_record 表&#xa;(流水 type=5/7)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="lane-mysql">
+          <mxGeometry x="25" y="620" width="150" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- EDGES -->
+        <!-- 客户端 -> 金额校验 -->
+        <mxCell id="e1" value="HTTP POST" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontSize=9;strokeColor=#6c8ebf;" edge="1" parent="1" source="n1" target="n2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 金额校验 失败 -->
+        <mxCell id="e2-fail" value="失败" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0.5;fontSize=9;strokeColor=#b85450;" edge="1" parent="1" source="n2" target="n2-fail">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 校验成功 -> 雪花ID -->
+        <mxCell id="e2" value="通过" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fontSize=9;strokeColor=#82b366;" edge="1" parent="1" source="n2" target="n3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 雪花ID -> Feign扣款 -->
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="n3" target="n4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Feign扣款 -> im-pay deduct -->
+        <mxCell id="e4" value="Feign 同步调用" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontSize=9;strokeColor=#d79b00;fontStyle=2;" edge="1" parent="1" source="n4" target="n-pay1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- im-pay steps -->
+        <mxCell id="ep1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n-pay1" target="n-pay2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ep2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="n-pay2" target="n-pay3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ep3" value="返回扣款结果" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;fontSize=9;strokeColor=#6c8ebf;fontStyle=2;" edge="1" parent="1" source="n-pay3" target="n-check-deduct">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 扣款成功 -> 写DB -->
+        <mxCell id="e5" value="成功" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fontSize=9;strokeColor=#82b366;" edge="1" parent="1" source="n-check-deduct" target="n5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 扣款失败 -> 补偿退款 -->
+        <mxCell id="e-fail-refund" value="失败" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;entryX=0.5;entryY=0;fontSize=9;strokeColor=#b85450;" edge="1" parent="1" source="n-check-deduct" target="n6-fail">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="210" y="500" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 写DB -> 预热Redis -->
+        <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="n5" target="n6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 写DB edge to MySQL -->
+        <mxCell id="e-db2" value="INSERT" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontSize=9;strokeColor=#82b366;dashed=1;" edge="1" parent="1" source="n5" target="n-db2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 预热Redis edge to Redis -->
+        <mxCell id="e-redis" value="HSET + EXPIRE" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontSize=9;strokeColor=#666666;dashed=1;" edge="1" parent="1" source="n6" target="n-redis1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 预热完成 -> 返回VO -->
+        <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n6" target="n7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 返回VO -> 客户端 -->
+        <mxCell id="e-resp" value="HTTP Response" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;fontSize=9;strokeColor=#82b366;" edge="1" parent="1" source="n7" target="n-end-send">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 补偿退款 -> im-pay refund -->
+        <mxCell id="e-refund" value="Feign refund()" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontSize=9;strokeColor=#b85450;fontStyle=2;" edge="1" parent="1" source="n6-fail" target="n-pay-refund">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- im-pay 写流水 type=5 -->
+        <mxCell id="ep4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="n-pay3" target="n-pay4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="490" />
+              <mxPoint x="560" y="490" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 写流水 -> DB -->
+        <mxCell id="e-db3" value="INSERT" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontSize=9;strokeColor=#82b366;dashed=1;" edge="1" parent="1" source="n-pay4" target="n-db3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 扣款 写DB -->
+        <mxCell id="e-db1" value="UPDATE" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontSize=9;strokeColor=#b85450;dashed=1;" edge="1" parent="1" source="n-pay3" target="n-db1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Legend -->
+        <mxCell id="legend-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="8" width="1040" height="4" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
