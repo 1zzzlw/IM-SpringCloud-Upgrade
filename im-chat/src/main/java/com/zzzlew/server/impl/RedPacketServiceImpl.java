@@ -26,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -106,8 +107,13 @@ public class RedPacketServiceImpl implements RedPacketService {
             // 写 red_packet 表
             RedPacket redPacket = new RedPacket();
             redPacket.setId(redPacketId);
+            redPacket.setMessageId(redPacketDTO.getMessageId());
             redPacket.setConversationId(redPacketDTO.getConversationId());
             redPacket.setSenderId(userId);
+            redPacket.setReceiverId(redPacketDTO.getReceiverId());
+            // 根据会话ID判断聊天类型：私聊(1) 还是 群聊(2)
+            redPacket.setChatType(redPacketDTO.getConversationId() != null
+                    && redPacketDTO.getConversationId().startsWith("g_") ? 2 : 1);
             redPacket.setTotalAmount(totalAmount);
             redPacket.setTotalCount(totalCount);
             redPacket.setRemainAmount(totalAmount);
@@ -115,6 +121,7 @@ public class RedPacketServiceImpl implements RedPacketService {
             redPacket.setType(redPacketDTO.getType() != null ? redPacketDTO.getType() : 0);
             redPacket.setGreeting(redPacketDTO.getGreeting());
             redPacket.setStatus(0);
+            redPacket.setExpireTime(LocalDateTime.now().plusHours(24));
             // 写入数据库
             redPacketMapper.saveRedPacket(redPacket);
 
@@ -134,6 +141,7 @@ public class RedPacketServiceImpl implements RedPacketService {
             // 构建返回 VO，前端展示
             RedPacketVO vo = new RedPacketVO();
             vo.setId(redPacketId);
+            vo.setMessageId(redPacketDTO.getMessageId());
             vo.setSenderId(userId);
             vo.setTotalAmount(totalAmount);
             vo.setTotalCount(totalCount);
@@ -269,6 +277,7 @@ public class RedPacketServiceImpl implements RedPacketService {
         Long userId = UserHolder.getUser().getId();
         // 根据红包ID查询红包信息
         RedPacket redPacket = redPacketMapper.selectRedPacketById(redPacketId);
+        log.info("获取红包详情信息，红包信息：{}", redPacket);
         // 如果红包不存在，抛出异常
         if (redPacket == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "红包不存在");
 

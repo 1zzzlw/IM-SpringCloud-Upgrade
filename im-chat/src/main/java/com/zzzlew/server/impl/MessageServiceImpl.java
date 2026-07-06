@@ -118,7 +118,8 @@ public class MessageServiceImpl implements MessageService {
 
         Integer msgType = messageDTO.getMsgType();
         boolean isSystem = java.util.Objects.equals(msgType, 99);
-        boolean isText = java.util.Objects.equals(msgType, 1);
+        // 红包消息和文本消息
+        boolean isText = java.util.Objects.equals(msgType, 1) || java.util.Objects.equals(msgType, 6);
         boolean isFile = !isText && !isSystem;
         messageDTO.setSendStatus(1);
 

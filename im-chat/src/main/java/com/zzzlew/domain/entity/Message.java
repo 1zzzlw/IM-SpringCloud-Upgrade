@@ -132,6 +132,11 @@ public class Message implements Serializable {
     private Integer downloadStatus;
 
     /**
+     * 关联红包ID（msg_type=6 时使用）
+     */
+    private Long redPacketId;
+
+    /**
      * 接收时间
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

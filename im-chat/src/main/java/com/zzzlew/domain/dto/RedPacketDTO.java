@@ -11,6 +11,11 @@ import java.math.BigDecimal;
 public class RedPacketDTO {
 
     /**
+     * 关联消息ID（前端预生成雪花ID）
+     */
+    private Long messageId;
+
+    /**
      * 会话ID
      */
     private String conversationId;

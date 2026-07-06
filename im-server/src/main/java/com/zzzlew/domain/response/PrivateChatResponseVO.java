@@ -1,5 +1,7 @@
 package com.zzzlew.domain.response;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.zzzlew.domain.Message;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,6 +31,7 @@ public class PrivateChatResponseVO extends Message implements Serializable {
     /**
      * 发送者id
      */
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long senderId;
 
     /**
@@ -69,6 +72,7 @@ public class PrivateChatResponseVO extends Message implements Serializable {
     /**
      * 引用消息id
      */
+    @JSONField(serializeUsing = ToStringSerializer.class)
     private Long quoteMsgId;
 
     /**
@@ -125,6 +129,12 @@ public class PrivateChatResponseVO extends Message implements Serializable {
      * 下载状态 0：未下载 1：已下载
      */
     private Integer downloadStatus;
+
+    /**
+     * 关联红包ID（msg_type=6 时使用）
+     */
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    private Long redPacketId;
 
     /**
      * 接收时间

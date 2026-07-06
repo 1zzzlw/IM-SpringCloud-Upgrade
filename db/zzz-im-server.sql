@@ -11,7 +11,7 @@
  Target Server Version : 80045
  File Encoding         : 65001
 
- Date: 22/06/2026 03:11:44
+ Date: 04/07/2026 01:12:21
 */
 
 SET NAMES utf8mb4;
@@ -221,7 +221,7 @@ CREATE TABLE `message`  (
   INDEX `idx_conversation_id_send_time`(`conversation_id` ASC, `send_time` ASC) USING BTREE COMMENT '加载最新消息时的联合索引',
   INDEX `idx_file_id`(`file_id` ASC) USING BTREE COMMENT '文件的唯一id索引',
   INDEX `idx_sender_id_conversation_id`(`conversation_id` ASC, `sender_id` ASC) USING BTREE COMMENT '会话id和发送id的联合索引，用于清空聊天记录'
-) ENGINE = InnoDB AUTO_INCREMENT = 7473996337006514367 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '消息表（单聊/群聊通用）' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 7475231013528772797 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '消息表（单聊/群聊通用）' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for moment_comments
@@ -258,7 +258,7 @@ CREATE TABLE `moments`  (
   `publish_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `like_count` int NULL DEFAULT 0,
   `comment_count` int NULL DEFAULT 0,
-  `reward_amount` int UNSIGNED NULL DEFAULT 0 COMMENT '打赏总金额',
+  `reward_amount` decimal(18, 2) NULL DEFAULT 0.00 COMMENT '打赏总金额',
   `is_deleted` tinyint(3) UNSIGNED ZEROFILL NULL DEFAULT 000 COMMENT '0 未删除，1 软删除',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 104 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '朋友圈' ROW_FORMAT = Dynamic;
@@ -269,11 +269,11 @@ CREATE TABLE `moments`  (
 DROP TABLE IF EXISTS `red_packet`;
 CREATE TABLE `red_packet`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '红包ID',
-  `message_id` bigint NOT NULL COMMENT '关联消息ID',
+  `message_id` bigint NULL DEFAULT NULL COMMENT '关联消息ID',
   `sender_id` bigint NOT NULL COMMENT '发送人ID',
   `receiver_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '单聊接收人',
   `conversation_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '会话ID',
-  `chat_type` tinyint NOT NULL COMMENT '1单聊 2群聊',
+  `chat_type` tinyint NULL DEFAULT NULL COMMENT '1单聊 2群聊',
   `total_amount` decimal(18, 2) NOT NULL COMMENT '总金额',
   `remain_amount` decimal(18, 2) NOT NULL COMMENT '剩余金额',
   `total_count` int NOT NULL DEFAULT 1 COMMENT '红包总份数',
@@ -282,11 +282,12 @@ CREATE TABLE `red_packet`  (
   `status` tinyint NOT NULL DEFAULT 0 COMMENT '\r\n0进行中\r\n1已领完\r\n2已过期\r\n3已撤回\r\n',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `expire_time` datetime NULL DEFAULT NULL COMMENT '过期时间',
+  `greeting` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '恭喜发财，大吉大利' COMMENT '祝福语',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_message_id`(`message_id` ASC) USING BTREE,
   INDEX `idx_sender_id`(`sender_id` ASC) USING BTREE,
   INDEX `idx_conversation_id`(`conversation_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '红包信息表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2068774454603403264 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '红包信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for red_packet_record
@@ -294,13 +295,14 @@ CREATE TABLE `red_packet`  (
 DROP TABLE IF EXISTS `red_packet_record`;
 CREATE TABLE `red_packet_record`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '领取记录ID',
-  `packet_id` bigint NOT NULL COMMENT '红包ID',
+  `red_packet_id` bigint NOT NULL COMMENT '红包ID',
   `user_id` bigint NOT NULL COMMENT '领取用户ID',
   `amount` decimal(18, 2) NOT NULL COMMENT '领取金额',
   `receive_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `uk_packet_user`(`packet_id` ASC, `user_id` ASC) USING BTREE,
-  INDEX `idx_packet_id`(`packet_id` ASC) USING BTREE,
+  UNIQUE INDEX `uk_packet_user`(`red_packet_id` ASC, `user_id` ASC) USING BTREE,
+  INDEX `idx_packet_id`(`red_packet_id` ASC) USING BTREE,
   INDEX `idx_user_id`(`user_id` ASC) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '红包领取记录表' ROW_FORMAT = Dynamic;
 
@@ -360,7 +362,7 @@ CREATE TABLE `wallet`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_user_id`(`user_id` ASC) USING BTREE,
   INDEX `idx_user_id`(`user_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户钱包表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户钱包表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for wallet_record
@@ -379,6 +381,6 @@ CREATE TABLE `wallet_record`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
   INDEX `idx_business_id`(`business_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '钱包流水表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '钱包流水表' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

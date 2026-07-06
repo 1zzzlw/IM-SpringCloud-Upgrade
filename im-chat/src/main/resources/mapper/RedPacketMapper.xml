@@ -4,10 +4,12 @@
 <mapper namespace="com.zzzlew.mapper.RedPacketMapper">
 
     <insert id="saveRedPacket" parameterType="com.zzzlew.domain.entity.RedPacket">
-        insert into red_packet (id, conversation_id, sender_id, total_amount, total_count,
-                                remain_amount, remain_count, type, greeting, status)
-        values (#{id}, #{conversationId}, #{senderId}, #{totalAmount}, #{totalCount},
-                #{remainAmount}, #{remainCount}, #{type}, #{greeting}, #{status})
+        insert into red_packet (id, message_id, conversation_id, sender_id, receiver_id, chat_type,
+                                total_amount, total_count, remain_amount, remain_count,
+                                type, greeting, status, expire_time)
+        values (#{id}, #{messageId}, #{conversationId}, #{senderId}, #{receiverId}, #{chatType},
+                #{totalAmount}, #{totalCount}, #{remainAmount}, #{remainCount},
+                #{type}, #{greeting}, #{status}, #{expireTime})
     </insert>
 
     <select id="selectRedPacketById" resultType="com.zzzlew.domain.entity.RedPacket">

@@ -116,6 +116,11 @@ public class MessageDTO implements Serializable {
     private String remoteUrl;
 
     /**
+     * 关联红包ID（msg_type=6 时使用）
+     */
+    private Long redPacketId;
+
+    /**
      * 预览base64
      */
     private String previewBase64;

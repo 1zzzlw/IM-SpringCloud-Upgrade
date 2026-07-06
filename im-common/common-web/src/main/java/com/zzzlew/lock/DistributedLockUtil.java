@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.Resource;
+
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -27,10 +28,10 @@ public class DistributedLockUtil {
     /**
      * 尝试加锁，执行业务后自动释放
      *
-     * @param lockKey     锁键
-     * @param waitTime    最大等待时间（秒）
-     * @param leaseTime   锁持有时间（秒），-1 表示看门狗自动续期
-     * @param supplier    需要在锁内执行的业务逻辑
+     * @param lockKey   锁键
+     * @param waitTime  最大等待时间（秒）
+     * @param leaseTime 锁持有时间（秒），-1 表示看门狗自动续期
+     * @param supplier  需要在锁内执行的业务逻辑
      * @return 业务返回值
      */
     public <T> T tryLock(String lockKey, long waitTime, long leaseTime, Supplier<T> supplier) {

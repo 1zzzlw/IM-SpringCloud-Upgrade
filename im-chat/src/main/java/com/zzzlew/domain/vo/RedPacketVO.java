@@ -1,5 +1,7 @@
 package com.zzzlew.domain.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -13,9 +15,15 @@ import java.util.List;
 public class RedPacketVO {
 
     /** 红包ID */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
+    /** 关联消息ID */
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long messageId;
+
     /** 发送者ID */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long senderId;
 
     /** 发送者名称 */
@@ -59,6 +67,7 @@ public class RedPacketVO {
      */
     @Data
     public static class GrabRecordVO {
+        @JsonSerialize(using = ToStringSerializer.class)
         private Long userId;
         private String username;
         private String avatar;
