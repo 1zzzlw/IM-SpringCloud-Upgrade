@@ -30,7 +30,7 @@ spring:
         - id: im-chat
           uri: lb://im-chat
           predicates:
-            - Path=/ai-message/**, /conversation/**, /message/**, /redPacket/**
+            - Path=/conversation/**, /message/**, /redPacket/**
         - id: im-social
           uri: lb://im-social
           predicates:
@@ -47,6 +47,10 @@ spring:
           uri: lb://im-pay
           predicates:
             - Path=/wallet/**
+        - id: im-agent
+          uri: lb://im-agent
+          predicates:
+            - Path=/ai-message/**
 
 jwt:
   access-secret-key: ${im.jwt.access-secret}

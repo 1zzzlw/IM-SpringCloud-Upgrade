@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>朱林威 - Java后端开发工程师</title>
+<style>
+  :root {
+    --c1: #1a1a1a; --c2: #4a4a4a; --c3: #888;
+    --ac: #1a5276; --ac-light: #eaf2f8;
+    --border: #d5dce4;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: "PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;
+    color: var(--c1); background: #e8ecf0;
+    display: flex; justify-content: center; padding: 16px 0;
+    line-height: 1.6; font-size: 13px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    width: 210mm; min-height: 297mm; background: #fff;
+    padding: 16mm 19mm 12mm 19mm;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.04);
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center; margin-bottom: 12px;
+    padding-bottom: 10px; border-bottom: 2px solid var(--ac);
+  }
+  .header .name {
+    font-size: 26px; font-weight: 700; color: var(--ac);
+    letter-spacing: 6px; margin-bottom: 6px;
+  }
+  .header .meta {
+    font-size: 12.5px; color: var(--c2);
+    display: flex; justify-content: center; flex-wrap: wrap;
+    gap: 2px 16px; margin-bottom: 4px;
+  }
+  .header .meta span { white-space: nowrap; }
+  .header .links { font-size: 11px; color: #999; margin-bottom: 4px; }
+  .header .links a { color: #557799; text-decoration: none; }
+  .header .target {
+    margin-top: 4px; font-size: 13px; color: var(--ac); font-weight: 600;
+    background: var(--ac-light); display: inline-block;
+    padding: 3px 18px; border-radius: 4px; letter-spacing: 1px;
+  }
+
+  /* ── Section ── */
+  .section { margin-bottom: 11px; }
+  .section-title {
+    font-size: 15px; font-weight: 700; color: var(--ac);
+    padding-bottom: 3px; border-bottom: 1.5px solid var(--ac);
+    margin-bottom: 6px; letter-spacing: 1px;
+  }
+
+  /* ── Skills ── */
+  .skill-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    column-gap: 20px; row-gap: 3px;
+  }
+  .skill-item { font-size: 12.5px; color: var(--c1); line-height: 1.5; }
+  .skill-item .label { color: var(--ac); font-weight: 600; }
+
+  /* ── Projects ── */
+  .project { margin-bottom: 10px; }
+  .project-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 2px;
+  }
+  .project-name { font-size: 14.5px; font-weight: 700; color: var(--c1); }
+  .project-role { font-size: 12px; color: var(--c2); font-weight: 400; }
+  .project-time { font-size: 11px; color: var(--c3); white-space: nowrap; }
+  .project-desc {
+    font-size: 12px; color: var(--c2); margin-bottom: 5px; line-height: 1.55;
+  }
+  .project-desc a { color: #557799; text-decoration: none; font-size: 11px; }
+
+  .bullets { list-style: none; padding: 0; }
+  .bullets li {
+    font-size: 12px; color: var(--c1); margin-bottom: 3.5px;
+    padding-left: 14px; position: relative; line-height: 1.55;
+  }
+  .bullets li::before {
+    content: "▸"; position: absolute; left: 0; top: 0;
+    color: var(--ac); font-size: 8px; line-height: 1.55;
+  }
+
+  .tag {
+    display: inline-block; font-size: 10.5px; font-weight: 600;
+    color: var(--ac); background: var(--ac-light);
+    padding: 1px 7px; border-radius: 3px; margin-right: 3px;
+  }
+
+  /* ── Print ── */
+  @media print {
+    body { background: #fff; padding: 0; }
+    .page { width: 100%; min-height: auto; box-shadow: none;
+           padding: 10mm 13mm 6mm 13mm; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ════ Header ════ -->
+  <div class="header">
+    <div class="name">朱 林 威</div>
+    <div class="meta">
+      <span>河南师范大学 · 本科在读（2024.09 ~ 2028.06）</span>
+      <span>19 岁</span>
+      <span>18539312155</span>
+      <span>1400377637@qq.com</span>
+    </div>
+    <div class="links">
+      <a href="https://github.com/1zzzlw/IM-SpringCloud-Upgrade">GitHub：github.com/1zzzlw/IM-SpringCloud-Upgrade</a>
+    </div>
+    <div class="target">求职意向：Java 后端开发工程师（实习 / 校招）</div>
+  </div>
+
+  <!-- ════ Skills ════ -->
+  <div class="section">
+    <div class="section-title">专业技能</div>
+    <div class="skill-grid">
+      <div class="skill-item"><span class="label">Java</span>&nbsp; 熟悉 JUC 并发、集合框架、JVM 内存模型与 GC</div>
+      <div class="skill-item"><span class="label">Spring</span>&nbsp; Spring Boot + MyBatis + Spring Cloud Alibaba 微服务</div>
+      <div class="skill-item"><span class="label">MySQL</span>&nbsp; 索引优化、行级锁 / 乐观锁并发控制、SQL 调优</div>
+      <div class="skill-item"><span class="label">Redis</span>&nbsp; Lua 原子脚本、分布式锁、Cache-Aside 缓存一致性</div>
+      <div class="skill-item"><span class="label">Netty</span>&nbsp; 自研二进制协议、Pipeline 责任链、TCP 粘包半包</div>
+      <div class="skill-item"><span class="label">RabbitMQ</span>&nbsp; 集群消息路由、异步解耦、可靠投递与幂等消费</div>
+      <div class="skill-item"><span class="label">DevOps</span>&nbsp; Docker、Nginx、Maven 多模块工程</div>
+      <div class="skill-item"><span class="label">AI Agent</span>&nbsp; RAG、ReAct / Plan-Execute、MCP 协议、LangChain</div>
+    </div>
+  </div>
+
+  <!-- ════ Projects ════ -->
+  <div class="section">
+    <div class="section-title">项目经历</div>
+
+    <!-- Project 1: IM -->
+    <div class="project">
+      <div class="project-header">
+        <div>
+          <span class="project-name">仿微信全栈即时通讯系统</span>
+          <span class="project-role">— 独立全栈开发</span>
+        </div>
+        <span class="project-time">2025.11 ~ 2026.06</span>
+      </div>
+      <div class="project-desc">
+        基于 Spring Cloud Alibaba 的高并发 IM 系统，覆盖私聊 / 群聊 / 朋友圈 / 红包 / 支付 / AI 对话完整闭环。后端 <b>9 个微服务 + 6 个公共模块</b>，Netty WebSocket 实时通信，RabbitMQ 异步解耦与集群路由。<br>
+        <a href="https://github.com/1zzzlw/IM-SpringCloud-Upgrade">github.com/1zzzlw/IM-SpringCloud-Upgrade</a>
+      </div>
+      <ul class="bullets">
+        <li><b>自研 Netty 通信协议与集群路由</b>&nbsp; 设计 16 字节固定头 + 变长体自定义协议帧解决粘包半包，策略模式 JSON / Java 双序列化可插拔；14 级 Pipeline 覆盖 HTTP → WebSocket 升级 → JWT 握手 → 编解码 → 分发 → 心跳全链路；RabbitMQ Topic Exchange 三向路由——同节点 Channel 直发、跨节点队列投递、离线 Redis Lua 暂存，支持多 im-server 实例无状态水平扩展。</li>
+        <li><b>Redis Lua 原子编程与三层资金安全锁</b>&nbsp; 手写 <b>7 个业务 Lua 脚本</b>——Token 原子替换解决并发登录竞态，二倍均值法红包随机分配（金额以分为单位避免浮点精度），点赞 / 评论 HINCRBY / SISMEMBER 原子切换，离线消息 ZADD 按雪花 ID 排序暂存。红包 / 支付 / 打赏设计三层锁策略——MySQL SELECT FOR UPDATE 行锁 + WHERE balance ≥ amount 乐观条件二次拦截 + Redisson SETNX 幂等锁防 MQ 重复消费；转账按 userId 排序统一加锁顺序避免死锁，流水 before / after balance 完整审计链。</li>
+        <li><b>朋友圈与 Canal 缓存一致性</b>&nbsp; ZSet 时间线 + String 详情 + Hash 计数 + Set 点赞集合四种数据结构协同；选型 Canal binlog 异步缓存失效 + Cache-Aside 读模式重建，<b>4 个 Lua 脚本</b>保证点赞 / 计数 / 预热原子性；TTL 随机 ±10% 防雪崩 + 游标分页解决实时新增数据重复。</li>
+        <li><b>Spring AI 双模型对话与微服务工程化</b>&nbsp; 集成智谱 GLM-5.1 + Ollama qwen2.5:14b 双模型，SSE 流式推送 + Reactor Flux 背压；Function Calling 工具调用 + 自定义 AI 个性系统热切换；Gateway 双 Token 无感刷新 + Feign 全链路用户上下文透传；文件分片上传（雪花 ID + MD5 校验 + MinIO composeObject 合并）、AOP IP 限流、全局异常处理。</li>
+      </ul>
+    </div>
+
+    <!-- Project 2: Agent -->
+    <div class="project">
+      <div class="project-header">
+        <div>
+          <span class="project-name">智能 OnCall 协同平台</span>
+          <span class="project-role">— 独立开发</span>
+        </div>
+        <span class="project-time">2026.04 ~ 2026.07</span>
+      </div>
+      <div class="project-desc">
+        企业级 AI Agent 系统，基于 <b>LangChain + LangGraph</b> 构建 Multi-Agent 架构，整合 RAG 知识库、ReAct 对话与 Plan-Execute-Replan 智能运维三大能力，通过 <b>MCP 协议</b>集成外部工具，实现故障自动诊断与问题智能应答的完整闭环。
+      </div>
+      <ul class="bullets">
+        <li><b>Plan-Execute-Replan 智能运维引擎</b>&nbsp; 基于 LangGraph 状态图设计 Planner → Executor → Replanner 三节点循环架构，Planner 先检索知识库经验再生成结构化诊断计划（Pydantic 约束输出格式），Executor 通过 ToolNode 自动执行工具调用并收集结果，Replanner 动态评估决定 continue / replan / respond。设计 8 步硬上限 + 第 5 步后禁止 Replan 的收敛策略防止无限循环；SSE 流式推送完整诊断过程，运维响应从 <b>小时级降至分钟级</b>。</li>
+        <li><b>MCP 协议工具集成与容错设计</b>&nbsp; MultiServerMCPClient 全局单例管理远程工具连接，自研指数退避重试拦截器（3 次，1s / 2s / 4s 递增），工具调用失败时返回结构化错误而非抛出异常；CLS 日志查询 + Prometheus 监控告警两类 MCP Server 独立部署；Agent 运行时动态合并<b>本地工具</b>（知识检索 + 时间 + 告警查询）与<b>远程 MCP 工具</b>，MCP 服务不可用时自动降级为纯本地工具模式继续运行，保证系统可用性。</li>
+        <li><b>RAG 知识库与 Multi-Agent 协作</b>&nbsp; 基于 Milvus（IVF_FLAT 索引，1024 维向量）搭建文档分割 → embedding → 索引 → 检索完整流水线，经实验确定 chunk_size=800 / overlap=100 / TopK=3 最优参数组合；LangChain create_agent + MemorySaver checkpointer 实现多轮对话记忆，消息超 7 条自动修剪（保留 system + 最近 6 条）防止上下文溢出；单套 Agent 架构同时覆盖 RAG 知识检索增强、ReAct 工具调用对话与 AIOps 自动诊断三类场景，无需多套系统。</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

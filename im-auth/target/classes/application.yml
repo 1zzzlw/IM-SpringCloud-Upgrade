@@ -42,7 +42,7 @@ spring:
 jwt:
   access-secret-key: ${im.jwt.access-secret}
   fresh-secret-key: ${im.jwt.refresh-secret}
-  access-expiration: 3600000
+  access-expiration: 3600000  # 3600000
   refresh-expiration: 31536000000
   token-name: Authorization
 

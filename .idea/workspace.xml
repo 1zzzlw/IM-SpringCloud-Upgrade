@@ -4,34 +4,34 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="深度梳理了一下支付模块的思路">
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" />
+    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="完善了一些实体类，对应数据库表字段">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db/zzz-im-server.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/dto/MessageDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/dto/MessageDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/dto/RedPacketDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/dto/RedPacketDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/entity/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/entity/Message.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/entity/RedPacket.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/entity/RedPacket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/vo/MessageVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/vo/MessageVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/vo/RedPacketVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/vo/RedPacketVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/MessageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/MessageServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/RedPacketServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/RedPacketServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/resources/mapper/MessageMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/resources/mapper/MessageMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/resources/mapper/RedPacketMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/resources/mapper/RedPacketMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/domain/dto/MessageDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/domain/dto/MessageDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/domain/entity/message.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/domain/entity/message.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/domain/vo/MessageVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/domain/vo/MessageVO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/server/impl/MessageServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/server/impl/MessageServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/mapper/MessageMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/mapper/MessageMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-redis/target/classes/com/zzzlew/constant/RedisConstant.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-redis/target/classes/com/zzzlew/constant/RedisConstant.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-web/src/main/java/com/zzzlew/lock/DistributedLockUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-web/src/main/java/com/zzzlew/lock/DistributedLockUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/request/GroupChatRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/request/GroupChatRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/request/PrivateChatRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/request/PrivateChatRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/response/GroupChatResponseVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/response/GroupChatResponseVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/response/PrivateChatResponseVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/response/PrivateChatResponseVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/resources/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/server/impl/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/server/impl/UserServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/resources/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-content/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/src/main/resources/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-content/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/target/classes/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/src/main/java/com/zzzlew/config/ReactiveRedisConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/src/main/java/com/zzzlew/config/ReactiveRedisConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/src/main/resources/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/target/classes/com/zzzlew/config/ReactiveRedisConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/target/classes/com/zzzlew/config/ReactiveRedisConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/resources/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-pay/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-pay/src/main/resources/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/resources/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-social/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/src/main/resources/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-social/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/target/classes/application-dev.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_error.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_error.log" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,13 +181,10 @@
         <entry key="SpringBootApplicationConfigurationType">
           <value>
             <map>
-              <entry key="AuthApplication" value="STOPPED" />
               <entry key="ChatApplication" value="STOPPED" />
               <entry key="ContentApplication" value="STOPPED" />
               <entry key="GatewayApplication" value="STOPPED" />
-              <entry key="IMNetyApplication" value="STOPPED" />
               <entry key="MomentsApplication" value="STOPPED" />
-              <entry key="PayApplication" value="STOPPED" />
               <entry key="SocialApplication" value="STOPPED" />
             </map>
           </value>
@@ -242,13 +239,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="IMNetyApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="im-server" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.zzzlew.IMNetyApplication" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="MomentsApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="im-moments" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.zzzlew.MomentsApplication" />
@@ -283,21 +273,20 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Spring Boot.GatewayApplication" />
+      <item itemvalue="Spring Boot.MomentsApplication" />
       <item itemvalue="Spring Boot.AuthApplication" />
+      <item itemvalue="Spring Boot.PayApplication" />
       <item itemvalue="Spring Boot.ChatApplication" />
       <item itemvalue="Spring Boot.ContentApplication" />
-      <item itemvalue="Spring Boot.GatewayApplication" />
-      <item itemvalue="Spring Boot.IMNetyApplication" />
-      <item itemvalue="Spring Boot.MomentsApplication" />
-      <item itemvalue="Spring Boot.PayApplication" />
       <item itemvalue="Spring Boot.SocialApplication" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.ChatApplication" />
         <item itemvalue="Spring Boot.PayApplication" />
-        <item itemvalue="Spring Boot.SocialApplication" />
         <item itemvalue="Spring Boot.AuthApplication" />
+        <item itemvalue="Spring Boot.SocialApplication" />
+        <item itemvalue="Spring Boot.ChatApplication" />
         <item itemvalue="Spring Boot.ContentApplication" />
       </list>
     </recent_temporary>
@@ -462,14 +451,45 @@
       <workItem from="1782975033176" duration="11884000" />
       <workItem from="1783044923070" duration="24634000" />
       <workItem from="1783142694770" duration="7396000" />
-    </task>
-    <task id="LOCAL-00006" summary="加了一些小功能，尝试了一些Tools方法，但是ai的回答还是不好，感觉是模型的问题，但是我还在尝试找代码的优化地方">
-      <option name="closed" value="true" />
-      <created>1772898457384</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1772898457384</updated>
+      <workItem from="1783347389011" duration="53000" />
+      <workItem from="1783356850583" duration="666000" />
+      <workItem from="1783393935720" duration="2866000" />
+      <workItem from="1783775889732" duration="610000" />
+      <workItem from="1783945342094" duration="1887000" />
+      <workItem from="1784026238302" duration="10000" />
+      <workItem from="1784100240032" duration="4000" />
+      <workItem from="1784168919583" duration="1344000" />
+      <workItem from="1784685225768" duration="7000" />
+      <workItem from="1784690652866" duration="95000" />
+      <workItem from="1784698404119" duration="1829000" />
+      <workItem from="1785849244301" duration="409000" />
+      <workItem from="1785908645893" duration="23000" />
+      <workItem from="1786192225698" duration="955000" />
+      <workItem from="1786353392632" duration="1163000" />
+      <workItem from="1786414195750" duration="3000" />
+      <workItem from="1789021378308" duration="9835000" />
+      <workItem from="1789108886298" duration="1034000" />
+      <workItem from="1789181681370" duration="2138000" />
+      <workItem from="1789218789035" duration="1898000" />
+      <workItem from="1789248869706" duration="1974000" />
+      <workItem from="1789350512126" duration="1766000" />
+      <workItem from="1789529609844" duration="3080000" />
+      <workItem from="1789616273054" duration="3311000" />
+      <workItem from="1789691821484" duration="771000" />
+      <workItem from="1789864966733" duration="5951000" />
+      <workItem from="1789954248725" duration="5557000" />
+      <workItem from="1790044435423" duration="5014000" />
+      <workItem from="1790154264709" duration="785000" />
+      <workItem from="1791516815585" duration="285000" />
+      <workItem from="1791598262371" duration="153000" />
+      <workItem from="1792111295888" duration="5828000" />
+      <workItem from="1792368651475" duration="83000" />
+      <workItem from="1792487294285" duration="449000" />
+      <workItem from="1792487757520" duration="698000" />
+      <workItem from="1792546683672" duration="3753000" />
+      <workItem from="1792627391497" duration="5250000" />
+      <workItem from="1792971943810" duration="7250000" />
+      <workItem from="1793058932982" duration="651000" />
     </task>
     <task id="LOCAL-00007" summary="加了一些小功能，尝试了一些Tools方法，但是ai的回答还是不好，感觉是模型的问题，但是我还在尝试找代码的优化地方">
       <option name="closed" value="true" />
@@ -855,7 +875,15 @@
       <option name="project" value="LOCAL" />
       <updated>1783094381274</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="完善了一些实体类，对应数据库表字段">
+      <option name="closed" value="true" />
+      <created>1783347429810</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1783347429811</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -873,7 +901,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="优化了系统消息，还有publish代码，之前有一个错误就是，根据对方id查对方的Netty集群，应该一下子查完的，不应该每次循环都查询一次redis，这样太浪费性能了，这次优化了一下，并用上了spring的异步处理，避免了Netty的长时间阻塞" />
     <MESSAGE value="完成了撤回消息，以及删除好友的功能，IM项目这些很繁琐，前后端的数据一致性，一个小功能的添加就需要很多代码。因为我的项目是http和ws分开发送处理业务的，就只有消息发送是springboot监听Netty。" />
     <MESSAGE value="群聊相关的功能" />
     <MESSAGE value="算是完工了吧，还有优化的地方，后面慢慢补，接下来开始完善文档，测试数据了" />
@@ -898,7 +925,8 @@
     <MESSAGE value="优化部分模块的冗余代码吧,共同类放在common模块.这些天没有看项目,没有看八股,感觉什么都没有学.只不过是稍微看一些agent视频,用一下agent的功能,还有期末考试.这个项目,我越来越陌生,但是还是没有得到我想要的结果.越来越久,我就忘的更多,我这一年好像就浪费掉了.感觉,没有意义了,没有意义了.我又选错道路了吗,我还是像那样总是走在错误的道路上啊." />
     <MESSAGE value="让ai帮我扫描总结了一下项目，完成CLAUDE.md文档的优化，新增的技术标签内容，这样可以让我在面试中回答思路，代码设计时可以形成回答思路，今天晚上，还是复盘项目，根据简历总结面试时的回答内容。" />
     <MESSAGE value="深度梳理了一下支付模块的思路" />
-    <option name="LAST_COMMIT_MESSAGE" value="深度梳理了一下支付模块的思路" />
+    <MESSAGE value="完善了一些实体类，对应数据库表字段" />
+    <option name="LAST_COMMIT_MESSAGE" value="完善了一些实体类，对应数据库表字段" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

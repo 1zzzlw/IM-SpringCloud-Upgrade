@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>朱林威 - Java后端开发工程师</title>
+<style>
+  :root { --c: #333; --c2: #555; --ac: #003366; --al: #e8f0f8; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    color: var(--c); background:#f0f0f0; display:flex; justify-content:center; padding:10px;
+    line-height:1.55; font-size:12.5px;
+  }
+  .resume {
+    width:210mm; min-height:297mm; background:#fff;
+    padding:14mm 18mm 10mm 18mm; box-shadow:0 2px 12px rgba(0,0,0,.1);
+  }
+  .header { text-align:center; margin-bottom:8px; padding-bottom:8px; border-bottom:2px solid var(--ac); }
+  .header .name { font-size:24px; font-weight:700; color:var(--ac); letter-spacing:4px; margin-bottom:3px; }
+  .header .meta { font-size:12px; color:var(--c2); display:flex; justify-content:center; flex-wrap:wrap; gap:2px 12px; margin-bottom:3px; }
+  .header .meta span { white-space:nowrap; }
+  .header .links { font-size:11px; color:#888; }
+  .header .links a { color:#557799; text-decoration:none; }
+  .header .target { margin-top:5px; font-size:12.5px; color:var(--ac); font-weight:600; background:var(--al); display:inline-block; padding:2px 12px; border-radius:3px; }
+  .section { margin-bottom:8px; }
+  .section-title { font-size:14px; font-weight:700; color:var(--ac); padding-bottom:2px; border-bottom:1.2px solid var(--ac); margin-bottom:5px; letter-spacing:.5px; }
+  .skill-line { font-size:12px; color:var(--c); margin-bottom:2px; line-height:1.45; }
+  .skill-line .sk { color:var(--ac); font-weight:600; }
+  .project-header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:1px; }
+  .project-name { font-size:13.5px; font-weight:700; color:var(--c); }
+  .project-role { font-size:11.5px; color:var(--c2); }
+  .project-duration { font-size:11px; color:var(--c2); white-space:nowrap; }
+  .project-intro { font-size:11.5px; color:var(--c2); margin-bottom:4px; line-height:1.5; }
+  .project-intro a { color:#557799; text-decoration:none; font-size:11px; }
+  .bullet-list { list-style:none; padding:0; }
+  .bullet-list li { font-size:12px; color:var(--c); margin-bottom:2px; padding-left:12px; position:relative; line-height:1.45; }
+  .bullet-list li::before { content:"▸"; position:absolute; left:0; color:var(--ac); font-size:9px; }
+  .hl { color:var(--ac); font-weight:600; }
+  .strength-item { font-size:12px; color:var(--c); margin-bottom:2px; padding-left:12px; position:relative; line-height:1.45; }
+  .strength-item::before { content:"▸"; position:absolute; left:0; color:var(--ac); font-size:9px; }
+  @media print {
+    body { background:#fff; padding:0; }
+    .resume { width:100%; min-height:auto; box-shadow:none; padding:8mm 12mm 5mm 12mm; page-break-after:avoid; }
+    @page { size:A4; margin:0; }
+  }
+</style>
+</head>
+<body>
+<div class="resume">
+
+  <div class="header">
+    <div class="name">朱 林 威</div>
+    <div class="meta">
+      <span>河南师范大学 · 本科在读（2024.09 ~ 2028.06）</span>
+      <span>19 岁</span>
+      <span>18539312155</span>
+      <span>1400377637@qq.com</span>
+    </div>
+    <div class="links">
+      <a href="https://github.com/1zzzlw/IM-SpringCloud-Upgrade">GitHub：github.com/1zzzlw/IM-SpringCloud-Upgrade</a>
+    </div>
+    <div class="target">求职意向：Java 后端开发工程师（实习 / 校招）</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">专业技能</div>
+    <div class="skill-line"><span class="sk">Java：</span>熟悉 JUC 并发编程、集合框架核心机制与 JVM 内存模型及 GC 基础</div>
+    <div class="skill-line"><span class="sk">Spring：</span>熟练 Spring Boot + MyBatis 独立开发，熟悉 Spring Cloud Alibaba 微服务全家桶，能独立完成微服务项目拆分与治理</div>
+    <div class="skill-line"><span class="sk">MySQL：</span>熟悉索引优化与 SQL 调优，实践过行级锁与乐观锁并发控制</div>
+    <div class="skill-line"><span class="sk">Redis：</span>熟悉五大数据类型与持久化机制，实践过 <span class="hl">Lua 原子脚本编程</span>、分布式锁及缓存一致性方案，综合运用 ZSet / Hash / Set / String 四种数据结构</div>
+    <div class="skill-line"><span class="sk">Netty：</span>熟悉事件驱动模型与 Pipeline 责任链模式，能独立设计<span class="hl">自定义应用层二进制协议</span>，处理 TCP 粘包半包</div>
+    <div class="skill-line"><span class="sk">RabbitMQ：</span>熟悉异步解耦与削峰，实践过集群消息路由、消息可靠投递与幂等消费</div>
+    <div class="skill-line"><span class="sk">DevOps：</span>熟悉 Docker 容器化、Nginx 反向代理与 Maven 多模块工程管理</div>
+    <div class="skill-line" style="margin-top:4px;"><span class="sk">Spring AI：</span>实践过双模型集成、Function Calling 工具调用与 SSE 流式对话</div>
+    <div class="skill-line"><span class="sk">AI 工具链：</span>熟练使用 Cursor / Claude Code 等 AI IDE 辅助全栈高效开发</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">项目经历</div>
+    <div class="project-header">
+      <div><span class="project-name">仿微信全栈即时通讯系统</span><span class="project-role"> — 独立全栈开发</span></div>
+      <span class="project-duration">2025.11 ~ 2026.06</span>
+    </div>
+    <div class="project-intro">
+      基于 Spring Cloud Alibaba 的高并发 IM 系统，涵盖私聊 / 群聊 / 朋友圈 / 红包 / 支付 / AI 对话完整业务闭环。
+      后端 <span class="hl">9 个微服务 + 6 个公共模块</span>，Netty WebSocket 实时通信，RabbitMQ 集群路由与异步解耦。<br>
+      <a href="https://github.com/1zzzlw/IM-SpringCloud-Upgrade">GitHub：github.com/1zzzlw/IM-SpringCloud-Upgrade</a>
+    </div>
+    <ul class="bullet-list">
+      <li><span class="hl">自研 Netty 通信协议与集群路由：</span>设计 16 字节固定头 + 变长体自定义协议帧解决 TCP 粘包半包，策略模式实现 JSON / Java 双序列化可插拔；14 级 Pipeline 覆盖 HTTP 解码、WebSocket 升级、JWT 握手认证、编解码、消息分发与心跳保活；基于 RabbitMQ Topic Exchange 实现三向集群路由——同节点 Channel 直发、跨节点队列投递、离线消息 Redis Lua 原子暂存，支持多 im-server 实例无状态水平扩展。</li>
+      <li><span class="hl">Redis Lua 原子编程与三层资金安全锁：</span>手写 <span class="hl">7 个业务 Lua 脚本</span>——Token 原子替换解决并发登录竞态，二倍均值法红包随机分配且<span class="hl">金额以分为单位</span>避免浮点精度，点赞 / 评论计数 SISMEMBER / HINCRBY 原子切换与同步，SETNX 缓存预热，离线消息 ZADD 按雪花 ID 排序暂存。封装 Redisson 可重入锁 + SETNX 幂等锁双模式工具类，Pipeline 批量优化 + 随机 TTL 防雪崩。红包 / 支付 / 打赏场景设计三层锁策略——MySQL SELECT FOR UPDATE 悲观行锁 + WHERE balance &ge; amount 乐观条件二次拦截 + Redisson SETNX 幂等锁防 MQ 重复消费；转账按 userId 排序统一加锁顺序避免死锁；流水 before / after balance 完整审计链。</li>
+      <li><span class="hl">朋友圈与 Canal 缓存一致性：</span>ZSet 时间线 + String 详情 + Hash 计数 + Set 点赞集合四种数据结构协同；选型 Canal + Cache-Aside——Canal 监听 MySQL binlog 异步触发缓存删除，读请求 Cache-Aside 重建，避免双写不一致；<span class="hl">4 个 Lua 脚本</span>保证点赞 / 计数 / 预热原子性；TTL 随机 &plusmn;10% 防缓存雪崩；游标分页解决实时新增下的数据重复问题。</li>
+      <li><span class="hl">Spring AI 智能对话：</span>集成智谱 GLM-5.1 + Ollama qwen2.5:14b <span class="hl">双模型</span>，统一调用接口实现灵活切换；SSE 流式推送 + Reactor Flux 背压；自定义 AI 个性系统，支持角色、性格、头像等多配置热切换，MinIO 存储；Function Calling 工具调用 + 多轮对话上下文管理；AI 消息与普通 IM 消息共用 Netty WebSocket 通道，无缝衔接。</li>
+      <li><span class="hl">微服务架构工程化：</span>搭建 9 业务模块 + 6 公共模块的 Maven 多模块架构，严格单向依赖链 model → base → redis → web 消除循环依赖与传递污染；Gateway 双 Token 无感刷新 + Feign RequestInterceptor 用户上下文全链路透传；文件分片上传含雪花 ID 凭证、MD5 校验、ZSet 分块索引与 MinIO composeObject 合并；AOP 进程内 IP 限流 + 全局异常处理；Nacos 注册与配置中心。前端基于 Electron + Vue 构建桌面客户端，WebSocket 长连接实时通信。</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-title">个人优势</div>
+    <div class="strength-item"><span class="hl">从零独立构建复杂系统：</span>独立完成需求分析、技术选型、架构设计与开发部署全流程，上线涵盖 9 个微服务、6 个公共模块的完整 IM 系统，具备独立交付复杂后端项目的能力。</div>
+    <div class="strength-item"><span class="hl">深入底层原理的工程实践：</span>非表面使用框架——自研通信协议、手写 7 个 Lua 脚本、设计三层锁并发策略、选型 Canal 解决缓存一致性，每个技术决策都有明确场景驱动和权衡思考。</div>
+    <div class="strength-item"><span class="hl">AI + 后端的复合视野：</span>大二独立啃完 Netty、Spring Cloud、Redis 底层原理并落地完整项目；主动跟进 Spring AI 等新技术，将大模型能力融入传统后端系统。</div>
+  </div>
+
+</div>
+</body>
+</html>

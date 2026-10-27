@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>朱林威 - 全栈开发工程师</title>
+<style>
+  :root { --c: #333; --c2: #555; --ac: #003366; --al: #e8f0f8; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    color: var(--c); background:#f0f0f0; display:flex; justify-content:center; padding:10px;
+    line-height:1.52; font-size:12px;
+  }
+  .resume {
+    width:210mm; min-height:297mm; background:#fff;
+    padding:13mm 17mm 9mm 17mm; box-shadow:0 2px 12px rgba(0,0,0,.1);
+  }
+  .header { text-align:center; margin-bottom:7px; padding-bottom:7px; border-bottom:2px solid var(--ac); }
+  .header .name { font-size:24px; font-weight:700; color:var(--ac); letter-spacing:4px; margin-bottom:3px; }
+  .header .meta { font-size:12px; color:var(--c2); display:flex; justify-content:center; flex-wrap:wrap; gap:2px 12px; margin-bottom:2px; }
+  .header .meta span { white-space:nowrap; }
+  .header .links { font-size:10.5px; color:#888; }
+  .header .links a { color:#557799; text-decoration:none; }
+  .header .target { margin-top:4px; font-size:12.5px; color:var(--ac); font-weight:600; background:var(--al); display:inline-block; padding:2px 12px; border-radius:3px; }
+  .section { margin-bottom:7px; }
+  .section-title { font-size:14px; font-weight:700; color:var(--ac); padding-bottom:2px; border-bottom:1.2px solid var(--ac); margin-bottom:4px; letter-spacing:.5px; }
+  .skill-line { font-size:11.5px; color:var(--c); margin-bottom:1.5px; line-height:1.42; }
+  .skill-line .sk { color:var(--ac); font-weight:600; }
+  .skill-sub { font-size:11.5px; color:var(--ac); font-weight:600; margin:3px 0 1px 0; }
+  .project-block { margin-bottom:6px; }
+  .project-header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:1px; }
+  .project-name { font-size:13.5px; font-weight:700; color:var(--c); }
+  .project-role { font-size:11px; color:var(--c2); }
+  .project-duration { font-size:10.5px; color:var(--c2); white-space:nowrap; }
+  .project-intro { font-size:11px; color:var(--c2); margin-bottom:3px; line-height:1.45; }
+  .project-intro a { color:#557799; text-decoration:none; font-size:10.5px; }
+  .bullet-list { list-style:none; padding:0; }
+  .bullet-list li { font-size:11.5px; color:var(--c); margin-bottom:1.5px; padding-left:12px; position:relative; line-height:1.42; }
+  .bullet-list li::before { content:"▸"; position:absolute; left:0; color:var(--ac); font-size:9px; }
+  .hl { color:var(--ac); font-weight:600; }
+  .strength-item { font-size:11.5px; color:var(--c); margin-bottom:1.5px; padding-left:12px; position:relative; line-height:1.42; }
+  .strength-item::before { content:"▸"; position:absolute; left:0; color:var(--ac); font-size:9px; }
+  @media print {
+    body { background:#fff; padding:0; }
+    .resume { width:100%; min-height:auto; box-shadow:none; padding:7mm 11mm 4mm 11mm; page-break-after:avoid; }
+    @page { size:A4; margin:0; }
+  }
+</style>
+</head>
+<body>
+<div class="resume">
+
+  <div class="header">
+    <div class="name">朱 林 威</div>
+    <div class="meta">
+      <span>河南师范大学 · 本科在读（2024.09 ~ 2028.06）</span>
+      <span>19 岁</span>
+      <span>18539312155</span>
+      <span>1400377637@qq.com</span>
+    </div>
+    <div class="links">
+      <a href="https://github.com/1zzzlw/IM-SpringCloud-Upgrade">GitHub 后端</a> &nbsp;·&nbsp;
+      <a href="https://github.com/1zzzlw/WeChat-Electron-vue-vite">GitHub 前端</a>
+    </div>
+    <div class="target">求职意向：全栈开发工程师（实习 / 校招）· Java 后端 + Vue 前端</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">专业技能</div>
+    <div class="skill-sub">后端</div>
+    <div class="skill-line"><span class="sk">Java：</span>熟悉 JUC 并发编程、集合框架与 JVM 内存模型及 GC 基础</div>
+    <div class="skill-line"><span class="sk">Spring：</span>熟练 Spring Boot + MyBatis 独立开发，熟悉 Spring Cloud Alibaba 微服务全家桶，能独立完成微服务拆分与治理</div>
+    <div class="skill-line"><span class="sk">MySQL &amp; Redis：</span>熟悉 MySQL 索引优化与行级锁并发控制；熟悉 Redis 五大数据类型，实践过 <span class="hl">Lua 原子脚本</span>、分布式锁与缓存一致性方案</div>
+    <div class="skill-line"><span class="sk">Netty &amp; RabbitMQ：</span>熟悉 Netty 网络编程与<span class="hl">自定义二进制协议</span>设计；熟悉 RabbitMQ 异步解耦、集群路由与幂等消费</div>
+    <div class="skill-sub">前端</div>
+    <div class="skill-line"><span class="sk">Vue：</span>熟练 Vue + TypeScript + Vite，掌握 Composition API、响应式原理与组件化开发</div>
+    <div class="skill-line"><span class="sk">Electron：</span>熟悉桌面客户端开发，掌握主进程 / 渲染进程通信、多窗口管理、系统托盘与 SQLite 本地存储</div>
+    <div class="skill-line"><span class="sk">WebSocket：</span>熟悉长连接实时通信，实践过心跳保活、断线自动重连与 Pinia 跨窗口状态管理</div>
+    <div class="skill-sub">AI 应用</div>
+    <div class="skill-line"><span class="sk">Spring AI：</span>实践过双模型集成、Function Calling 工具调用与 SSE 流式对话</div>
+    <div class="skill-line"><span class="sk">AI 工具：</span>熟练使用 Cursor / Claude Code 等 AI IDE 辅助全栈高效开发</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">项目经历</div>
+
+    <div class="project-block">
+      <div class="project-header">
+        <div><span class="project-name">仿微信即时通讯系统 —— 后端</span><span class="project-role"> — 独立开发</span></div>
+        <span class="project-duration">2025.11 ~ 2026.06</span>
+      </div>
+      <div class="project-intro">
+        基于 Spring Cloud Alibaba 微服务架构，涵盖私聊 / 群聊 / 朋友圈 / 红包 / 支付 / AI 对话完整闭环，后端 <span class="hl">9 个微服务 + 6 个公共模块</span>，Netty WebSocket 实时通信，RabbitMQ 异步解耦。<br>
+        <a href="https://github.com/1zzzlw/IM-SpringCloud-Upgrade">GitHub：github.com/1zzzlw/IM-SpringCloud-Upgrade</a>
+      </div>
+      <ul class="bullet-list">
+        <li><span class="hl">自研 Netty 协议与集群路由：</span>设计 16 字节固定头 + 变长体自定义协议帧，策略模式 JSON / Java 双序列化可插拔；14 级 Pipeline 覆盖 HTTP 解码、WebSocket 升级、JWT 握手、编解码、消息分发与心跳保活；RabbitMQ 三向集群路由——同节点直发 / 跨节点投递 / 离线 Lua 暂存，支持多实例无状态水平扩展。</li>
+        <li><span class="hl">Redis Lua 原子编程与三层资金安全锁：</span>手写 <span class="hl">7 个业务 Lua 脚本</span>——Token 原子替换，二倍均值法红包随机分配且<span class="hl">金额以分为单位</span>避免浮点精度，点赞 / 评论计数原子切换与同步，SETNX 缓存预热，离线消息 ZADD 按雪花 ID 排序暂存。红包 / 支付 / 打赏场景设计三层锁策略——MySQL SELECT FOR UPDATE 悲观行锁 + WHERE balance &ge; amount 乐观条件二次拦截 + Redisson SETNX 幂等锁防 MQ 重复消费；转账按 userId 排序加锁避免死锁；流水 before / after balance 完整审计。</li>
+        <li><span class="hl">朋友圈与 Canal 缓存一致性：</span>ZSet 时间线 + String 详情 + Hash 计数 + Set 点赞集合四种 Redis 数据结构协同；选型 Canal + Cache-Aside——Canal 监听 binlog 异步缓存失效 + Cache-Aside 读模式重建；<span class="hl">4 个 Lua 脚本</span>保证点赞 / 计数 / 预热原子性；TTL 随机 &plusmn;10% 防雪崩；游标分页解决实时新增数据重复。</li>
+        <li><span class="hl">Spring AI 智能对话：</span>集成智谱 GLM-5.1 + Ollama qwen2.5:14b <span class="hl">双模型</span>，SSE 流式推送 + Reactor Flux 背压；自定义 AI 个性系统支持角色、性格、头像等多配置热切换，MinIO 存储；Function Calling 工具调用 + 多轮对话上下文管理；AI 消息与 IM 消息共用 Netty WebSocket 通道。</li>
+        <li><span class="hl">微服务工程化：</span>Gateway 双 Token 无感刷新 + Feign 用户上下文全链路透传；文件分片上传含雪花 ID 凭证、MD5 校验、ZSet 分块索引与 MinIO composeObject 合并；AOP IP 限流 + 全局异常处理；Nacos 注册与配置中心。</li>
+      </ul>
+    </div>
+
+    <div class="project-block">
+      <div class="project-header">
+        <div><span class="project-name">仿微信桌面客户端 —— 前端</span><span class="project-role"> — 独立开发</span></div>
+        <span class="project-duration">2025.12 ~ 2026.06</span>
+      </div>
+      <div class="project-intro">
+        基于 <span class="hl">Electron + Vue + TypeScript</span> 的跨平台桌面 IM 客户端，WebSocket 长连接实时通信，完整实现私聊 / 群聊 / 朋友圈 / 红包 / 支付 / AI 对话等功能模块。<br>
+        <a href="https://github.com/1zzzlw/WeChat-Electron-vue-vite">GitHub：github.com/1zzzlw/WeChat-Electron-vue-vite</a>
+      </div>
+      <ul class="bullet-list">
+        <li><span class="hl">Electron 桌面架构：</span>主进程 / 渲染进程分离，多窗口管理，系统托盘与消息通知；Pinia 跨窗口状态共享 + SQLite 本地缓存。</li>
+        <li><span class="hl">WebSocket 实时通信：</span>封装 WebSocket 客户端，心跳保活 + 断线自动重连，指数退避策略；与后端 Netty 自定义协议对接，支持消息实时收发与在线状态同步。</li>
+        <li><span class="hl">完整业务闭环：</span>实现通讯录、朋友圈信息流、红包收发与领取动画、钱包充值流水、AI 对话 SSE 流式展示等全部功能模块的前端交互与 UI。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">个人优势</div>
+    <div class="strength-item"><span class="hl">全栈交付能力：</span>从后端协议设计到前端 UI 交互，独立完成覆盖 9 个微服务 + 桌面客户端的完整 IM 系统，具备从 0 到 1 独立交付全栈产品的能力。</div>
+    <div class="strength-item"><span class="hl">技术深度与广度兼备：</span>后端深入 Netty 协议、Lua 原子编程、分布式锁策略；前端掌握 Electron 桌面开发与 WebSocket 实时通信——每个方向都有原理级理解，非浅尝辄止。</div>
+    <div class="strength-item"><span class="hl">AI 原生开发能力：</span>大二独立完成全栈学习与项目落地；熟练使用 Cursor / Claude Code 等 AI IDE 提升开发效率，具备 AI + 全栈复合竞争力。</div>
+  </div>
+
+</div>
+</body>
+</html>

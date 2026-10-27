@@ -18,20 +18,13 @@ public class ReactiveRedisConfig {
 
     @Bean
     @SuppressWarnings("unchecked")
-    public ReactiveRedisTemplate<Object, Object> reactiveRedisTemplate(
-            ReactiveRedisConnectionFactory connectionFactory) {
+    public ReactiveRedisTemplate<Object, Object> reactiveRedisTemplate(ReactiveRedisConnectionFactory connectionFactory) {
 
         // 使用 String 序列化器
         RedisSerializer<String> stringSerializer = RedisSerializer.string();
 
         // 配置序列化上下文
-        RedisSerializationContext<Object, Object> serializationContext =
-                RedisSerializationContext.<Object, Object>newSerializationContext((RedisSerializer<Object>) (RedisSerializer<?>) stringSerializer)
-                        .key((RedisSerializer<Object>) (RedisSerializer<?>) stringSerializer)
-                        .value((RedisSerializer<Object>) (RedisSerializer<?>) stringSerializer)
-                        .hashKey((RedisSerializer<Object>) (RedisSerializer<?>) stringSerializer)
-                        .hashValue((RedisSerializer<Object>) (RedisSerializer<?>) stringSerializer)
-                        .build();
+        RedisSerializationContext<Object, Object> serializationContext = RedisSerializationContext.<Object, Object>newSerializationContext((RedisSerializer<Object>) (RedisSerializer<?>) stringSerializer).key((RedisSerializer<Object>) (RedisSerializer<?>) stringSerializer).value((RedisSerializer<Object>) (RedisSerializer<?>) stringSerializer).hashKey((RedisSerializer<Object>) (RedisSerializer<?>) stringSerializer).hashValue((RedisSerializer<Object>) (RedisSerializer<?>) stringSerializer).build();
 
         return new ReactiveRedisTemplate<>(connectionFactory, serializationContext);
     }

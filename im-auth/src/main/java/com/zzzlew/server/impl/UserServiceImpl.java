@@ -247,10 +247,6 @@ public class UserServiceImpl implements UserService {
         response.setHeader("Authorization", "Bearer " + tokenResult.getAccessToken());
         response.setHeader("refreshtoken", tokenResult.getRefreshToken());
 
-        // 生成ai会话信息
-        String conversationId = "ai_" + userId;
-        chatClient.createConversation(conversationId, userId, "ai_system", 2);
-
         // 初始化钱包
         payClient.initWallet(userId);
 
