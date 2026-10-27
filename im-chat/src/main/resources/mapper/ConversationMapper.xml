@@ -26,7 +26,8 @@
             unread_count    = case
                 -- 对方的消息数量加1，发送者的消息数量还是原来的
                                   when user_id = #{receiverId}
-                                      then unread_count + 1
+                                      and #{messageId} > last_read_message_id
+                                      then coalesce(unread_count, 0) + 1
                                   else unread_count
                 end
         where id = #{conversationId}
@@ -44,7 +45,9 @@
                  separator=",">
             #{receiverId}
         </foreach>
-        then unread_count + 1
+        and user_id != #{senderId}
+        and #{messageId} > last_read_message_id
+        then coalesce(unread_count, 0) + 1
         else unread_count
         end
         where id = #{conversationId}
@@ -188,9 +191,39 @@
 
     <!-- 清除会话未读计数 -->
     <update id="clearUnreadCount">
-        update conversation set unread_count = 0
-        where id = #{conversationId} and user_id = #{userId}
+        update conversation
+        set last_read_message_id = #{maxMessageId},
+            unread_count = #{unreadCount},
+            update_time = current_timestamp
+        where id = #{conversationId} and user_id = #{userId} and status = 1
     </update>
+
+    <!-- 会话行锁内使用一致性读；尚未提交的消息稍后由入库事务自行累加。 -->
+    <select id="countUnreadMessages" resultType="java.lang.Integer">
+        select count(*) from Message
+        where conversation_id = #{conversationId} and id > #{maxMessageId}
+          and sender_id != #{userId} and msg_type != 99
+    </select>
+
+    <select id="selectReadCursorForUpdate" resultType="java.lang.Long">
+        select last_read_message_id from conversation
+        where id = #{conversationId} and user_id = #{userId} and status = 1 for update
+    </select>
+
+    <select id="selectLatestMessageId" resultType="java.lang.Long">
+        select coalesce(max(id), 0) from Message where conversation_id = #{conversationId}
+    </select>
+
+    <update id="markUnread">
+        update conversation set unread_count = greatest(coalesce(unread_count, 0), 1),
+                                update_time = current_timestamp
+        where id = #{conversationId} and user_id = #{userId} and status = 1
+    </update>
+
+    <select id="selectUnreadCount" resultType="java.lang.Integer">
+        select coalesce(unread_count, 0) from conversation
+        where id = #{conversationId} and user_id = #{userId} and status = 1
+    </select>
 
     <!-- 更新群聊完整信息 -->
     <update id="updateGroupInfoFull">

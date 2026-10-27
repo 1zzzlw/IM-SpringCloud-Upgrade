@@ -113,6 +113,9 @@ public interface MomentsService {
      */
     PageResult<MomentsVO> queryUserMoments(int page, int pageSize);
 
+    /** 按作者分页查询公开动态，供个人主页与好友动态预览共用。 */
+    PageResult<MomentsVO> queryUserMoments(Long userId, int page, int pageSize);
+
     /**
      * 删除朋友圈
      *

@@ -4,6 +4,8 @@ package com.zzzlew.controller;
 import com.zzzlew.annotaion.UrlLimit;
 import com.zzzlew.domain.dto.UserLoginDTO;
 import com.zzzlew.domain.dto.UserRegisterDTO;
+import com.zzzlew.domain.dto.UserProfileUpdateDTO;
+import com.zzzlew.domain.vo.UserProfileVO;
 import com.zzzlew.domain.entity.UserAuth;
 import com.zzzlew.domain.vo.UserInfoVO;
 import com.zzzlew.domain.vo.UserSearchVO;
@@ -34,6 +36,18 @@ public class UserController {
 
     @Resource
     private UserService userService;
+
+    @Operation(summary = "查询当前用户资料")
+    @GetMapping("/me")
+    public Result<UserProfileVO> currentProfile() {
+        return Result.success(userService.currentProfile());
+    }
+
+    @Operation(summary = "修改当前账号信息")
+    @PostMapping("/updateInfo")
+    public Result<UserProfileVO> updateProfile(@RequestBody UserProfileUpdateDTO profile) {
+        return Result.success(userService.updateProfile(profile));
+    }
 
     /**
      * 用户登录

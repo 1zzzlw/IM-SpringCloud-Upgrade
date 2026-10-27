@@ -177,9 +177,34 @@ public class ConversationImpl implements ConversationService {
     }
 
     @Override
-    public void clearConversationUnreadCounts(String conversationId) {
+    @Transactional
+    public void clearConversationUnreadCounts(String conversationId, Long maxMessageId) {
         Long userId = UserHolder.getUser().getId();
-        conversationMapper.clearUnreadCount(conversationId, userId);
+        if (maxMessageId != null && maxMessageId < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "消息 ID 无效");
+        }
+        Long previous = requireConversation(conversationId, userId);
+        // 兼容旧客户端不传游标；新客户端可传尚未由 MQ 入库的已展示消息 ID。
+        long cursor = Math.max(previous, maxMessageId == null
+                ? conversationMapper.selectLatestMessageId(conversationId) : maxMessageId);
+        int remaining = conversationMapper.countUnreadMessages(conversationId, userId, cursor);
+        conversationMapper.clearUnreadCount(conversationId, userId, cursor, remaining);
+    }
+
+    @Override
+    @Transactional
+    public Integer markConversationUnread(String conversationId) {
+        Long userId = UserHolder.getUser().getId();
+        requireConversation(conversationId, userId);
+        conversationMapper.markUnread(conversationId, userId);
+        return conversationMapper.selectUnreadCount(conversationId, userId);
+    }
+
+    // 锁定当前用户的会话行，与消息入库后的计数更新串行，避免清零丢失并发新消息。
+    private Long requireConversation(String conversationId, Long userId) {
+        Long cursor = conversationMapper.selectReadCursorForUpdate(conversationId, userId);
+        if (cursor == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "会话不存在");
+        return cursor;
     }
 
     @Override
@@ -189,8 +214,13 @@ public class ConversationImpl implements ConversationService {
     }
 
     @Override
+    @Transactional
     public void updateConversationMuteStatus(String conversationId, Integer isMute) {
+        if (isMute == null || (isMute != 0 && isMute != 1)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "免打扰状态只能为 0 或 1");
+        }
         Long userId = UserHolder.getUser().getId();
+        requireConversation(conversationId, userId);
         conversationMapper.updateConversationMuteStatus(conversationId, userId, isMute);
     }
 

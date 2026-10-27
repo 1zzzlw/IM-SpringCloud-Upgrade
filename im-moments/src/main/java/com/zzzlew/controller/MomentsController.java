@@ -180,9 +180,18 @@ public class MomentsController {
     public Result<PageResult<MomentsVO>> queryUserMoments(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int pageSize) {
-        log.info("查询用户个人帖子信息，userId: {}, page: {}, pageSize: {}", page, pageSize);
+        log.info("查询当前用户帖子，page: {}, pageSize: {}", page, pageSize);
         PageResult<MomentsVO> pageResult = momentsService.queryUserMoments(page, pageSize);
         return Result.success(pageResult);
+    }
+
+    @Operation(summary = "按作者查询公开帖子")
+    @GetMapping("/user/{userId}")
+    public Result<PageResult<MomentsVO>> queryAuthorMoments(
+            @PathVariable Long userId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return Result.success(momentsService.queryUserMoments(userId, page, pageSize));
     }
 
     /**

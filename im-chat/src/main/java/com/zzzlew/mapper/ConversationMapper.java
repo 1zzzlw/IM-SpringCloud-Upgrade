@@ -35,7 +35,9 @@ public interface ConversationMapper {
      * @param content        最后一条消息内容
      * @param sendTime       最后一条消息时间
      */
-    void updateConversationStatus(String conversationId, String content, LocalDateTime sendTime, String receiverId);
+    void updateConversationStatus(@Param("conversationId") String conversationId, @Param("content") String content,
+                                  @Param("sendTime") LocalDateTime sendTime, @Param("receiverId") String receiverId,
+                                  @Param("messageId") Long messageId);
 
     /**
      * 更新群会话状态
@@ -44,8 +46,9 @@ public interface ConversationMapper {
      * @param content        最后一条消息内容
      * @param sendTime       最后一条消息时间
      */
-    void updateGroupConversationStatus(String conversationId, String content,
-                                       LocalDateTime sendTime, List<String> receiverIds);
+    void updateGroupConversationStatus(@Param("conversationId") String conversationId, @Param("content") String content,
+                                       @Param("sendTime") LocalDateTime sendTime, @Param("receiverIds") List<String> receiverIds,
+                                       @Param("messageId") Long messageId, @Param("senderId") Long senderId);
 
     /**
      * 查询群聊成员列表
@@ -201,7 +204,19 @@ public interface ConversationMapper {
      * 清除会话未读消息数
      */
     void clearUnreadCount(@Param("conversationId") String conversationId,
-                          @Param("userId") Long userId);
+                          @Param("userId") Long userId, @Param("maxMessageId") Long maxMessageId,
+                          @Param("unreadCount") Integer unreadCount);
+
+    Integer countUnreadMessages(@Param("conversationId") String conversationId, @Param("userId") Long userId,
+                                @Param("maxMessageId") Long maxMessageId);
+
+    Long selectReadCursorForUpdate(@Param("conversationId") String conversationId, @Param("userId") Long userId);
+
+    Long selectLatestMessageId(@Param("conversationId") String conversationId);
+
+    void markUnread(@Param("conversationId") String conversationId, @Param("userId") Long userId);
+
+    Integer selectUnreadCount(@Param("conversationId") String conversationId, @Param("userId") Long userId);
 
     /**
      * 更新群聊完整信息（名称、头像、描述）

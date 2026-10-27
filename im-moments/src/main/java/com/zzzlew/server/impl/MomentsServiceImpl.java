@@ -1,5 +1,7 @@
 package com.zzzlew.server.impl;
 
+import com.zzzlew.exception.BaseException;
+
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -770,10 +772,23 @@ public class MomentsServiceImpl implements MomentsService {
 
     @Override
     public PageResult<MomentsVO> queryUserMoments(int page, int pageSize) {
-        Long userId = UserHolder.getUser().getId();
-        PageHelper.startPage(page, pageSize);
+        return queryUserMoments(UserHolder.getUser().getId(), page, pageSize);
+    }
+
+    @Override
+    public PageResult<MomentsVO> queryUserMoments(Long userId, int page, int pageSize) {
+        if (userId == null || userId <= 0) throw new BaseException("无效的用户ID");
+        PageHelper.startPage(Math.max(1, page), Math.max(1, Math.min(50, pageSize)));
         Page<MomentsVO> pageResult = momentsMapper.queryUserMoments(userId);
         return new PageResult<>(pageResult.getTotal(), pageResult.getResult());
+    }
+
+    private void requireMomentOwner(Long momentId) {
+        MomentsVO moment = momentId == null ? null : momentsMapper.getById(momentId);
+        if (moment == null) throw new BaseException("帖子不存在");
+        if (!UserHolder.getUser().getId().equals(moment.getUserId())) {
+            throw new BaseException("只能操作自己发布的帖子");
+        }
     }
 
     @Override
@@ -783,6 +798,7 @@ public class MomentsServiceImpl implements MomentsService {
             log.warn("无效的 momentId: {}", momentId);
             return;
         }
+        requireMomentOwner(momentId);
         // 删除数据库
         momentsMapper.delete(momentId);
 
@@ -807,6 +823,7 @@ public class MomentsServiceImpl implements MomentsService {
      */
     @Override
     public void update(MomentsDTO momentsDTO) {
+        requireMomentOwner(momentsDTO.getId());
         momentsMapper.update(momentsDTO);
     }
 

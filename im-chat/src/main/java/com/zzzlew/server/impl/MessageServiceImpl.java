@@ -140,10 +140,12 @@ public class MessageServiceImpl implements MessageService {
             String conversationId = messageDTO.getConversationId();
             if (conversationId.startsWith("g_")) {
                 List<String> receiverIds = conversationMapper.selectGroupNumber(conversationId);
-                conversationMapper.updateGroupConversationStatus(conversationId, messageDTO.getContent(), sendTime, receiverIds);
+                conversationMapper.updateGroupConversationStatus(conversationId, messageDTO.getContent(), sendTime,
+                        receiverIds, messageDTO.getId(), messageDTO.getSenderId());
             } else {
                 String receiverId = messageDTO.getReceiverId();
-                conversationMapper.updateConversationStatus(conversationId, messageDTO.getContent(), sendTime, receiverId);
+                conversationMapper.updateConversationStatus(conversationId, messageDTO.getContent(), sendTime,
+                        receiverId, messageDTO.getId());
             }
         }
         MessageVO vo = isFile ? BeanUtil.copyProperties(messageDTO, MessageVO.class)

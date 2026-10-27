@@ -4,6 +4,8 @@ import com.zzzlew.domain.entity.UserAuth;
 import com.zzzlew.domain.entity.UserInfo;
 import com.zzzlew.domain.vo.UserSearchVO;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Param;
+import java.time.LocalDate;
 
 import java.util.List;
 
@@ -14,6 +16,17 @@ import java.util.List;
  * @version: 1.0
  */
 public interface UserMapper {
+    @Select("select id, username, account, avatar, gender, phone, email, birthday, address from user_info where id = #{userId}")
+    UserInfo selectProfileById(Long userId);
+
+    @Select("select exists(select 1 from user_info where email = #{email} and id != #{userId})")
+    boolean emailInUse(@Param("email") String email, @Param("userId") Long userId);
+
+    int updateProfile(@Param("userId") Long userId, @Param("account") String account,
+                      @Param("email") String email, @Param("birthday") LocalDate birthday);
+
+    int updateAuthAccount(@Param("userId") Long userId, @Param("account") String account);
+
     /**
      * 根据账号查询用户
      *

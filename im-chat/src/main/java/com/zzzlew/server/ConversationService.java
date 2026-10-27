@@ -38,7 +38,10 @@ public interface ConversationService {
      *
      * @param conversationId 会话id
      */
-    void clearConversationUnreadCounts(String conversationId);
+    void clearConversationUnreadCounts(String conversationId, Long maxMessageId);
+
+    /** 手动标未读，不降低已有的未读消息数。 */
+    Integer markConversationUnread(String conversationId);
 
     /**
      * 更新会话置顶状态

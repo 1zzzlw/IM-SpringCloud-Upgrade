@@ -2,6 +2,8 @@ package com.zzzlew.server;
 
 import com.zzzlew.domain.dto.UserLoginDTO;
 import com.zzzlew.domain.dto.UserRegisterDTO;
+import com.zzzlew.domain.dto.UserProfileUpdateDTO;
+import com.zzzlew.domain.vo.UserProfileVO;
 import com.zzzlew.domain.entity.UserAuth;
 import com.zzzlew.domain.vo.UserInfoVO;
 import com.zzzlew.domain.vo.UserSearchVO;
@@ -17,6 +19,10 @@ import java.util.List;
  * @version: 1.0
  */
 public interface UserService {
+
+    UserProfileVO currentProfile();
+
+    UserProfileVO updateProfile(UserProfileUpdateDTO profile);
 
     /**
      * 用户登录

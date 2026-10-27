@@ -6,32 +6,38 @@
   <component name="ChangeListManager">
     <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="完善了一些实体类，对应数据库表字段">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/zzz-im-server.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/mapper/UserMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/mapper/UserMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/UserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/src/main/resources/mapper/UserMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/resources/mapper/UserMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/controller/UserController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/mapper/UserMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/mapper/UserMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/server/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/server/UserService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/server/impl/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/server/impl/UserServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-content/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-content/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-content/target/classes/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-gateway/src/main/java/com/zzzlew/config/ReactiveRedisConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/src/main/java/com/zzzlew/config/ReactiveRedisConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-gateway/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-gateway/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-gateway/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-gateway/target/classes/com/zzzlew/config/ReactiveRedisConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/target/classes/com/zzzlew/config/ReactiveRedisConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-moments/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-moments/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-pay/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-pay/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/target/classes/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_error.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_error.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/mapper/UserMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/mapper/UserMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/controller/ConversationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/controller/ConversationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/mapper/ConversationMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/mapper/ConversationMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/ConversationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/ConversationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/ConversationImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/ConversationImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/MessageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/MessageServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/src/main/resources/mapper/ConversationMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/resources/mapper/ConversationMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/controller/ConversationController.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/controller/ConversationController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/mapper/ConversationMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/mapper/ConversationMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/server/ConversationService.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/server/ConversationService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/server/impl/ConversationImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/server/impl/ConversationImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/server/impl/MessageServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/server/impl/MessageServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/mapper/ConversationMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/mapper/ConversationMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/controller/MomentsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/controller/MomentsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/domain/vo/MomentsVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/domain/vo/MomentsVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/MomentsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/MomentsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/impl/MomentsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/impl/MomentsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/resources/mapper/MomentsMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/resources/mapper/MomentsMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/controller/MomentsController.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/controller/MomentsController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/domain/vo/MomentsVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/domain/vo/MomentsVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/server/MomentsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/server/MomentsService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/server/impl/MomentsServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/com/zzzlew/server/impl/MomentsServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/target/classes/mapper/MomentsMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/target/classes/mapper/MomentsMapper.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,10 +187,13 @@
         <entry key="SpringBootApplicationConfigurationType">
           <value>
             <map>
+              <entry key="AuthApplication" value="STOPPED" />
               <entry key="ChatApplication" value="STOPPED" />
               <entry key="ContentApplication" value="STOPPED" />
               <entry key="GatewayApplication" value="STOPPED" />
+              <entry key="IMNetyApplication" value="STOPPED" />
               <entry key="MomentsApplication" value="STOPPED" />
+              <entry key="PayApplication" value="STOPPED" />
               <entry key="SocialApplication" value="STOPPED" />
             </map>
           </value>
@@ -283,11 +292,11 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.PayApplication" />
-        <item itemvalue="Spring Boot.AuthApplication" />
         <item itemvalue="Spring Boot.SocialApplication" />
-        <item itemvalue="Spring Boot.ChatApplication" />
+        <item itemvalue="Spring Boot.PayApplication" />
         <item itemvalue="Spring Boot.ContentApplication" />
+        <item itemvalue="Spring Boot.ChatApplication" />
+        <item itemvalue="Spring Boot.AuthApplication" />
       </list>
     </recent_temporary>
   </component>

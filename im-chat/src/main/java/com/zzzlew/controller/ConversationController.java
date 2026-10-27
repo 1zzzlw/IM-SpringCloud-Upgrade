@@ -66,9 +66,16 @@ public class ConversationController {
      */
     @Operation(summary = "清除会话中未读消息计数")
     @PutMapping("/isReaded/{conversationId}")
-    public Result<Object> clearConversationUnreadCounts(@PathVariable String conversationId) {
-        conversationService.clearConversationUnreadCounts(conversationId);
+    public Result<Object> clearConversationUnreadCounts(@PathVariable String conversationId,
+                                                        @RequestParam(value = "maxMessageId", required = false) Long maxMessageId) {
+        conversationService.clearConversationUnreadCounts(conversationId, maxMessageId);
         return Result.success();
+    }
+
+    @Operation(summary = "将自己的会话标为未读，至少保留一条未读")
+    @PutMapping("/markUnread/{conversationId}")
+    public Result<Integer> markConversationUnread(@PathVariable String conversationId) {
+        return Result.success(conversationService.markConversationUnread(conversationId));
     }
 
     /**

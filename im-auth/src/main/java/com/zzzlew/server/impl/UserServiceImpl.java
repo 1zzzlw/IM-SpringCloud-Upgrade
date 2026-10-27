@@ -12,6 +12,8 @@ import com.zzzlew.constant.MessageConstant;
 import com.zzzlew.domain.dto.UserBaseDTO;
 import com.zzzlew.domain.dto.UserLoginDTO;
 import com.zzzlew.domain.dto.UserRegisterDTO;
+import com.zzzlew.domain.dto.UserProfileUpdateDTO;
+import com.zzzlew.domain.vo.UserProfileVO;
 import com.zzzlew.domain.entity.UserAuth;
 import com.zzzlew.domain.entity.UserInfo;
 import com.zzzlew.domain.vo.FriendRelationVO;
@@ -32,6 +34,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
@@ -43,6 +46,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -77,6 +81,46 @@ public class UserServiceImpl implements UserService {
     private MinIOFileStorgeUtil minIOFileStorgeUtil;
     @Resource
     private MinIOConfigProperties minIOConfigProperties;
+
+    @Override
+    public UserProfileVO currentProfile() {
+        UserInfo user = userMapper.selectProfileById(UserHolder.getUser().getId());
+        if (user == null) throw new BaseException("用户不存在");
+        return BeanUtil.copyProperties(user, UserProfileVO.class);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public UserProfileVO updateProfile(UserProfileUpdateDTO profile) {
+        Long userId = UserHolder.getUser().getId();
+        String account = profile.getAccount() == null ? "" : profile.getAccount().trim();
+        String email = profile.getEmail() == null ? "" : profile.getEmail().trim();
+        if (!account.matches("^[A-Za-z0-9_]{1,64}$")) {
+            throw new BaseException("账号限64位以内的字母、数字或下划线");
+        }
+        if (!email.isEmpty() && (email.length() > 100 || !email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"))) {
+            throw new BaseException("请输入有效的邮箱地址");
+        }
+        if (profile.getBirthday() != null && profile.getBirthday().isAfter(LocalDate.now())) {
+            throw new BaseException("生日不能晚于今天");
+        }
+        UserInfo occupied = userMapper.getByAccount(account);
+        if (occupied != null && !userId.equals(occupied.getId())) {
+            throw new BaseException("该账号已被使用");
+        }
+        if (!email.isEmpty() && userMapper.emailInUse(email, userId)) {
+            throw new BaseException("该邮箱已被使用");
+        }
+        currentProfile(); // 确认当前用户存在。
+        try {
+            // 两份账号资料必须同一事务更新；空邮箱存 NULL，允许多个用户不填写邮箱。
+            userMapper.updateProfile(userId, account, email.isEmpty() ? null : email, profile.getBirthday());
+            userMapper.updateAuthAccount(userId, account);
+        } catch (DuplicateKeyException ex) {
+            throw new BaseException("账号或邮箱已被使用，请修改后重试");
+        }
+        return currentProfile();
+    }
 
     private static final DefaultRedisScript<Long> tokenAtomicScript;
 

@@ -87,6 +87,8 @@
         select *
         from moments
         where user_id = #{userId}
+          and is_deleted = 0
+        order by id desc
     </select>
 
     <update id="likeComment">
