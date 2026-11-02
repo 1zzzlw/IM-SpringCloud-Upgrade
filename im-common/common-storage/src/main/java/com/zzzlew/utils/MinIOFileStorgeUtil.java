@@ -110,6 +110,17 @@ public class MinIOFileStorgeUtil {
         }
     }
 
+    // 缩略图与原文件存于同桶，写入失败必须传递给调用方，不能返回虚假成功。
+    public void uploadMessagePreview(String objectPath, MultipartFile preview, Integer fileType, String contentType) {
+        try (java.io.InputStream stream = preview.getInputStream()) {
+            minioClient.putObject(PutObjectArgs.builder()
+                    .bucket(getBucketName(fileType)).object(objectPath)
+                    .stream(stream, preview.getSize(), -1).contentType(contentType).build());
+        } catch (Exception e) {
+            throw new IllegalStateException("预览图上传失败", e);
+        }
+    }
+
     // 上传文件分块到minio
     public void uploadFileChunk(String minioFileChunkPath, MultipartFile chunkBlob, Integer fileType) {
         try {

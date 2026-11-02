@@ -120,8 +120,5 @@ public class MessageDTO implements Serializable {
      */
     private Long redPacketId;
 
-    /**
-     * 预览base64
-     */
-    private String previewBase64;
+
 }

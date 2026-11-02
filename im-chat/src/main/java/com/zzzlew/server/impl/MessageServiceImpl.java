@@ -186,7 +186,52 @@ public class MessageServiceImpl implements MessageService {
         stringRedisTemplate.expire(fileIdKey, FILE_CHUNK_INDEX_KEY_TTL, TimeUnit.MINUTES);
         // 创建存入minio的文件路径
         String minioFilePath = minIOFileStorgeUtil.buildFilePath(fileId);
+        // 预览对象路径由服务端决定，客户端不能传入任意覆盖路径。
+        stringRedisTemplate.opsForValue().set(verifyKey + ":path", minioFilePath,
+                FILE_UPLOAD_VERIFY_KEY_TTL, TimeUnit.MINUTES);
         return Map.of("verify", verify, "minioFilePath", minioFilePath);
+    }
+
+    @Override
+    public String uploadPreview(MultipartFile preview, String fileId, String verify, Integer fileType) {
+        if (!java.util.Objects.equals(fileType, 2) && !java.util.Objects.equals(fileType, 3)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "仅图片和视频支持预览");
+        }
+        String key = FILE_UPLOAD_VERIFY_KEY + fileId;
+        String expected = stringRedisTemplate.opsForValue().get(key);
+        String path = stringRedisTemplate.opsForValue().get(key + ":path");
+        if (expected == null || !expected.equals(verify) || path == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "上传凭证无效或已过期");
+        }
+        if (preview.isEmpty() || preview.getSize() > 1024 * 1024) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "预览图大小必须在1MB以内");
+        }
+        // 仅读图像头检查格式和尺寸，不解码完整像素，限制预览资源开销。
+        String contentType;
+        try (java.io.InputStream stream = preview.getInputStream();
+             javax.imageio.stream.ImageInputStream input = javax.imageio.ImageIO.createImageInputStream(stream)) {
+            java.util.Iterator<javax.imageio.ImageReader> readers = javax.imageio.ImageIO.getImageReaders(input);
+            if (!readers.hasNext()) throw new IOException("不支持的图片格式");
+            javax.imageio.ImageReader reader = readers.next();
+            try {
+                reader.setInput(input);
+                String format = reader.getFormatName();
+                if (!format.equalsIgnoreCase("JPEG") && !format.equalsIgnoreCase("PNG")) {
+                    throw new IOException("仅支持JPEG或PNG预览");
+                }
+                int width = reader.getWidth(0), height = reader.getHeight(0);
+                if (width < 1 || height < 1 || width > 1024 || height > 1024) {
+                    throw new IOException("预览图长宽不能超过1024像素");
+                }
+                contentType = format.equalsIgnoreCase("PNG") ? "image/png" : "image/jpeg";
+            } finally {
+                reader.dispose();
+            }
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "预览图格式或尺寸无效", e);
+        }
+        minIOFileStorgeUtil.uploadMessagePreview(path + ".preview", preview, fileType, contentType);
+        return minIOConfigProperties.getEndpoint() + "/" + minIOFileStorgeUtil.getBucketName(fileType) + "/" + path + ".preview";
     }
 
     @Override

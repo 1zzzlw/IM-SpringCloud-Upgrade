@@ -70,6 +70,7 @@ auth:
     # --- 文件上传相关（分块上传在业务层校验） ---
     - "/message/checkUploaded"
     - "/message/uploadChunk"
+    - "/message/uploadPreview"
     # --- 静态资源与接口文档 (Knife4j/Swagger) ---
     - "/swagger-ui/**"
     - "/v3/api-docs/**"

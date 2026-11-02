@@ -251,7 +251,6 @@ CREATE TABLE `message`  (
   `remote_path` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '远程存储文件路径',
   `local_path` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '本地存储绝对路径（未下载时为 NULL）',
   `remote_url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '服务端存储地址',
-  `preview_base64` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '图片和视频的预览图',
   `download_status` tinyint NULL DEFAULT 0 COMMENT '下载状态：0-未下载，1-已下载，2-下载失败',
   `receive_time` datetime NULL DEFAULT NULL COMMENT '接收时间',
   PRIMARY KEY (`id`) USING BTREE,

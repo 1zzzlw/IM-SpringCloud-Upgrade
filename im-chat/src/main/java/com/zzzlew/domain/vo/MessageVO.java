@@ -131,10 +131,11 @@ public class MessageVO implements Serializable {
      */
     private String remoteUrl;
 
-    /**
-     * 预览base64
-     */
-    private String previewBase64;
+    /** 预览图与原文件使用同桶、固定后缀，不保存图片内容或额外地址字段。 */
+    public String getPreviewUrl() {
+        return (Integer.valueOf(2).equals(msgType) || Integer.valueOf(3).equals(msgType))
+                && remoteUrl != null && !remoteUrl.isBlank() ? remoteUrl + ".preview" : null;
+    }
 
     /**
      * 下载状态 0：未下载 1：已下载

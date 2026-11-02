@@ -104,6 +104,15 @@ public class MessageController {
         return Result.success();
     }
 
+    @Operation(summary = "上传图片缩略图或视频封面")
+    @PostMapping("/uploadPreview")
+    public Result<String> uploadPreview(@RequestParam("preview") MultipartFile preview,
+                                        @RequestParam("fileId") String fileId,
+                                        @RequestParam("verify") String verify,
+                                        @RequestParam("fileType") Integer fileType) {
+        return Result.success(messageService.uploadPreview(preview, fileId, verify, fileType));
+    }
+
     /**
      * 检查文件分片是否上传完成
      *

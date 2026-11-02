@@ -37,7 +37,7 @@
         insert
         ignore into Message (id, conversation_id, sender_id, receiver_id, content, msg_type, sub_type, quote_msg_id,
                              quote_content, quote_msg_type, is_revoked,
-                             file_id, file_name, bucket, send_status, remote_path, file_size, preview_base64,
+                             file_id, file_name, bucket, send_status, remote_path, file_size,
                              local_path, remote_url, red_packet_id, send_time)
         values (
         #{id},
@@ -57,7 +57,6 @@
         #{sendStatus},
         #{remotePath},
         #{fileSize},
-        #{previewBase64},
         #{localPath},
         #{remoteUrl},
         #{redPacketId},

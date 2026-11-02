@@ -109,7 +109,8 @@ public class NettyWebSocketServer {
                 // 自定义 Http 处理头，用于处理 Http 头信息
                 pipeline.addLast(new HttpHeadersHandler());
                 // 用于处理 WebSocket 协议的握手、升级和关闭，会自动处理 ping/pong 帧
-                pipeline.addLast(new WebSocketServerProtocolHandler("/ws", null, true, 131072, true, true, 30000L));
+                pipeline.addLast(new WebSocketServerProtocolHandler("/ws", null, true,
+                        ProtocolFrameDecoder.MAX_FRAME_LENGTH, true, true, 30000L));
                 // 用于将 BinaryWebSocketFrame 转换为 ByteBuf ，因为后续的处理器都需要 ByteBuf 类型的消息
                 pipeline.addLast(new BinaryWebSocketFrameToByteBufHandler());
                 // 自定义协议处理，WebSocket 升级完成后使用

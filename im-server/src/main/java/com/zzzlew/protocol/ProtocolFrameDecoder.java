@@ -10,6 +10,9 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
  */
 public class ProtocolFrameDecoder extends LengthFieldBasedFrameDecoder {
 
+    /** 完整应用消息上限，包含16字节协议头；与WebSocket载荷上限共用。 */
+    public static final int MAX_FRAME_LENGTH = 64 * 1024;
+
     public ProtocolFrameDecoder() {
         /**
          * maxFrameLength 允许解码的「最大帧长度」，单条消息的最大大小
@@ -18,7 +21,7 @@ public class ProtocolFrameDecoder extends LengthFieldBasedFrameDecoder {
          * LengthAdjustment 长度字段的值和「实际整帧长度」的差值补偿
          * initialBytesToStrip 解码后「要跳过 / 剥离的字节数」
          * */
-        this(128 * 1024, 12, 4, 0, 0);
+        this(MAX_FRAME_LENGTH, 12, 4, 0, 0);
     }
 
     public ProtocolFrameDecoder(int maxFrameLength, int lengthFieldOffset, int lengthFieldLength, int lengthAdjustment,

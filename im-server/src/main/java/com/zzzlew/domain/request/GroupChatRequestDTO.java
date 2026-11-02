@@ -123,11 +123,6 @@ public class GroupChatRequestDTO extends Message implements Serializable {
      */
     private Long redPacketId;
 
-    /**
-     * 预览base64
-     */
-    private String previewBase64;
-
     @Override
     public int getMessageType() {
         return GroupChatRequestDTO;

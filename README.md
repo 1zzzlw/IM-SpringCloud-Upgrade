@@ -6,6 +6,8 @@
 
 ## 核心技术栈
 
+图片/视频预览改为 HTTP 文件上传、WS 只发送元数据，启用与数据库字段说明见[媒体消息去除 Base64](docs/媒体消息去除Base64.md)。本次数据库删列由用户执行，未运行测试或构建。
+
 - 后端：Java，SpringBoot，Netty，Redis，RabbitMQ，MySQL，Minio，Canal，ElasticSearch
 - 前端： Vite/Vue3，TypeScript，JavaScript，Electron，WebSocket，SQLite3
 

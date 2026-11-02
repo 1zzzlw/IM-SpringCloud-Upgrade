@@ -6,26 +6,23 @@
   <component name="ChangeListManager">
     <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="补充功能，消息未读数量清理，人物资料修改等">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/server/impl/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/server/impl/UserServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-redis/src/main/java/com/zzzlew/constant/RedisConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-redis/src/main/java/com/zzzlew/constant/RedisConstant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-redis/target/classes/com/zzzlew/constant/RedisConstant.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-redis/target/classes/com/zzzlew/constant/RedisConstant.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/Message.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/ConnectSuccessMessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/ConnectSuccessMessageHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/HeartBeatHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/HeartBeatHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/MessageDispatcherHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/MessageDispatcherHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/QuitLoginHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/QuitLoginHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/listener/MQMessageListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/listener/MQMessageListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/publish/MQMessagePublish.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/publish/MQMessagePublish.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/utils/ChannelManageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/utils/ChannelManageUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/zzz-im-server.sql" beforeDir="false" afterPath="$PROJECT_DIR$/db/zzz-im-server.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/controller/MessageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/controller/MessageController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/dto/MessageDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/dto/MessageDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/entity/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/entity/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/vo/MessageVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/domain/vo/MessageVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/MessageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/MessageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/MessageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/java/com/zzzlew/server/impl/MessageServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-chat/src/main/resources/mapper/MessageMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/src/main/resources/mapper/MessageMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-storage/src/main/java/com/zzzlew/utils/MinIOFileStorgeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-storage/src/main/java/com/zzzlew/utils/MinIOFileStorgeUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/request/GroupChatRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/request/GroupChatRequestDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/request/PrivateChatRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/request/PrivateChatRequestDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/response/GroupChatResponseVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/response/GroupChatResponseVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/response/PrivateChatResponseVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/response/PrivateChatResponseVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/protocol/ProtocolFrameDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/protocol/ProtocolFrameDecoder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/websocket/NettyWebSocketServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/websocket/NettyWebSocketServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/server/impl/FriendServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/server/impl/FriendServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/target/classes/com/zzzlew/server/impl/FriendServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/target/classes/com/zzzlew/server/impl/FriendServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_error.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_error.log" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -176,10 +173,12 @@
           <value>
             <map>
               <entry key="AuthApplication" value="STOPPED" />
+              <entry key="ChatApplication" value="STOPPED" />
               <entry key="ContentApplication" value="STOPPED" />
-              <entry key="GatewayApplication" value="FAILED" />
+              <entry key="GatewayApplication" value="STOPPED" />
               <entry key="IMNetyApplication" value="STOPPED" />
               <entry key="MomentsApplication" value="STOPPED" />
+              <entry key="PayApplication" value="STOPPED" />
               <entry key="SocialApplication" value="STOPPED" />
             </map>
           </value>
@@ -278,11 +277,11 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.ChatApplication" />
         <item itemvalue="Spring Boot.IMNetyApplication" />
+        <item itemvalue="Spring Boot.ChatApplication" />
+        <item itemvalue="Spring Boot.AuthApplication" />
         <item itemvalue="Spring Boot.SocialApplication" />
         <item itemvalue="Spring Boot.ContentApplication" />
-        <item itemvalue="Spring Boot.AuthApplication" />
       </list>
     </recent_temporary>
   </component>
@@ -486,7 +485,7 @@
       <workItem from="1792971943810" duration="7250000" />
       <workItem from="1793058932982" duration="651000" />
       <workItem from="1793149182507" duration="10938000" />
-      <workItem from="1793579412766" duration="1288000" />
+      <workItem from="1793579412766" duration="6533000" />
     </task>
     <task id="LOCAL-00008" summary="增加了笔记系统的内容，后续完善收藏功能">
       <option name="closed" value="true" />

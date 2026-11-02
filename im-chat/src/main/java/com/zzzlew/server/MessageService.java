@@ -17,6 +17,9 @@ import java.util.Map;
  */
 public interface MessageService {
 
+    /** 使用文件上传凭证上传小尺寸预览图，返回可访问地址。 */
+    String uploadPreview(MultipartFile preview, String fileId, String verify, Integer fileType);
+
     /**
      * 热数据预加载消息列表，当前限额100条
      *

@@ -122,11 +122,6 @@ public class Message implements Serializable {
     private String remoteUrl;
 
     /**
-     * 预览base64
-     */
-    private String previewBase64;
-
-    /**
      * 下载状态 0：未下载 1：已下载
      */
     private Integer downloadStatus;
