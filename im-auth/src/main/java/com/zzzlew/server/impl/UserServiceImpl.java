@@ -153,9 +153,9 @@ public class UserServiceImpl implements UserService {
 
         // 从redis中获取验证码，并进行判断
         String code = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + verifyCode);
-        // if (code == null || !code.equals(verifyCode)) {
-        //     throw new PasswordErrorException(MessageConstant.VERIFYCODE_ERROR);
-        // }
+        if (code == null || !code.equals(verifyCode)) {
+            throw new PasswordErrorException(MessageConstant.VERIFYCODE_ERROR);
+        }
 
         // 构建用户信息对象
         UserInfoVO userInfoVO = UserInfoVO.builder().id(userInfo.getId()).username(userInfo.getUsername()).avatar(userInfo.getAvatar()).account(userInfo.getAccount()).phone(userInfo.getPhone()).gender(userInfo.getGender()).build();

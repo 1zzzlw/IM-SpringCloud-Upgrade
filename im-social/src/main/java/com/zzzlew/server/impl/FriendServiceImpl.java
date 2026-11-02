@@ -9,12 +9,16 @@ import com.zzzlew.utils.UserHolder;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 import static com.zzzlew.constant.RedisConstant.USER_OFFLINE_INFO_KEY;
+import static com.zzzlew.constant.RedisConstant.USER_FRIEND_LIST_KEY;
+import static com.zzzlew.constant.RedisConstant.USER_FRIEND_LIST_KEY_TTL;
 
 /**
  * @Auther: zzzlew
@@ -25,6 +29,15 @@ import static com.zzzlew.constant.RedisConstant.USER_OFFLINE_INFO_KEY;
 @Slf4j
 @Service
 public class FriendServiceImpl implements FriendService {
+
+    private static final DefaultRedisScript<Long> CACHE_FRIEND_IDS = new DefaultRedisScript<>("""
+            redis.call('DEL', KEYS[1])
+            for i = 2, #ARGV do
+                redis.call('SADD', KEYS[1], ARGV[i])
+            end
+            redis.call('EXPIRE', KEYS[1], ARGV[1])
+            return 1
+            """, Long.class);
 
     @Resource
     private FriendMapper friendMapper;
@@ -55,6 +68,14 @@ public class FriendServiceImpl implements FriendService {
         log.info("该用户的上次离线时间是：{}", quitTime);
         // 根据用户id和用户离线时间查询该用户的好友列表
         List<FriendRelationVO> friendRelationVOList = friendMapper.selectFriendList(userId, quitTime);
+        if (Boolean.TRUE.equals(isInit)) {
+            // 全量同步时重建通知接收者缓存，覆盖 App 自动登录和缓存过期后的重连。
+            List<String> args = new ArrayList<>();
+            args.add(String.valueOf(USER_FRIEND_LIST_KEY_TTL * 60));
+            friendRelationVOList.forEach(friend -> args.add(friend.getFriendId().toString()));
+            stringRedisTemplate.execute(CACHE_FRIEND_IDS,
+                    List.of(USER_FRIEND_LIST_KEY + userId), args.toArray());
+        }
         // 打印好友列表
         log.info("好友列表: {}", friendRelationVOList);
         // 返回好友列表

@@ -2,25 +2,18 @@ package com.zzzlew.handler;
 
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.zzzlew.constant.RedisConstant;
 import com.zzzlew.domain.Message;
 import com.zzzlew.handler.impl.MessageHandler;
 import com.zzzlew.handler.messageHandler.*;
 import com.zzzlew.publish.MQMessagePublish;
 import com.zzzlew.result.MessageResult;
-import com.zzzlew.utils.ChannelManageUtil;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RedissonClient;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-
-import static com.zzzlew.constant.RedisConstant.*;
 
 /**
  * @Auther: zzzlew
@@ -32,15 +25,11 @@ import static com.zzzlew.constant.RedisConstant.*;
 @ChannelHandler.Sharable
 public class MessageDispatcherHandler extends ChannelInboundHandlerAdapter {
 
-    private RedissonClient redissonClient;
-    private StringRedisTemplate stringRedisTemplate;
     private MQMessagePublish mqMessagePublish;
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) {
-        if (this.redissonClient == null && this.stringRedisTemplate == null) {
-            this.redissonClient = SpringUtil.getBean(RedissonClient.class);
-            this.stringRedisTemplate = SpringUtil.getBean(StringRedisTemplate.class);
+        if (this.mqMessagePublish == null) {
             this.mqMessagePublish = SpringUtil.getBean(MQMessagePublish.class);
         }
     }
@@ -58,19 +47,14 @@ public class MessageDispatcherHandler extends ChannelInboundHandlerAdapter {
         handlerMap.put(Message.SystemMessageRequestDTO, new SystemMessageHandler());
         handlerMap.put(Message.FriendApplyDealRequestDTO, new FriendApplyDealHandler());
         handlerMap.put(Message.GroupApplyDealRequestDTO, new GroupApplyDealHandler());
+        handlerMap.put(Message.OnlineStatusListRequestDTO, new OnlineStatusListHandler());
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         // 自定义的消息编码器会将消息转换为 Message 对象
         if (msg instanceof Message message) {
-            // 打印消息类型
             log.info("收到消息类型: {}", message.getMessageType());
-            if (message.getMessageType() == 0) {
-                // 心跳消息
-                Long userId = ChannelManageUtil.getUser(ctx.channel()).getId();
-                handleHeartMessage(userId);
-            }
             // 根据消息类型，分发给对应的 Handler 处理
             MessageHandler handler = handlerMap.get(message.getMessageType());
             if (handler != null) {
@@ -88,13 +72,4 @@ public class MessageDispatcherHandler extends ChannelInboundHandlerAdapter {
         super.channelRead(ctx, msg);
     }
 
-    public void handleHeartMessage(Long userId) {
-        log.info("接收心跳消息，更新redis缓存");
-        // 更新好友信息的过期时间
-        String friendListKey = USER_FRIEND_LIST_KEY + userId;
-        // 重置过期时间
-        stringRedisTemplate.expire(friendListKey, USER_FRIEND_LIST_KEY_TTL, TimeUnit.MINUTES);
-        // 更新在线过期时间
-        stringRedisTemplate.expire(RedisConstant.USER_ONLINE_STATUS_KEY, RedisConstant.USER_ONLINE_STATUS_KEY_TTL, TimeUnit.SECONDS);
-    }
 }

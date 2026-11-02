@@ -118,13 +118,12 @@ public class NettyWebSocketServer {
                 pipeline.addLast(new ByteBufToBinaryWebSocketFrameHandler());
                 // 消息编码器，用于将消息编码为 ByteBuf ，因为后续的处理器都需要 ByteBuf 类型的消息
                 pipeline.addLast(new MessageCodecSharable());
+                // 先统计解码后的入站消息，再交给会消费消息的处理器，避免心跳被提前拦截。
+                // 连续 90 秒没有读到完整的应用层消息时触发 READER_IDLE。
+                pipeline.addLast(new IdleStateHandler(90, 0, 0, TimeUnit.SECONDS));
+                pipeline.addLast(new HeartBeatHandler());
                 // 消息分发处理器，用于分发消息到不同的处理器
                 pipeline.addLast(new MessageDispatcherHandler());
-                // 30 秒没有读写操作时触发 IdleState.READER_IDLE 事件
-                // 这个心跳处理器因为只有读时间，所以只在入站的时候处理，出战的时候虽然经过但是没有处理业务
-                pipeline.addLast(new IdleStateHandler(90, 0, 0, TimeUnit.SECONDS));
-                // 心跳处理器，用于处理心跳包
-                pipeline.addLast(new HeartBeatHandler());
                 // 连接成功处理器，用于处理连接成功事件，此时用户上线
                 pipeline.addLast(new ConnectSuccessMessageHandler());
                 // 退出登录处理器，用于处理退出登录请求

@@ -134,7 +134,9 @@ public class MQMessagePublish {
                     } else if (currentClusterId.equals(serverId)) {
                         // 用户在本地集群：直接通过Channel发送，不走MQ
                         Channel channel = ChannelManageUtil.getChannel(receiverId);
-                        if (channel != null && channel.isActive() && channel.isWritable()) {
+                        boolean presence = message.getMessageType() == Message.LoginSuccessResponseVO ||
+                                message.getMessageType() == Message.QuitLoginResponseVO;
+                        if (channel != null && channel.isActive() && (channel.isWritable() || presence)) {
                             // 发送消息并监听结果
                             channel.writeAndFlush(message).addListener(future -> {
                                 if (future.isSuccess()) {

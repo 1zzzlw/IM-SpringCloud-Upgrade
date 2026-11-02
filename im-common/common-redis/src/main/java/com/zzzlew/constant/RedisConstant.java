@@ -43,6 +43,7 @@ public class RedisConstant {
     public static final String SYSTEM_MESSAGE_BROADCAST = "system:message:broadcast";
 
     public static final String USER_CLUSTER_MAPPING_KEY = "netty:websocket:cluster:info";
+    public static final String USER_CONNECTION_MAPPING_KEY = "netty:websocket:connection:info";
 
     // 用户离线消息存储的集合
     public static final String USER_OFFLINE_MESSAGE_CONTENT_KEY = "user:offline:message:content:";

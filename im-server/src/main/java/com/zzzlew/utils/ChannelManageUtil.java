@@ -32,7 +32,7 @@ public class ChannelManageUtil {
     public static void removeChannel(Channel channel) {
         UserBaseDTO userBaseDTO = Online_channel.remove(channel);
         if (userBaseDTO != null) {
-            Online_user.remove(userBaseDTO.getId());
+            Online_user.remove(userBaseDTO.getId(), channel);
         }
     }
 

@@ -12,6 +12,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,6 +30,17 @@ import static com.zzzlew.constant.RedisConstant.*;
 @Slf4j
 @ChannelHandler.Sharable
 public class QuitLoginHandler extends ChannelInboundHandlerAdapter {
+
+    private static final DefaultRedisScript<Long> REMOVE_ONLINE = new DefaultRedisScript<>("""
+            if redis.call('HGET', KEYS[3], ARGV[1]) ~= ARGV[2] then
+                return 0
+            end
+            redis.call('SREM', KEYS[1], ARGV[1])
+            redis.call('HDEL', KEYS[2], ARGV[1])
+            redis.call('HDEL', KEYS[3], ARGV[1])
+            redis.call('HSET', KEYS[4], ARGV[1], ARGV[3])
+            return 1
+            """, Long.class);
 
     private RedissonClient redissonClient;
     private StringRedisTemplate stringRedisTemplate;
@@ -90,6 +102,22 @@ public class QuitLoginHandler extends ChannelInboundHandlerAdapter {
         // 推送离线消息给他的好友
         // 获得用户的基础信息
         UserBaseDTO userBaseDTO = ChannelManageUtil.getUser(ctx.channel());
+        if (userBaseDTO == null) {
+            ctx.fireChannelInactive();
+            return;
+        }
+        ChannelManageUtil.removeChannel(ctx.channel());
+        String userId = userBaseDTO.getId().toString();
+        String offlineTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        Long removed = stringRedisTemplate.execute(REMOVE_ONLINE,
+                List.of(USER_ONLINE_STATUS_KEY, USER_CLUSTER_MAPPING_KEY,
+                        USER_CONNECTION_MAPPING_KEY, USER_OFFLINE_INFO_KEY),
+                userId, ctx.channel().id().asLongText(), offlineTime);
+        if (!Long.valueOf(1).equals(removed)) {
+            log.debug("旧连接关闭，保留用户 {} 的当前在线状态", userId);
+            ctx.fireChannelInactive();
+            return;
+        }
         log.info("用户 {} 离线！", userBaseDTO.getId());
         String key = USER_FRIEND_LIST_KEY + userBaseDTO.getId();
         // 1 从redis中获取当前用户的好友列表id
@@ -105,21 +133,7 @@ public class QuitLoginHandler extends ChannelInboundHandlerAdapter {
         // RTopic topic = redissonClient.getTopic(SYSTEM_MESSAGE_BROADCAST);
         // topic.publish(result);
 
-        // TODO 将离线时间存储在redis中，因为有20s的时间可以推送离线消息，因此，再用户正常退出登录的时候拉取离线消息的时间可以晚20s
-        LocalDateTime offlineTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String offlineTimeStr = offlineTime.format(formatter);
-        String userId = userBaseDTO.getId().toString();
-        stringRedisTemplate.opsForHash().put(USER_OFFLINE_INFO_KEY, userId,
-                offlineTimeStr);
-        // 移除该用户的在线状态
-        stringRedisTemplate.opsForSet().remove(USER_ONLINE_STATUS_KEY, userId);
-        ChannelManageUtil.removeChannel(ctx.channel());
-
-        // 用户断开连接时，移除用户和Netty集群的对应关系
-        stringRedisTemplate.opsForHash().delete(USER_CLUSTER_MAPPING_KEY, userId);
-
-        offLine(ctx);
+        ctx.fireChannelInactive();
     }
 
 }

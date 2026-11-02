@@ -7,7 +7,6 @@ import com.zzzlew.constant.RedisConstant;
 import com.zzzlew.domain.Message;
 import com.zzzlew.domain.dto.UserBaseDTO;
 import com.zzzlew.domain.response.LoginSuccessResponseVO;
-import com.zzzlew.domain.response.OnlineStatusListResponseVO;
 import com.zzzlew.publish.MQMessagePublish;
 import com.zzzlew.result.MessageResult;
 import com.zzzlew.utils.ChannelManageUtil;
@@ -20,10 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import static com.zzzlew.config.NettyConfig.NETTY_CLUSTER_ID;
 import static com.zzzlew.constant.RedisConstant.*;
@@ -38,6 +37,14 @@ import static com.zzzlew.constant.RedisConstant.*;
 @Slf4j
 @ChannelHandler.Sharable
 public class ConnectSuccessMessageHandler extends ChannelInboundHandlerAdapter {
+
+    private static final DefaultRedisScript<Long> REGISTER_ONLINE = new DefaultRedisScript<>("""
+            redis.call('SADD', KEYS[1], ARGV[1])
+            redis.call('EXPIRE', KEYS[1], ARGV[4])
+            redis.call('HSET', KEYS[2], ARGV[1], ARGV[2])
+            redis.call('HSET', KEYS[3], ARGV[1], ARGV[3])
+            return 1
+            """, Long.class);
 
     private RedissonClient redissonClient;
     private StringRedisTemplate stringRedisTemplate;
@@ -72,6 +79,13 @@ public class ConnectSuccessMessageHandler extends ChannelInboundHandlerAdapter {
             UserBaseDTO userInfo = ChannelManageUtil.getUser(ctx.channel());
             Long userId = userInfo.getId();
 
+            // 先登记上线及路由，再通知好友，避免并发登录时遗漏新连接。
+            String onlineStatusKey = RedisConstant.USER_ONLINE_STATUS_KEY;
+            stringRedisTemplate.execute(REGISTER_ONLINE,
+                    List.of(onlineStatusKey, USER_CLUSTER_MAPPING_KEY, USER_CONNECTION_MAPPING_KEY),
+                    userId.toString(), NETTY_CLUSTER_ID, ctx.channel().id().asLongText(),
+                    RedisConstant.USER_ONLINE_STATUS_KEY_TTL.toString());
+
             if (hasOfflineMessages(userId)) {
                 log.info("用户 {} 有离线消息，开始推送", userId);
                 pushOfflineMessages(userId, ctx.channel());
@@ -92,25 +106,6 @@ public class ConnectSuccessMessageHandler extends ChannelInboundHandlerAdapter {
             // topic.publish(result);
             mqMessagePublish.sendToCluster(result);
 
-            String onlineStatusKey = RedisConstant.USER_ONLINE_STATUS_KEY;
-            List<String> onlineFriends = stringRedisTemplate.opsForSet().intersect(onlineStatusKey, key).stream().toList();
-            log.info("在线用户id集合: {}", onlineFriends);
-
-            // 推送当前用户的好友在线状态集合
-            OnlineStatusListResponseVO onlineStatusListResponseVO = new OnlineStatusListResponseVO();
-            onlineStatusListResponseVO.setFriendIdList(onlineFriends);
-            ctx.channel().writeAndFlush(onlineStatusListResponseVO);
-            // 修改redis中的用户状态为在线
-            stringRedisTemplate.opsForSet().add(onlineStatusKey, userId.toString());
-            // 设置过期时间为270秒，因为用户在270秒内没有操作，就可以判断为用户不在线，对应心跳时间90秒
-            stringRedisTemplate.expire(onlineStatusKey, RedisConstant.USER_ONLINE_STATUS_KEY_TTL, TimeUnit.SECONDS);
-
-            // 将用户和Netty集群的对应关系存入redis中
-            stringRedisTemplate.opsForHash().put(
-                    USER_CLUSTER_MAPPING_KEY,
-                    userId.toString(),
-                    NETTY_CLUSTER_ID
-            );
         }
     }
 

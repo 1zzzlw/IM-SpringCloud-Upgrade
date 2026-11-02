@@ -42,7 +42,9 @@ public class MQMessageListener {
         }
 
         // 检查Channel是否可写
-        if (!channel.isWritable()) {
+        boolean presence = message.getMessageType() == Message.LoginSuccessResponseVO ||
+                message.getMessageType() == Message.QuitLoginResponseVO;
+        if (!channel.isWritable() && !presence) {
             log.warn("用户 {} 的Channel写缓冲区已满，消息将由离线机制投递", userId);
             return;
         }
