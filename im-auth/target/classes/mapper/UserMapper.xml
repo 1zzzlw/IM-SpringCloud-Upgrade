@@ -5,12 +5,13 @@
 
     <update id="updateProfile">
         update user_info
-        set account = #{account}, email = #{email}, birthday = #{birthday}
+        set account = #{account}, email = #{email}, birthday = #{birthday},
+            username = #{username}, gender = #{gender}, address = #{address}
         where id = #{userId}
     </update>
 
-    <update id="updateAuthAccount">
-        update user_auth set account = #{account} where user_id = #{userId}
+    <update id="updateAuthProfile">
+        update user_auth set account = #{account}, username = #{username}, gender = #{gender} where user_id = #{userId}
     </update>
 
     <insert id="insertUserAuth" useGeneratedKeys="true" keyProperty="id">

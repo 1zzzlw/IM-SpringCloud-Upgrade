@@ -13,7 +13,6 @@ import com.zzzlew.domain.entity.UserAuth;
 import com.zzzlew.domain.vo.ConversationVO;
 import com.zzzlew.domain.vo.GroupMemberVO;
 import com.zzzlew.enums.ConversationTypeEnum;
-import com.zzzlew.mapper.AIMessageMapper;
 import com.zzzlew.mapper.ConversationMapper;
 import com.zzzlew.properties.MinIOConfigProperties;
 import com.zzzlew.server.ConversationService;
@@ -55,8 +54,6 @@ public class ConversationImpl implements ConversationService {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
     @Resource
-    private AIMessageMapper aiMessageMapper;
-    @Resource
     private MinIOFileStorgeUtil minIOFileStorgeUtil;
     @Resource
     private MinIOConfigProperties minIOConfigProperties;
@@ -84,7 +81,10 @@ public class ConversationImpl implements ConversationService {
             quitTime = entries.get(userId.toString()).toString();
         }
         // 根据用户id和用户的离线时间查询登录用户的会话列表
-        List<Conversation> conversationList = conversationMapper.selectList(userId, quitTime);
+        List<Conversation> conversationList = conversationMapper.selectList(userId, quitTime).stream()
+                .filter(conversation -> conversation.getType() == ConversationTypeEnum.USER.getType()
+                        || conversation.getType() == ConversationTypeEnum.GROUP.getType())
+                .toList();
 
         // 如果会话列表为空，直接返回空列表
         if (conversationList.isEmpty()) {
@@ -150,14 +150,6 @@ public class ConversationImpl implements ConversationService {
                 ConversationVO conversationVO = BeanUtil.copyProperties(conversation, ConversationVO.class);
                 conversationVO.setAvatar(groupConversation.getGroupAvatar());
                 conversationVO.setName(groupConversation.getGroupName());
-                conversationVO.setUserId(userId);
-                return conversationVO;
-            } else if (conversation.getType() == ConversationTypeEnum.AI.getType()) {
-                // ai会话
-                ConversationVO conversationVO = BeanUtil.copyProperties(conversation, ConversationVO.class);
-                String avatar = aiMessageMapper.getAiAvatarById(userId);
-                conversationVO.setAvatar(avatar);
-                conversationVO.setName("ai助手");
                 conversationVO.setUserId(userId);
                 return conversationVO;
             } else {

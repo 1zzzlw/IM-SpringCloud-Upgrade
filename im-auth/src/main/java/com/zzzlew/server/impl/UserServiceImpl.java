@@ -93,6 +93,20 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public UserProfileVO updateProfile(UserProfileUpdateDTO profile) {
         Long userId = UserHolder.getUser().getId();
+        UserProfileVO current = currentProfile();
+        String username = profile.getUsername() == null ? current.getUsername() : profile.getUsername().trim();
+        Integer gender = profile.getGender() == null ? current.getGender() : profile.getGender();
+        if (gender == null) gender = -1;
+        String address = profile.getAddress() == null ? current.getAddress() : profile.getAddress().trim();
+        if (username == null || username.isEmpty() || username.length() > 32) {
+            throw new BaseException("昵称长度需在1-32个字符之间");
+        }
+        if (gender != null && gender != -1 && gender != 0 && gender != 1) {
+            throw new BaseException("性别选项无效");
+        }
+        if (address != null && address.length() > 255) {
+            throw new BaseException("地址不能超过255个字符");
+        }
         String account = profile.getAccount() == null ? "" : profile.getAccount().trim();
         String email = profile.getEmail() == null ? "" : profile.getEmail().trim();
         if (!account.matches("^[A-Za-z0-9_]{1,64}$")) {
@@ -111,11 +125,10 @@ public class UserServiceImpl implements UserService {
         if (!email.isEmpty() && userMapper.emailInUse(email, userId)) {
             throw new BaseException("该邮箱已被使用");
         }
-        currentProfile(); // 确认当前用户存在。
         try {
             // 两份账号资料必须同一事务更新；空邮箱存 NULL，允许多个用户不填写邮箱。
-            userMapper.updateProfile(userId, account, email.isEmpty() ? null : email, profile.getBirthday());
-            userMapper.updateAuthAccount(userId, account);
+            userMapper.updateProfile(userId, account, email.isEmpty() ? null : email, profile.getBirthday(), username, gender, address);
+            userMapper.updateAuthProfile(userId, account, username, gender);
         } catch (DuplicateKeyException ex) {
             throw new BaseException("账号或邮箱已被使用，请修改后重试");
         }

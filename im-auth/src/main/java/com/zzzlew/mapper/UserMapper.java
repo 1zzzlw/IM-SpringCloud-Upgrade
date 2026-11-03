@@ -23,9 +23,12 @@ public interface UserMapper {
     boolean emailInUse(@Param("email") String email, @Param("userId") Long userId);
 
     int updateProfile(@Param("userId") Long userId, @Param("account") String account,
-                      @Param("email") String email, @Param("birthday") LocalDate birthday);
+                      @Param("email") String email, @Param("birthday") LocalDate birthday,
+                      @Param("username") String username, @Param("gender") Integer gender,
+                      @Param("address") String address);
 
-    int updateAuthAccount(@Param("userId") Long userId, @Param("account") String account);
+    int updateAuthProfile(@Param("userId") Long userId, @Param("account") String account,
+                          @Param("username") String username, @Param("gender") Integer gender);
 
     /**
      * 根据账号查询用户
