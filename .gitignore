@@ -1,4 +1,4 @@
 jmeter.log
-nginx-1.28.2/logs
+nginx-1.28.2/logs/
 .idea
 **/target
