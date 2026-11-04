@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="清理加完善用户资料修改功能">
+    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="保存项目">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/domain/dto/MessageDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/domain/dto/MessageDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/domain/vo/MessageVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/domain/vo/MessageVO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/server/impl/ConversationImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/server/impl/ConversationImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/server/impl/MessageServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-chat/target/classes/com/zzzlew/server/impl/MessageServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/conf/nginx.conf" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/conf/nginx.conf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_error.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_error.log" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -274,8 +274,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Spring Boot.SocialApplication" />
-        <item itemvalue="Spring Boot.ContentApplication" />
         <item itemvalue="Spring Boot.AuthApplication" />
+        <item itemvalue="Spring Boot.ContentApplication" />
         <item itemvalue="Spring Boot.ChatApplication" />
         <item itemvalue="Spring Boot.PayApplication" />
       </list>
@@ -483,14 +483,10 @@
       <workItem from="1793149182507" duration="10938000" />
       <workItem from="1793579412766" duration="13354000" />
       <workItem from="1793665635487" duration="9697000" />
-    </task>
-    <task id="LOCAL-00009" summary="ai远程头像的bug解决">
-      <option name="closed" value="true" />
-      <created>1772990153336</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1772990153336</updated>
+      <workItem from="1793704929894" duration="25000" />
+      <workItem from="1793706440733" duration="1218000" />
+      <workItem from="1793749693816" duration="1304000" />
+      <workItem from="1793761393272" duration="1959000" />
     </task>
     <task id="LOCAL-00010" summary="笔记系统的完善">
       <option name="closed" value="true" />
@@ -876,7 +872,15 @@
       <option name="project" value="LOCAL" />
       <updated>1793675709438</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="保存项目">
+      <option name="closed" value="true" />
+      <created>1793704947309</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1793704947309</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -894,7 +898,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="算是完工了吧，还有优化的地方，后面慢慢补，接下来开始完善文档，测试数据了" />
     <MESSAGE value="全部部署到了服务器上。编写了部署服务器的过程文档，和前端的展示界面" />
     <MESSAGE value="这次提交，我想说一下我的规划。经过一段时间的八股复习，我发现自己的基础特别的不好，写项目和基础完全就是两回事，因此我感觉我的项目的基层越来越不稳定。部署到服务器上之后的bug频繁出现，并且高并发效果不好。本来打算4月13号就投简历的，但是发现自己不能这么着急，还需要打磨。主要原因我认为是这个项目写的时间太长了，花费了4个多月的时间，而且，大量的时间花在了写前端代码上，但是我的前端代码的基础也不好。我认为是我的学习方法出现了一点问题。接下来的时间安排我打算是6月份等到期末考试结束，我在投暑假的日常实习。然后说一下后面的复习方法，也就是说又争取到了两个月的时间，我准备慢慢的来了，先从redis开始，项目二和项目一都有对redis的应用，但是我的理解还是不够深，打算八股和项目结合学习。然后是RabbitMQ，这个也要深度学习。接下来就是MySQL，项目一是自己独立写的，数据库设计也是自己设计的，相关的优化需要做一下，这个也可以根据项目来学习。然后是JVM，JavaSE，JUC，JavaList这些java基础，只能是熟能生巧了，我也想不到什么好办法去理解，有的感觉就是需要背。只能慢慢来了。算法的话，我现在应该是刷出技巧来了，不会刷的心态崩溃了。" />
     <MESSAGE value="完成了一些优化吧，完成了消息并发的测试，收获就是对Jmeter的使用更了解了。以及netty在linux下的配置" />
@@ -919,7 +922,8 @@
     <MESSAGE value="完善了一些实体类，对应数据库表字段" />
     <MESSAGE value="补充功能，消息未读数量清理，人物资料修改等" />
     <MESSAGE value="清理加完善用户资料修改功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="清理加完善用户资料修改功能" />
+    <MESSAGE value="保存项目" />
+    <option name="LAST_COMMIT_MESSAGE" value="保存项目" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
