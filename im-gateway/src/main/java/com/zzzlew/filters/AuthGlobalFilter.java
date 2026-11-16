@@ -59,7 +59,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
         // 获取 Token
         String token = request.getHeaders().getFirst(jwtproperties.getTokenName());
-        log.info("网关拦截路径：{}，Token为：{}", path, token);
+        log.info("网关拦截路径：{}", path);
 
         // 判断是否是"长期Token"业务路径
         if (isRefreshPath(path)) {
@@ -96,7 +96,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
                 .collectMap(Map.Entry::getKey, Map.Entry::getValue)
                 .flatMap(userMap -> {
                     if (userMap.isEmpty()) {
-                        log.error("长期token在Redis中不存在: {}", token);
+                        log.error("长期token在Redis中不存在");
                         response.setStatusCode(HttpStatus.UNAUTHORIZED);
                         return response.setComplete();
                     }
@@ -141,7 +141,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
                 .collectMap(Map.Entry::getKey, Map.Entry::getValue)
                 .flatMap(userMap -> {
                     if (userMap.isEmpty()) {
-                        log.error("短期token在Redis中不存在，可能已被清理或失效: {}", token);
+                        log.error("短期token在Redis中不存在，可能已被清理或失效");
                         response.setStatusCode(HttpStatus.UNAUTHORIZED);
                         return response.setComplete();
                     }

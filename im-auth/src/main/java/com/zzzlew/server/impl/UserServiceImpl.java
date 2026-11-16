@@ -31,6 +31,7 @@ import com.zzzlew.utils.RegexUtils;
 import com.zzzlew.utils.UserHolder;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
@@ -173,30 +174,7 @@ public class UserServiceImpl implements UserService {
         // 构建用户信息对象
         UserInfoVO userInfoVO = UserInfoVO.builder().id(userInfo.getId()).username(userInfo.getUsername()).avatar(userInfo.getAvatar()).account(userInfo.getAccount()).phone(userInfo.getPhone()).gender(userInfo.getGender()).build();
 
-        // 生成并存储token
-        TokenResult tokenResult = generateAndStoreWithUpdateToken(userInfoVO);
-
-        response.setHeader("Authorization", "Bearer " + tokenResult.getAccessToken());
-        response.setHeader("refreshtoken", tokenResult.getRefreshToken());
-
-        // 手动将用户信息存入ThreadLocal，以便Feign拦截器使用
-        UserBaseDTO userBaseDTO = new UserBaseDTO();
-        userBaseDTO.setId(userInfo.getId());
-        userBaseDTO.setUsername(userInfo.getUsername());
-        userBaseDTO.setAvatar(userInfo.getAvatar());
-        userBaseDTO.setPhone(userInfo.getPhone());
-        userBaseDTO.setGender(userInfo.getGender());
-        UserHolder.save(userBaseDTO);
-
-        try {
-            Long userId = userInfo.getId();
-            storeFriendListId(userId);
-        } finally {
-            // 清理ThreadLocal，避免内存泄漏
-            UserHolder.removeUser();
-        }
-
-        return userInfoVO;
+        return completeLogin(userInfoVO, response);
     }
 
     private void storeFriendListId(Long userId) {
@@ -347,38 +325,42 @@ public class UserServiceImpl implements UserService {
      * @param response HttpServletResponse对象
      */
     @Override
-    public void pendingLogin(String token, Long userId, HttpServletResponse response) {
-        // 判断长期token是否过期
-        if (JwtUtil.parseJWT(jwtproperties.getFreshSecretKey(), token) == null) {
+    public UserInfoVO pendingLogin(String token, Long userId, HttpServletResponse response) {
+        Claims claims;
+        try {
+            claims = JwtUtil.parseJWT(jwtproperties.getFreshSecretKey(), token);
+        } catch (Exception exception) {
+            throw new TokenExpiredException(MessageConstant.TOKEN_EXPIRED);
+        }
+        if (claims == null || userId == null || !userId.toString().equals(String.valueOf(claims.get(JwtClaimsConstant.USER_ID)))) {
+            throw new TokenExpiredException(MessageConstant.TOKEN_EXPIRED);
+        }
+        Map<Object, Object> session = stringRedisTemplate.opsForHash().entries(LOGIN_USERINFO_REFRESHTOKEN_KEY + token);
+        if (session.isEmpty() || !userId.toString().equals(String.valueOf(session.get("id")))) {
             throw new TokenExpiredException(MessageConstant.TOKEN_EXPIRED);
         }
         // 根据用户信息查询一次用户信息
         UserAuth userAuth = userMapper.selectUserInfoById(userId);
+        if (userAuth == null) throw new TokenExpiredException(MessageConstant.TOKEN_EXPIRED);
 
         // 构建用户信息对象
         UserInfoVO userInfoVO = UserInfoVO.builder().id(userAuth.getUserId()).username(userAuth.getUsername()).avatar(userAuth.getAvatar()).account(userAuth.getAccount()).phone(userAuth.getPhone()).gender(userAuth.getGender()).build();
 
-        // 校验成功之后，重新生成一个短期token
-        TokenResult tokenResult = generateAndStoreWithUpdateToken(userInfoVO);
+        return completeLogin(userInfoVO, response);
+    }
 
-        response.setHeader("Authorization", "Bearer " + tokenResult.getAccessToken());
-        response.setHeader("refreshtoken", tokenResult.getRefreshToken());
-
-        // 手动将用户信息存入ThreadLocal，以便Feign拦截器使用
-        UserBaseDTO userBaseDTO = new UserBaseDTO();
-        userBaseDTO.setId(userAuth.getUserId());
-        userBaseDTO.setUsername(userAuth.getUsername());
-        userBaseDTO.setAvatar(userAuth.getAvatar());
-        userBaseDTO.setPhone(userAuth.getPhone());
-        userBaseDTO.setGender(userAuth.getGender());
-        UserHolder.save(userBaseDTO);
-
+    private UserInfoVO completeLogin(UserInfoVO profile, HttpServletResponse response) {
+        UserHolder.save(BeanUtil.copyProperties(profile, UserBaseDTO.class));
         try {
-            storeFriendListId(userId);
+            storeFriendListId(profile.getId());
         } finally {
-            // 清理ThreadLocal，避免内存泄漏
             UserHolder.removeUser();
         }
+        // 外部依赖准备完成后再轮换凭据，失败时原会话仍可重试。
+        TokenResult tokens = generateAndStoreWithUpdateToken(profile);
+        response.setHeader("Authorization", "Bearer " + tokens.getAccessToken());
+        response.setHeader("refreshtoken", tokens.getRefreshToken());
+        return profile;
     }
 
     @Override
@@ -524,6 +506,7 @@ public class UserServiceImpl implements UserService {
         Long userId = userInfoVO.getId();
         log.info("当前登录用户id：{}，用户信息：{}", userId, userInfoVO);
         claims.put(JwtClaimsConstant.USER_ID, userId);
+        claims.put("jti", UUID.randomUUID().toString());
         claims.put(JwtClaimsConstant.USERNAME, userInfoVO.getUsername());
         claims.put(JwtClaimsConstant.ACCOUNT, userInfoVO.getAccount());
         claims.put(JwtClaimsConstant.AVATAR, userInfoVO.getAvatar());

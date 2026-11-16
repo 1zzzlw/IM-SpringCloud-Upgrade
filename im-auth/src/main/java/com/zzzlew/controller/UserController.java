@@ -5,6 +5,8 @@ import com.zzzlew.annotaion.UrlLimit;
 import com.zzzlew.domain.dto.UserLoginDTO;
 import com.zzzlew.domain.dto.UserRegisterDTO;
 import com.zzzlew.domain.dto.UserProfileUpdateDTO;
+import com.zzzlew.domain.dto.SessionLoginDTO;
+import com.zzzlew.exception.TokenExpiredException;
 import com.zzzlew.domain.vo.UserProfileVO;
 import com.zzzlew.domain.entity.UserAuth;
 import com.zzzlew.domain.vo.UserInfoVO;
@@ -15,8 +17,10 @@ import com.zzzlew.server.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,7 +63,7 @@ public class UserController {
     @PostMapping("/login")
     @UrlLimit(keyType = LimitKeyType.IP)
     public Result<UserInfoVO> login(@RequestBody UserLoginDTO userLoginDTO, HttpServletResponse response) {
-        log.info("当前登录用户信息：{}", userLoginDTO);
+        log.info("账号正在登录：{}", userLoginDTO.getAccount());
         UserInfoVO userInfoVO = userService.login(userLoginDTO, response);
         log.info("登录成功，当前登录用户信息：{}", userInfoVO);
         return Result.success(userInfoVO);
@@ -80,16 +84,22 @@ public class UserController {
     /**
      * 用户登录确认
      *
-     * @param token  登录凭证
-     * @param userId 用户id
+     * @param token 登录凭证
+     * @param body  用户id
      * @return 登录确认结果
      */
     @Operation(summary = "用户登录确认")
-    @GetMapping("/pendingLogin")
-    public Result<Object> pendingLogin(@RequestParam("token") String token, @RequestParam("userId") Long userId, HttpServletResponse response) {
-        log.info("用户 {} 正在登录，用户id为 {}", token, userId);
-        userService.pendingLogin(token, userId, response);
-        return Result.success();
+    @PostMapping("/pendingLogin")
+    public Result<UserInfoVO> pendingLogin(@RequestHeader(value = "Authorization", defaultValue = "") String token,
+                                           @Valid @RequestBody SessionLoginDTO body, HttpServletResponse response) {
+        if (token.startsWith("Bearer ")) token = token.substring(7);
+        return Result.success(userService.pendingLogin(token, body.getUserId(), response));
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Result<String> invalidSession(TokenExpiredException exception) {
+        return Result.error(exception.getMessage());
     }
 
     /**

@@ -61,7 +61,7 @@ public interface UserService {
      * @param token  登录时生成的token
      * @param userId 用户id
      */
-    void pendingLogin(String token, Long userId, HttpServletResponse response);
+    UserInfoVO pendingLogin(String token, Long userId, HttpServletResponse response);
 
     /**
      * 刷新token

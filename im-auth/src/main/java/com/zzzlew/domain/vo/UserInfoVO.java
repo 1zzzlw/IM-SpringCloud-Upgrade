@@ -2,6 +2,7 @@ package com.zzzlew.domain.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ import java.io.Serializable;
 @Data
 public class UserInfoVO implements Serializable {
     @JSONField(serializeUsing = ToStringSerializer.class)
+    @JsonSerialize(using = com.fasterxml.jackson.databind.ser.std.ToStringSerializer.class)
     private Long id;
 
     private String username;

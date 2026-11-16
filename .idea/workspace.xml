@@ -6,11 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="保存项目">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/conf/nginx.conf" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/conf/nginx.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/error.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/nginx.pid" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_access.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_error.log" beforeDir="false" afterPath="$PROJECT_DIR$/nginx-1.28.2/logs/spring_error.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/domain/vo/UserInfoVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/domain/vo/UserInfoVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/controller/UserController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/domain/vo/UserInfoVO$UserInfoVOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/domain/vo/UserInfoVO$UserInfoVOBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/domain/vo/UserInfoVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/domain/vo/UserInfoVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/server/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/server/UserService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/server/impl/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/server/impl/UserServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/src/main/java/com/zzzlew/filters/AuthGlobalFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/src/main/java/com/zzzlew/filters/AuthGlobalFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/target/classes/com/zzzlew/filters/AuthGlobalFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/target/classes/com/zzzlew/filters/AuthGlobalFilter.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +121,7 @@
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
     &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;ai.codegeex.plugin.settings.ApplicationConfigurable&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;MavenSettings&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -263,21 +269,21 @@
     </configuration>
     <list>
       <item itemvalue="Spring Boot.GatewayApplication" />
-      <item itemvalue="Spring Boot.MomentsApplication" />
       <item itemvalue="Spring Boot.IMNetyApplication" />
-      <item itemvalue="Spring Boot.PayApplication" />
-      <item itemvalue="Spring Boot.ChatApplication" />
+      <item itemvalue="Spring Boot.MomentsApplication" />
       <item itemvalue="Spring Boot.AuthApplication" />
+      <item itemvalue="Spring Boot.ChatApplication" />
       <item itemvalue="Spring Boot.ContentApplication" />
+      <item itemvalue="Spring Boot.PayApplication" />
       <item itemvalue="Spring Boot.SocialApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Spring Boot.ContentApplication" />
         <item itemvalue="Spring Boot.SocialApplication" />
         <item itemvalue="Spring Boot.AuthApplication" />
-        <item itemvalue="Spring Boot.ContentApplication" />
-        <item itemvalue="Spring Boot.ChatApplication" />
         <item itemvalue="Spring Boot.PayApplication" />
+        <item itemvalue="Spring Boot.ChatApplication" />
       </list>
     </recent_temporary>
   </component>
@@ -486,7 +492,15 @@
       <workItem from="1793704929894" duration="25000" />
       <workItem from="1793706440733" duration="1218000" />
       <workItem from="1793749693816" duration="1304000" />
-      <workItem from="1793761393272" duration="1959000" />
+      <workItem from="1793761393272" duration="2582000" />
+      <workItem from="1793839235773" duration="1884000" />
+      <workItem from="1793922611046" duration="3830000" />
+      <workItem from="1793951959098" duration="2000" />
+      <workItem from="1793952068493" duration="1000" />
+      <workItem from="1793952075734" duration="1437000" />
+      <workItem from="1794011906739" duration="798000" />
+      <workItem from="1794654206844" duration="892000" />
+      <workItem from="1794798063023" duration="628000" />
     </task>
     <task id="LOCAL-00010" summary="笔记系统的完善">
       <option name="closed" value="true" />
