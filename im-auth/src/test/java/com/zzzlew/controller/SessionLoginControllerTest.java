@@ -28,14 +28,14 @@ class SessionLoginControllerTest {
 
     @Test
     void acceptsRefreshTokenInHeaderAndReturnsCurrentProfile() throws Exception {
-        when(service.pendingLogin(eq("fixture-refresh"), eq(1792113130553811123L), any())).thenReturn(UserInfoVO.builder().id(1792113130553811123L).account("current-account").build());
-        mvc.perform(post("/user/pendingLogin").header("Authorization", "Bearer fixture-refresh").contentType("application/json").content("{\"userId\":\"1792113130553811123\"}"))
+        when(service.pendingLogin(eq("fixture-refresh"), eq(1792113130553811123L), eq("desktop_test"), any())).thenReturn(UserInfoVO.builder().id(1792113130553811123L).account("current-account").build());
+        mvc.perform(post("/user/pendingLogin").header("Authorization", "Bearer fixture-refresh").header("X-Device-Id", "desktop_test").contentType("application/json").content("{\"userId\":\"1792113130553811123\"}"))
             .andExpect(status().isOk()).andExpect(jsonPath("$.code").value(1)).andExpect(jsonPath("$.data.id").value("1792113130553811123")).andExpect(jsonPath("$.data.account").value("current-account"));
     }
 
     @Test
     void expiredSessionIsUnauthorizedAndDoesNotReturnCredentials() throws Exception {
-        when(service.pendingLogin(anyString(), anyLong(), any())).thenThrow(new TokenExpiredException("登录已失效"));
+        when(service.pendingLogin(anyString(), anyLong(), isNull(), any())).thenThrow(new TokenExpiredException("登录已失效"));
         mvc.perform(post("/user/pendingLogin").header("Authorization", "expired").contentType("application/json").content("{\"userId\":42}"))
             .andExpect(status().isUnauthorized()).andExpect(header().doesNotExist("Authorization")).andExpect(jsonPath("$.code").value(0));
     }

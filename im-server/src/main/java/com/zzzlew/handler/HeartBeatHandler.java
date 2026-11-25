@@ -38,6 +38,10 @@ public class HeartBeatHandler extends ChannelDuplexHandler {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        if (msg instanceof Message && !ChannelManageUtil.isCurrent(ctx.channel(), stringRedisTemplate)) {
+            ctx.close();
+            return;
+        }
         if (msg instanceof Message message && message.getMessageType() == Message.HeartRequestDTO) {
             Long userId = ChannelManageUtil.getUser(ctx.channel()).getId();
             renewHeartbeatCache(userId);

@@ -1,8 +1,8 @@
 package com.zzzlew.handler;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.zzzlew.constant.JwtClaimsConstant;
 import com.zzzlew.domain.dto.UserBaseDTO;
 import com.zzzlew.utils.ChannelManageUtil;
 import com.zzzlew.utils.JwtUtil;
@@ -11,8 +11,14 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.QueryStringDecoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.StringRedisTemplate;
+
+import java.util.List;
+
+import static com.zzzlew.constant.RedisConstant.*;
 
 /**
  * @Auther: zzzlew
@@ -28,27 +34,26 @@ public class HttpHeadersHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof FullHttpRequest request) {
             try {
-                log.info("检测到 HttpRequest，开始处理");
-                // 获得url路径
-                String uri = request.uri();
-                String token = getToken(uri);
-                // TODO token解析失败，之后加上前端的异常状态
-                if (StrUtil.isBlank(token) || token.length() < 32) {
-                    log.error("请求路径 {} 中未包含 token 参数，或 token 不合法", uri);
-                    ctx.channel().close();
+                String token = getToken(request.uri());
+                Environment env = SpringUtil.getBean(Environment.class);
+                Claims claims = token == null ? null : JwtUtil.parseJWT(env.getProperty("jwt.accessToken.secret"), token);
+                if (claims == null || claims.get(JwtClaimsConstant.USER_ID) == null) {
+                    request.release();
+                    ctx.close();
                     return;
                 }
-                log.info("请求路径 {} 中 token 参数值为 {}", uri, token);
-                // 解析token
-                Environment env = SpringUtil.getBean(Environment.class);
-                String accessTokenSecret = env.getProperty("jwt.accessToken.secret");
-                Claims claims = JwtUtil.parseJWT(accessTokenSecret, token);
-                // 将用户信息转为用户基本信息DTO UserBaseDTO
-                UserBaseDTO userBaseDTO = BeanUtil.copyProperties(claims, UserBaseDTO.class);
-                // 打印用户基本信息DTO
-                log.info("用户基本信息DTO：{}", userBaseDTO);
-                ChannelManageUtil.addChannel(userBaseDTO, ctx.channel());
-                log.info("HttpRequest 处理完成，准备升级为 WebSocket 协议");
+                UserBaseDTO user = BeanUtil.copyProperties(claims, UserBaseDTO.class);
+                String deviceId = claims.get(DEVICE_ID_CLAIM, String.class);
+                String sessionId = claims.get(SESSION_ID_CLAIM, String.class);
+                String accessKey = LOGIN_USERINFO_ACCESSTOKEN_KEY + token;
+                if (!Boolean.TRUE.equals(SpringUtil.getBean(StringRedisTemplate.class).hasKey(accessKey))) {
+                    request.release();
+                    ctx.close();
+                    return;
+                }
+                ChannelManageUtil.authenticate(ctx.channel(), new ChannelManageUtil.Session(user,
+                        deviceId == null ? LEGACY_DEVICE_ID : deviceId,
+                        sessionId == null ? "" : sessionId, accessKey));
                 ctx.fireChannelRead(msg);
             } catch (Exception e) {
                 log.error("HttpRequest 处理异常", e);
@@ -61,17 +66,7 @@ public class HttpHeadersHandler extends ChannelInboundHandlerAdapter {
     }
 
     public String getToken(String url) {
-        if (StrUtil.isBlank(url) || !url.contains("?")) {
-            return null;
-        }
-        String[] queryParams = url.split("\\?");
-        if (queryParams.length != 2) {
-            return null;
-        }
-        String[] params = queryParams[1].split("=");
-        if (params.length != 2) {
-            return null;
-        }
-        return params[1];
+        List<String> tokens = new QueryStringDecoder(url).parameters().get("token");
+        return tokens != null && tokens.size() == 1 && !tokens.get(0).isBlank() ? tokens.get(0) : null;
     }
 }

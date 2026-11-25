@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.List;
 
@@ -27,6 +28,8 @@ public class BroadCastListener {
 
     @Resource
     private RedissonClient redissonClient;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
 
     @PostConstruct
     public void initBroadCastListener() {
@@ -37,12 +40,10 @@ public class BroadCastListener {
 
             // 只发送给本地的接收者
             for (Long receiverId : receiverIds) {
-                Channel receiverChannel = ChannelManageUtil.getChannel(receiverId);
-                if (receiverChannel != null) {
-                    receiverChannel.writeAndFlush(response);
-                    log.info("发送消息成功，对方id为: {}，消息为: {}", receiverId, response);
-                } else {
-                    log.warn("对方不在线");
+                for (Channel receiverChannel : ChannelManageUtil.getChannels(receiverId)) {
+                    if (ChannelManageUtil.isCurrent(receiverChannel, stringRedisTemplate)) {
+                        receiverChannel.writeAndFlush(response);
+                    }
                 }
             }
         });

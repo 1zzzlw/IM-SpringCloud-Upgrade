@@ -9,7 +9,7 @@ import com.zzzlew.domain.response.PrivateChatResponseVO;
 import com.zzzlew.domain.response.SystemMessageResponseVO;
 import com.zzzlew.result.MessageResult;
 import com.zzzlew.utils.ChannelManageUtil;
-import io.micrometer.common.util.StringUtils;
+import com.zzzlew.utils.DevicePresence;
 import io.netty.channel.Channel;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +20,10 @@ import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import java.util.stream.Collectors;
 
 import static com.zzzlew.constant.RabbitMQConstant.*;
 import static com.zzzlew.constant.RedisConstant.*;
@@ -51,7 +51,7 @@ public class MQMessagePublish {
         // 提前读取lua文件，提高效率
         storeOfflineMessageScript = new DefaultRedisScript<>();
         // 设置lua脚本文件的位置
-        storeOfflineMessageScript.setLocation(new ClassPathResource("store_offline_message.lua"));
+        storeOfflineMessageScript.setLocation(new ClassPathResource("lua/store_offline_message.lua"));
         // 指定返回值
         storeOfflineMessageScript.setResultType(Long.class);
     }
@@ -93,97 +93,74 @@ public class MQMessagePublish {
      * 发送消息到集群（优化版：本地直接发送，远程走MQ）
      */
     public void sendToCluster(MessageResult messageResult) {
-        List<Long> receiverIds = messageResult.getReceiverIds();
-        if (receiverIds == null || receiverIds.isEmpty()) {
-            return;
-        }
+        sendToCluster(messageResult, null);
+    }
 
+    public void sendToCluster(MessageResult messageResult, Channel source) {
         Message message = messageResult.getResponse();
-        String currentClusterId = NettyConfig.NETTY_CLUSTER_ID;
+        boolean chat = message instanceof PrivateChatResponseVO || message instanceof GroupChatResponseVO;
+        boolean persist = chat || message instanceof SystemMessageResponseVO;
+        Long sender = source != null && chat ? ChannelManageUtil.getUser(source).getId() : null;
+        String sourceConnection = source != null && chat ? source.id().asLongText() : null;
 
-        // 异步执行，Netty线程立即释放
+        var recipients = new LinkedHashSet<Long>();
+        if (messageResult.getReceiverIds() != null) recipients.addAll(messageResult.getReceiverIds());
+        if (sender != null) recipients.add(sender);
+        if (recipients.isEmpty()) return;
+        List<Long> receiverIds = List.copyOf(recipients);
+
         CompletableFuture.runAsync(() -> {
             try {
-                // 批量获取 Redis 中的用户集群映射关系
-                List<Object> userIds = receiverIds.stream()
-                        .map(Object::toString)
-                        .collect(Collectors.toList());
-
-                // Hash 批量查询：同一个HashKey，批量取多个field
-                List<Object> serverIdsObjects = stringRedisTemplate.opsForHash().multiGet(
-                        USER_CLUSTER_MAPPING_KEY,
-                        userIds
-                );
-
-                List<String> serverIds = (serverIdsObjects == null ? Collections.<Object>emptyList() : serverIdsObjects).stream()
-                        .map(obj -> obj != null ? obj.toString() : null)
-                        .collect(Collectors.toList());
-
-                // 遍历处理投递
+                List<Object> userIds = receiverIds.stream().map(id -> (Object) id.toString()).toList();
+                List<Object> routes = stringRedisTemplate.opsForHash().multiGet(USER_CLUSTER_MAPPING_KEY, userIds);
                 for (int i = 0; i < receiverIds.size(); i++) {
-                    Long receiverId = receiverIds.get(i);
-                    String serverId = (serverIds != null && i < serverIds.size()) ? serverIds.get(i) : null;
-
-                    if (StringUtils.isBlank(serverId)) {
-                        // 用户离线
-                        if (message instanceof PrivateChatResponseVO ||
-                                message instanceof GroupChatResponseVO ||
-                                message instanceof SystemMessageResponseVO) {
-                            recordOfflineMessageMarker(receiverId, message);
-                        }
-                    } else if (currentClusterId.equals(serverId)) {
-                        // 用户在本地集群：直接通过Channel发送，不走MQ
-                        Channel channel = ChannelManageUtil.getChannel(receiverId);
-                        boolean presence = message.getMessageType() == Message.LoginSuccessResponseVO ||
-                                message.getMessageType() == Message.QuitLoginResponseVO;
-                        if (channel != null && channel.isActive() && (channel.isWritable() || presence)) {
-                            // 发送消息并监听结果
-                            channel.writeAndFlush(message).addListener(future -> {
-                                if (future.isSuccess()) {
-                                    log.debug("本地直接发送消息成功，用户: {}", receiverId);
-                                } else {
-                                    log.error("本地发送消息失败，用户: {}，降级为MQ发送", receiverId, future.cause());
-                                    // 失败后降级为MQ发送
-                                    String routingKey = QUEUE_NETTY_ROUTING_KEY + serverId;
-                                    rabbitTemplate.convertAndSend(EXCHANGE, routingKey,
-                                            new ClusterMessageWrapper<>(message, receiverId));
-                                }
-                            });
+                    Long receiver = receiverIds.get(i);
+                    Object route = routes == null || i >= routes.size() ? null : routes.get(i);
+                    var nodes = DevicePresence.groupByNode(route, sourceConnection);
+                    boolean scheduled = false;
+                    for (var node : nodes.entrySet()) {
+                        if (NettyConfig.NETTY_CLUSTER_ID.equals(node.getKey())) {
+                            scheduled |= deliverLocally(receiver, message, node.getValue());
                         } else {
-                            // Channel不可用，降级为离线处理
-                            log.warn("用户 {} 在本地但Channel不可用(active:{}, writable:{}), 标记为离线",
-                                    receiverId,
-                                    channel != null && channel.isActive(),
-                                    channel != null && channel.isWritable());
-                            if (message instanceof PrivateChatResponseVO ||
-                                    message instanceof GroupChatResponseVO ||
-                                    message instanceof SystemMessageResponseVO) {
-                                recordOfflineMessageMarker(receiverId, message);
-                            }
+                            sendToNode(node.getKey(), receiver, message, node.getValue());
+                            scheduled = true;
                         }
-                    } else {
-                        // 用户在远程集群：通过MQ转发到对应集群
-                        String routingKey = QUEUE_NETTY_ROUTING_KEY + serverId;
-                        rabbitTemplate.convertAndSend(EXCHANGE, routingKey,
-                                new ClusterMessageWrapper<>(message, receiverId));
-                        log.debug("通过MQ发送消息到集群 {}, 用户: {}", serverId, receiverId);
+                    }
+                    if (!scheduled && persist && !receiver.equals(sender)) {
+                        recordOfflineMessageMarker(receiver, message);
                     }
                 }
-
-                // 消息持久化异步存储
-                if (message instanceof PrivateChatResponseVO ||
-                        message instanceof GroupChatResponseVO ||
-                        message instanceof SystemMessageResponseVO) {
+                if (persist) {
                     rabbitTemplate.convertAndSend(EXCHANGE, QUEUE_STORGE_ROUTING_KEY,
                             new ClusterMessageWrapper<>(message));
                 }
-
-                log.info("消息投递完成");
-
             } catch (Exception e) {
                 log.error("异步投递集群消息时发生异常", e);
             }
         }, imAsyncExecutor);
+    }
+
+    private boolean deliverLocally(Long userId, Message message, List<String> connections) {
+        boolean scheduled = false;
+        boolean presence = message.getMessageType() == Message.LoginSuccessResponseVO ||
+                message.getMessageType() == Message.QuitLoginResponseVO;
+        for (Channel channel : ChannelManageUtil.getChannels(userId)) {
+            String connection = channel.id().asLongText();
+            if (!connections.contains(connection) || !ChannelManageUtil.isCurrent(channel, stringRedisTemplate)) continue;
+            if (!channel.isWritable() && !presence) continue;
+            scheduled = true;
+            channel.writeAndFlush(message).addListener(future -> {
+                if (!future.isSuccess()) {
+                    sendToNode(NettyConfig.NETTY_CLUSTER_ID, userId, message, List.of(connection));
+                }
+            });
+        }
+        return scheduled;
+    }
+
+    private void sendToNode(String node, Long userId, Message message, List<String> connections) {
+        rabbitTemplate.convertAndSend(EXCHANGE, QUEUE_NETTY_ROUTING_KEY + node,
+                new ClusterMessageWrapper<>(message, userId, connections));
     }
 
     public void recordOfflineMessageMarker(Long userId, Message message) {

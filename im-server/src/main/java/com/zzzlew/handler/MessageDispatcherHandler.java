@@ -62,7 +62,7 @@ public class MessageDispatcherHandler extends ChannelInboundHandlerAdapter {
                 MessageResult result = handler.handle(ctx, message);
                 // 使用RabbitMQ发送消息到集群，而不是Redisson
                 if (result != null) {
-                    mqMessagePublish.sendToCluster(result);
+                    mqMessagePublish.sendToCluster(result, ctx.channel());
                 }
             } else {
                 log.warn("未找到对应的 Handler 处理消息类型: {}", message.getMessageType());

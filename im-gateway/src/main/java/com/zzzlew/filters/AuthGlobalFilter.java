@@ -1,10 +1,8 @@
 package com.zzzlew.filters;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.zzzlew.constant.RedisConstant;
-import com.zzzlew.domain.dto.UserBaseDTO;
 import com.zzzlew.properties.AuthProperties;
 import com.zzzlew.properties.JwtProperties;
 import com.zzzlew.utils.JwtUtil;
@@ -59,6 +57,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
         // 获取 Token
         String token = request.getHeaders().getFirst(jwtproperties.getTokenName());
+        if (token != null && token.startsWith("Bearer ")) token = token.substring(7);
         log.info("网关拦截路径：{}", path);
 
         // 判断是否是"长期Token"业务路径
@@ -101,13 +100,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
                         return response.setComplete();
                     }
 
-                    // 刷新长期 token 在 redis 中的过期时间
-                    return reactiveRedisTemplate.expire(refreshTokenKey,
-                                    Duration.ofMinutes(LOGIN_USERINFO_REFRESHTOKEN_KEY_TTL))
-                            .flatMap(success -> {
-                                // 透传用户信息并放行
-                                return passThrough(exchange, chain, userMap);
-                            });
+                    return renewAndPass(exchange, chain, userMap, refreshTokenKey, LOGIN_USERINFO_REFRESHTOKEN_KEY_TTL);
                 })
                 .onErrorResume(e -> {
                     log.error("Redis操作异常: {}", e.getMessage());
@@ -146,26 +139,29 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
                         return response.setComplete();
                     }
 
-                    // 刷新短期 token 在 redis 中的过期时间
-                    UserBaseDTO userBaseDTO = BeanUtil.copyProperties(userMap, UserBaseDTO.class);
-                    String userTokenSetKey = RedisConstant.LOGIN_USER_TOKEN_LIST_KEY + userBaseDTO.getId();
-
-                    return reactiveRedisTemplate.expire(accessTokenKey,
-                                    Duration.ofMinutes(LOGIN_USERINFO_ACCESSTOKEN_KEY_TTL))
-                            .flatMap(success1 ->
-                                    reactiveRedisTemplate.expire(userTokenSetKey,
-                                            Duration.ofMinutes(LOGIN_USER_TOKEN_LIST_KEY_TTL))
-                            )
-                            .flatMap(success2 -> {
-                                // 透传用户信息并放行
-                                return passThrough(exchange, chain, userMap);
-                            });
+                    return renewAndPass(exchange, chain, userMap, accessTokenKey, LOGIN_USERINFO_ACCESSTOKEN_KEY_TTL);
                 })
                 .onErrorResume(e -> {
                     log.error("Redis操作异常: {}", e.getMessage());
                     response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
                     return response.setComplete();
                 });
+    }
+
+    private Mono<Void> renewAndPass(ServerWebExchange exchange, GatewayFilterChain chain, Map<Object, Object> user,
+                                    String tokenKey, Long ttl) {
+        Long userId = Long.valueOf(user.get("id").toString());
+        Object deviceId = user.get(DEVICE_ID_CLAIM);
+        String sessionKey = deviceId == null ? LOGIN_USER_TOKEN_LIST_KEY + userId
+                : deviceSessionKey(userId, deviceId.toString());
+        return reactiveRedisTemplate.expire(tokenKey, Duration.ofMinutes(ttl)).flatMap(renewed -> {
+            if (!renewed) {
+                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                return exchange.getResponse().setComplete();
+            }
+            return reactiveRedisTemplate.expire(sessionKey, Duration.ofMinutes(LOGIN_USER_TOKEN_LIST_KEY_TTL))
+                    .then(Mono.defer(() -> passThrough(exchange, chain, user)));
+        });
     }
 
     /**

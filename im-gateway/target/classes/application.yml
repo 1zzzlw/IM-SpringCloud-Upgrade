@@ -83,6 +83,7 @@ auth:
 
   refreshPaths:
     - "/user/refreshToken/**"
+    - "/user/logout"
     - "/message/verifyUploadToken/**"
     - "/message/merge"
     - "/message/init/list/**"

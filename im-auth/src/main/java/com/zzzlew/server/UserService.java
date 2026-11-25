@@ -30,7 +30,7 @@ public interface UserService {
      * @param userLoginDTO 用户登录DTO
      * @return 用户信息VO
      */
-    UserInfoVO login(UserLoginDTO userLoginDTO, HttpServletResponse response);
+    UserInfoVO login(UserLoginDTO userLoginDTO, String deviceId, HttpServletResponse response);
 
     /**
      * 创建验证码
@@ -45,7 +45,7 @@ public interface UserService {
      * @param userRegisterDTO 用户注册DTO
      * @return 用户id
      */
-    UserAuth register(UserRegisterDTO userRegisterDTO, MultipartFile avatarFile, HttpServletResponse response);
+    UserAuth register(UserRegisterDTO userRegisterDTO, MultipartFile avatarFile, String deviceId, HttpServletResponse response);
 
     /**
      * 创建验证码
@@ -61,14 +61,16 @@ public interface UserService {
      * @param token  登录时生成的token
      * @param userId 用户id
      */
-    UserInfoVO pendingLogin(String token, Long userId, HttpServletResponse response);
+    UserInfoVO pendingLogin(String token, Long userId, String deviceId, HttpServletResponse response);
 
     /**
      * 刷新token
      *
      * @param userId 用户id
      */
-    void refreshToken(Long userId, HttpServletResponse response);
+    void refreshToken(String token, Long userId, String deviceId, HttpServletResponse response);
+
+    void logout(String token);
 
     /**
      * 根据用户id列表获取用户信息

@@ -4,9 +4,13 @@ import com.zzzlew.domain.ClusterMessageWrapper;
 import com.zzzlew.domain.Message;
 import com.zzzlew.utils.ChannelManageUtil;
 import io.netty.channel.Channel;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.StringRedisTemplate;
+
+import java.util.List;
 
 /**
  * @Auther: zzzlew
@@ -17,6 +21,9 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration
 public class MQMessageListener {
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
     /**
      * 监听本集群的消息队列
      */
@@ -27,20 +34,19 @@ public class MQMessageListener {
         Message message = wrapper.getMessage();
         Long targetUserId = wrapper.getTargetUserId();
 
-        sendToUser(targetUserId, message);
+        List<String> connections = wrapper.getTargetConnectionIds();
+        for (Channel channel : ChannelManageUtil.getChannels(targetUserId)) {
+            if (connections != null && !connections.contains(channel.id().asLongText())) continue;
+            if (!ChannelManageUtil.isCurrent(channel, stringRedisTemplate)) continue;
+            sendToChannel(targetUserId, channel, message);
+        }
     }
 
     /**
      * 发送消息给指定用户（不抛异常，避免 MQ 重试导致重复投递）
      * 发送失败时，消息已通过离线存储路径持久化，用户上线后可通过离线消息机制获取
      */
-    private void sendToUser(Long userId, Message message) {
-        Channel channel = ChannelManageUtil.getChannel(userId);
-        if (channel == null || !channel.isActive()) {
-            log.warn("用户 {} 的Channel不存在或未激活，消息将由离线机制投递", userId);
-            return;
-        }
-
+    private void sendToChannel(Long userId, Channel channel, Message message) {
         // 检查Channel是否可写
         boolean presence = message.getMessageType() == Message.LoginSuccessResponseVO ||
                 message.getMessageType() == Message.QuitLoginResponseVO;

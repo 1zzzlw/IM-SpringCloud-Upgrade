@@ -1,5 +1,6 @@
 package com.zzzlew;
 
+import com.alibaba.fastjson.JSON;
 import com.zzzlew.config.NettyConfig;
 import com.zzzlew.domain.ClusterMessageWrapper;
 import com.zzzlew.domain.Message;
@@ -17,6 +18,7 @@ import com.zzzlew.listener.MQMessageListener;
 import com.zzzlew.publish.MQMessagePublish;
 import com.zzzlew.result.MessageResult;
 import com.zzzlew.utils.ChannelManageUtil;
+import io.netty.channel.DefaultChannelId;
 import io.netty.channel.embedded.EmbeddedChannel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +31,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
@@ -48,9 +51,17 @@ class PresenceDeliveryTest {
 
     @AfterEach
     void clearChannels() {
-        ChannelManageUtil.Online_user.clear();
-        ChannelManageUtil.Online_channel.clear();
+        ChannelManageUtil.getChannels(user.getId()).forEach(ChannelManageUtil::removeChannel);
         NettyConfig.NETTY_CLUSTER_ID = previousClusterId;
+    }
+
+    private void addChannel(EmbeddedChannel channel) {
+        addChannel(channel, LEGACY_DEVICE_ID);
+    }
+
+    private void addChannel(EmbeddedChannel channel, String deviceId) {
+        ChannelManageUtil.authenticate(channel, new ChannelManageUtil.Session(user, deviceId, "", "access-" + deviceId));
+        ChannelManageUtil.register(channel);
     }
 
     @Test
@@ -58,10 +69,10 @@ class PresenceDeliveryTest {
         EmbeddedChannel old = new EmbeddedChannel();
         EmbeddedChannel current = new EmbeddedChannel();
         try {
-            ChannelManageUtil.addChannel(user, old);
-            ChannelManageUtil.addChannel(user, current);
+            addChannel(old);
+            addChannel(current);
             ChannelManageUtil.removeChannel(old);
-            assertSame(current, ChannelManageUtil.getChannel(user.getId()));
+            assertEquals(List.of(current), ChannelManageUtil.getChannels(user.getId()));
             assertNull(ChannelManageUtil.getUser(old));
         } finally {
             old.finishAndReleaseAll();
@@ -86,14 +97,16 @@ class PresenceDeliveryTest {
     void localPresenceMustQueueWhileWriteBufferIsBusy(int type) {
         EmbeddedChannel channel = new EmbeddedChannel();
         try {
-            ChannelManageUtil.addChannel(user, channel);
+            addChannel(channel);
             channel.unsafe().outboundBuffer().setUserDefinedWritability(1, false);
             assertFalse(channel.isWritable());
             StringRedisTemplate redis = mock(StringRedisTemplate.class);
             HashOperations<String, Object, Object> hashes = mock(HashOperations.class);
             when(redis.opsForHash()).thenReturn(hashes);
             when(hashes.multiGet(USER_CLUSTER_MAPPING_KEY, List.of("100")))
-                    .thenReturn(List.of(NettyConfig.NETTY_CLUSTER_ID));
+                    .thenReturn(List.of(JSON.toJSONString(Map.of(LEGACY_DEVICE_ID,
+                            List.of(NettyConfig.NETTY_CLUSTER_ID, channel.id().asLongText())))));
+            when(redis.hasKey("access-" + LEGACY_DEVICE_ID)).thenReturn(true);
             ExecutorService executor = mock(ExecutorService.class);
             doAnswer(invocation -> {
                 invocation.<Runnable>getArgument(0).run();
@@ -117,13 +130,46 @@ class PresenceDeliveryTest {
     void clusterPresenceMustQueueWhileWriteBufferIsBusy(int type) {
         EmbeddedChannel channel = new EmbeddedChannel();
         try {
-            ChannelManageUtil.addChannel(user, channel);
+            addChannel(channel);
             channel.unsafe().outboundBuffer().setUserDefinedWritability(1, false);
             Message online = presence(type);
-            new MQMessageListener().handleClusterMessage(new ClusterMessageWrapper<>(online, 100L));
+            StringRedisTemplate redis = mock(StringRedisTemplate.class);
+            when(redis.hasKey("access-" + LEGACY_DEVICE_ID)).thenReturn(true);
+            MQMessageListener listener = new MQMessageListener();
+            ReflectionTestUtils.setField(listener, "stringRedisTemplate", redis);
+            listener.handleClusterMessage(new ClusterMessageWrapper<>(online, 100L));
             assertSame(online, channel.readOutbound());
         } finally {
             channel.finishAndReleaseAll();
+        }
+    }
+
+    @Test
+    void nodeDeliversToAllListedDevicesAndSkipsRevokedSession() {
+        EmbeddedChannel desktop = new EmbeddedChannel(DefaultChannelId.newInstance());
+        EmbeddedChannel app = new EmbeddedChannel(DefaultChannelId.newInstance());
+        try {
+            addChannel(desktop, "desktop");
+            addChannel(app, "app");
+            StringRedisTemplate redis = mock(StringRedisTemplate.class);
+            when(redis.hasKey("access-desktop")).thenReturn(true);
+            when(redis.hasKey("access-app")).thenReturn(true);
+            MQMessageListener listener = new MQMessageListener();
+            ReflectionTestUtils.setField(listener, "stringRedisTemplate", redis);
+            Message online = presence(9);
+            var wrapper = new ClusterMessageWrapper<>(online, user.getId(),
+                    List.of(desktop.id().asLongText(), app.id().asLongText()));
+            listener.handleClusterMessage(wrapper);
+            assertSame(online, desktop.readOutbound());
+            assertSame(online, app.readOutbound());
+
+            when(redis.hasKey("access-app")).thenReturn(false);
+            listener.handleClusterMessage(wrapper);
+            assertSame(online, desktop.readOutbound());
+            assertNull(app.readOutbound());
+        } finally {
+            desktop.finishAndReleaseAll();
+            app.finishAndReleaseAll();
         }
     }
 
@@ -137,10 +183,10 @@ class PresenceDeliveryTest {
         EmbeddedChannel old = new EmbeddedChannel(handler);
         EmbeddedChannel current = new EmbeddedChannel();
         try {
-            ChannelManageUtil.addChannel(user, old);
-            ChannelManageUtil.addChannel(user, current);
+            addChannel(old);
+            addChannel(current);
             old.finishAndReleaseAll();
-            assertSame(current, ChannelManageUtil.getChannel(100L));
+            assertEquals(List.of(current), ChannelManageUtil.getChannels(100L));
             verifyNoInteractions(publish);
         } finally {
             old.finishAndReleaseAll();
@@ -176,7 +222,7 @@ class PresenceDeliveryTest {
         ReflectionTestUtils.setField(handler, "stringRedisTemplate", redis);
         EmbeddedChannel channel = new EmbeddedChannel(dispatcher);
         try {
-            ChannelManageUtil.addChannel(user, channel);
+            addChannel(channel);
             channel.writeInbound(new OnlineStatusListRequestDTO());
             OnlineStatusListResponseVO snapshot = channel.readOutbound();
             assertNotNull(snapshot);
@@ -199,7 +245,8 @@ class PresenceDeliveryTest {
         ReflectionTestUtils.setField(handler, "stringRedisTemplate", redis);
         EmbeddedChannel channel = new EmbeddedChannel(handler);
         try {
-            ChannelManageUtil.addChannel(user, channel);
+            addChannel(channel);
+            when(redis.hasKey("access-" + LEGACY_DEVICE_ID)).thenReturn(true);
             HeartRequestDTO heartbeat = new HeartRequestDTO();
             heartbeat.setSequenceId(37);
             channel.writeInbound(heartbeat);

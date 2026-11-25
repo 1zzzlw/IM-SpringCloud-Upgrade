@@ -10,6 +10,15 @@ public class RedisConstant {
 
     public static final String LOGIN_USER_TOKEN_LIST_KEY = "login:user:tokenList:";
     public static final Long LOGIN_USER_TOKEN_LIST_KEY_TTL = 36000L;
+    public static final String DEVICE_ID_HEADER = "X-Device-Id";
+    public static final String DEVICE_ID_CLAIM = "deviceId";
+    public static final String SESSION_ID_CLAIM = "sessionId";
+    public static final String LEGACY_DEVICE_ID = "legacy";
+    private static final String LOGIN_DEVICE_SESSION_KEY = "login:user:session:";
+
+    public static String deviceSessionKey(Long userId, String deviceId) {
+        return LOGIN_DEVICE_SESSION_KEY + userId + ":" + deviceId;
+    }
 
     public static final String LOGIN_CODE_KEY = "login:code:";
     public static final Long LOGIN_CODE_TTL = 2L;

@@ -26,6 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+import static com.zzzlew.constant.RedisConstant.DEVICE_ID_HEADER;
+
 /**
  * @Auther: zzzlew
  * @Date: 2025/11/6 - 11 - 06 - 23:07
@@ -62,9 +64,11 @@ public class UserController {
     @Operation(summary = "用户登录")
     @PostMapping("/login")
     @UrlLimit(keyType = LimitKeyType.IP)
-    public Result<UserInfoVO> login(@RequestBody UserLoginDTO userLoginDTO, HttpServletResponse response) {
+    public Result<UserInfoVO> login(@RequestBody UserLoginDTO userLoginDTO,
+                                    @RequestHeader(value = DEVICE_ID_HEADER, required = false) String deviceId,
+                                    HttpServletResponse response) {
         log.info("账号正在登录：{}", userLoginDTO.getAccount());
-        UserInfoVO userInfoVO = userService.login(userLoginDTO, response);
+        UserInfoVO userInfoVO = userService.login(userLoginDTO, deviceId, response);
         log.info("登录成功，当前登录用户信息：{}", userInfoVO);
         return Result.success(userInfoVO);
     }
@@ -91,9 +95,9 @@ public class UserController {
     @Operation(summary = "用户登录确认")
     @PostMapping("/pendingLogin")
     public Result<UserInfoVO> pendingLogin(@RequestHeader(value = "Authorization", defaultValue = "") String token,
+                                           @RequestHeader(value = DEVICE_ID_HEADER, required = false) String deviceId,
                                            @Valid @RequestBody SessionLoginDTO body, HttpServletResponse response) {
-        if (token.startsWith("Bearer ")) token = token.substring(7);
-        return Result.success(userService.pendingLogin(token, body.getUserId(), response));
+        return Result.success(userService.pendingLogin(rawToken(token), body.getUserId(), deviceId, response));
     }
 
     @ExceptionHandler(TokenExpiredException.class)
@@ -110,9 +114,11 @@ public class UserController {
      */
     @Operation(summary = "用户注册")
     @PostMapping("/register")
-    public Result<UserAuth> register(UserRegisterDTO userRegisterDTO, @RequestParam(value = "avatarFile") MultipartFile avatarFile, HttpServletResponse response) {
+    public Result<UserAuth> register(UserRegisterDTO userRegisterDTO, @RequestParam(value = "avatarFile") MultipartFile avatarFile,
+                                     @RequestHeader(value = DEVICE_ID_HEADER, required = false) String deviceId,
+                                     HttpServletResponse response) {
         log.info("注册用户信息为 {}，头像信息为 {}", userRegisterDTO, avatarFile);
-        UserAuth userAuth = userService.register(userRegisterDTO, avatarFile, response);
+        UserAuth userAuth = userService.register(userRegisterDTO, avatarFile, deviceId, response);
         return Result.success(userAuth);
     }
 
@@ -164,10 +170,22 @@ public class UserController {
      */
     @Operation(summary = "刷新token")
     @PostMapping("/refreshToken/{userId}")
-    public Result<String> refreshToken(@PathVariable("userId") Long userId, HttpServletResponse response) {
-        log.info("用户id为：{} 开始刷新AccessToken", userId);
-        userService.refreshToken(userId, response);
+    public Result<String> refreshToken(@PathVariable("userId") Long userId,
+                                       @RequestHeader(value = "Authorization", defaultValue = "") String token,
+                                       @RequestHeader(value = DEVICE_ID_HEADER, required = false) String deviceId,
+                                       HttpServletResponse response) {
+        userService.refreshToken(rawToken(token), userId, deviceId, response);
         return Result.success();
+    }
+
+    @PostMapping("/logout")
+    public Result<String> logout(@RequestHeader(value = "Authorization", defaultValue = "") String token) {
+        userService.logout(rawToken(token));
+        return Result.success();
+    }
+
+    private String rawToken(String token) {
+        return token.startsWith("Bearer ") ? token.substring(7) : token;
     }
 
 

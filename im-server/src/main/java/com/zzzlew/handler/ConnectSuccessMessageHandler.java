@@ -3,13 +3,13 @@ package com.zzzlew.handler;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.zzzlew.constant.RedisConstant;
 import com.zzzlew.domain.Message;
 import com.zzzlew.domain.dto.UserBaseDTO;
 import com.zzzlew.domain.response.LoginSuccessResponseVO;
 import com.zzzlew.publish.MQMessagePublish;
 import com.zzzlew.result.MessageResult;
 import com.zzzlew.utils.ChannelManageUtil;
+import com.zzzlew.utils.DevicePresence;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -19,12 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
 
 import java.util.List;
 import java.util.Set;
 
-import static com.zzzlew.config.NettyConfig.NETTY_CLUSTER_ID;
 import static com.zzzlew.constant.RedisConstant.*;
 
 
@@ -37,14 +35,6 @@ import static com.zzzlew.constant.RedisConstant.*;
 @Slf4j
 @ChannelHandler.Sharable
 public class ConnectSuccessMessageHandler extends ChannelInboundHandlerAdapter {
-
-    private static final DefaultRedisScript<Long> REGISTER_ONLINE = new DefaultRedisScript<>("""
-            redis.call('SADD', KEYS[1], ARGV[1])
-            redis.call('EXPIRE', KEYS[1], ARGV[4])
-            redis.call('HSET', KEYS[2], ARGV[1], ARGV[2])
-            redis.call('HSET', KEYS[3], ARGV[1], ARGV[3])
-            return 1
-            """, Long.class);
 
     private RedissonClient redissonClient;
     private StringRedisTemplate stringRedisTemplate;
@@ -75,17 +65,21 @@ public class ConnectSuccessMessageHandler extends ChannelInboundHandlerAdapter {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
         if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete) {
             log.info("ws协议正式搭建完成，通道成功开启，客户端 {} 握手完成！", ctx.channel().remoteAddress());
-            // 通知其他用户当前用户上线
-            UserBaseDTO userInfo = ChannelManageUtil.getUser(ctx.channel());
+            ChannelManageUtil.Session session = ChannelManageUtil.getSession(ctx.channel());
+            if (session == null) {
+                ctx.close();
+                return;
+            }
+            Long first = DevicePresence.register(stringRedisTemplate, session, ctx.channel());
+            if (first == null || first < 0) {
+                ctx.close();
+                return;
+            }
+            ChannelManageUtil.register(ctx.channel());
+            if (first == 0) return;
+
+            UserBaseDTO userInfo = session.user();
             Long userId = userInfo.getId();
-
-            // 先登记上线及路由，再通知好友，避免并发登录时遗漏新连接。
-            String onlineStatusKey = RedisConstant.USER_ONLINE_STATUS_KEY;
-            stringRedisTemplate.execute(REGISTER_ONLINE,
-                    List.of(onlineStatusKey, USER_CLUSTER_MAPPING_KEY, USER_CONNECTION_MAPPING_KEY),
-                    userId.toString(), NETTY_CLUSTER_ID, ctx.channel().id().asLongText(),
-                    RedisConstant.USER_ONLINE_STATUS_KEY_TTL.toString());
-
             if (hasOfflineMessages(userId)) {
                 log.info("用户 {} 有离线消息，开始推送", userId);
                 pushOfflineMessages(userId, ctx.channel());
