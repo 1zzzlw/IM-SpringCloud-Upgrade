@@ -3,6 +3,7 @@ package com.zzzlew.listener;
 import com.zzzlew.domain.ClusterMessageWrapper;
 import com.zzzlew.domain.Message;
 import com.zzzlew.utils.ChannelManageUtil;
+import com.zzzlew.utils.DevicePresence;
 import io.netty.channel.Channel;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,10 @@ public class MQMessageListener {
         List<String> connections = wrapper.getTargetConnectionIds();
         for (Channel channel : ChannelManageUtil.getChannels(targetUserId)) {
             if (connections != null && !connections.contains(channel.id().asLongText())) continue;
+            if (message.getMessageType() == Message.DevicePresenceResponseVO) {
+                DevicePresence.pushSnapshot(stringRedisTemplate, channel);
+                continue;
+            }
             if (!ChannelManageUtil.isCurrent(channel, stringRedisTemplate)) continue;
             sendToChannel(targetUserId, channel, message);
         }

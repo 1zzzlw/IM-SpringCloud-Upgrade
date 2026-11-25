@@ -45,6 +45,7 @@ import java.util.Map;
         @JsonSubTypes.Type(value = GroupApplyDealRequestDTO.class, name = "17"),
         @JsonSubTypes.Type(value = GroupApplyDealResponseVO.class, name = "18"),
         @JsonSubTypes.Type(value = OnlineStatusListRequestDTO.class, name = "19"),
+        @JsonSubTypes.Type(value = DevicePresenceResponseVO.class, name = "20"),
 })
 public abstract class Message implements Serializable {
     private static final Map<Integer, Class<? extends Message>> messageClasses = new HashMap<>();
@@ -85,6 +86,7 @@ public abstract class Message implements Serializable {
     public static final int GroupApplyDealRequestDTO = 17;
     public static final int GroupApplyDealResponseVO = 18;
     public static final int OnlineStatusListRequestDTO = 19;
+    public static final int DevicePresenceResponseVO = 20;
 
     /**
      * 根据消息类型字节，获得对应的消息 class
@@ -116,5 +118,6 @@ public abstract class Message implements Serializable {
         messageClasses.put(GroupApplyDealRequestDTO, GroupApplyDealRequestDTO.class);
         messageClasses.put(GroupApplyDealResponseVO, GroupApplyDealResponseVO.class);
         messageClasses.put(OnlineStatusListRequestDTO, OnlineStatusListRequestDTO.class);
+        messageClasses.put(DevicePresenceResponseVO, DevicePresenceResponseVO.class);
     }
 }

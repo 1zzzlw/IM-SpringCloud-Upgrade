@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zzzlew.domain.Message;
 import com.zzzlew.domain.dto.UserBaseDTO;
+import com.zzzlew.domain.response.DevicePresenceResponseVO;
 import com.zzzlew.domain.response.LoginSuccessResponseVO;
 import com.zzzlew.publish.MQMessagePublish;
 import com.zzzlew.result.MessageResult;
@@ -76,7 +77,11 @@ public class ConnectSuccessMessageHandler extends ChannelInboundHandlerAdapter {
                 return;
             }
             ChannelManageUtil.register(ctx.channel());
-            if (first == 0) return;
+            DevicePresence.pushSnapshot(stringRedisTemplate, ctx.channel());
+            if (first == 0) {
+                mqMessagePublish.sendToCluster(MessageResult.single(new DevicePresenceResponseVO(), session.user().getId()));
+                return;
+            }
 
             UserBaseDTO userInfo = session.user();
             Long userId = userInfo.getId();

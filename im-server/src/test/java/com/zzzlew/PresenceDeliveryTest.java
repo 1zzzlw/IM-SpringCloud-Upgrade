@@ -1,12 +1,15 @@
 package com.zzzlew;
 
 import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zzzlew.config.NettyConfig;
 import com.zzzlew.domain.ClusterMessageWrapper;
 import com.zzzlew.domain.Message;
 import com.zzzlew.domain.dto.UserBaseDTO;
 import com.zzzlew.domain.request.HeartRequestDTO;
 import com.zzzlew.domain.request.OnlineStatusListRequestDTO;
+import com.zzzlew.domain.response.DevicePresenceResponseVO;
 import com.zzzlew.domain.response.LoginSuccessResponseVO;
 import com.zzzlew.domain.response.OnlineStatusListResponseVO;
 import com.zzzlew.domain.response.QuitLoginResponseVO;
@@ -28,8 +31,10 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -206,6 +211,58 @@ class PresenceDeliveryTest {
 
     @Test
     @SuppressWarnings("unchecked")
+    void clusterDeviceUpdatesUseLiveRoutesAndDoNotNotifyOtherAccounts() throws Exception {
+        EmbeddedChannel desktop = new EmbeddedChannel(DefaultChannelId.newInstance());
+        try {
+            addChannel(desktop, "desktop_one");
+            StringRedisTemplate redis = mock(StringRedisTemplate.class);
+            HashOperations<String, Object, Object> hashes = mock(HashOperations.class);
+            ValueOperations<String, String> values = mock(ValueOperations.class);
+            when(redis.opsForHash()).thenReturn(hashes);
+            when(redis.opsForValue()).thenReturn(values);
+            when(redis.hasKey("access-desktop_one")).thenReturn(true);
+            when(hashes.get(USER_CLUSTER_MAPPING_KEY, "100")).thenReturn(JSON.toJSONString(Map.of(
+                    "desktop_one", List.of(NettyConfig.NETTY_CLUSTER_ID, desktop.id().asLongText()),
+                    "app_one", List.of("other-node", "first"),
+                    "app_two", List.of("other-node", "second"))));
+            when(values.multiGet(any())).thenAnswer(invocation ->
+                    invocation.<List<String>>getArgument(0).stream()
+                            .map(key -> key.endsWith(":first") ? null : "1")
+                            .toList());
+
+            MQMessageListener listener = new MQMessageListener();
+            ReflectionTestUtils.setField(listener, "stringRedisTemplate", redis);
+            listener.handleClusterMessage(new ClusterMessageWrapper<>(new DevicePresenceResponseVO(), 200L));
+            desktop.runPendingTasks();
+            assertNull(desktop.readOutbound());
+
+            ObjectMapper mapper = new ObjectMapper();
+            byte[] encoded = mapper.writeValueAsBytes(new ClusterMessageWrapper<>(new DevicePresenceResponseVO(), 100L));
+            var update = mapper.readValue(encoded, new TypeReference<ClusterMessageWrapper<Message>>() {});
+            listener.handleClusterMessage(update);
+            desktop.runPendingTasks();
+            DevicePresenceResponseVO snapshot = desktop.readOutbound();
+            assertTrue(snapshot.isDesktopOnline());
+            assertTrue(snapshot.isAppOnline());
+
+            doAnswer(invocation ->
+                    invocation.<List<String>>getArgument(0).stream()
+                            .map(key -> key.endsWith(desktop.id().asLongText()) ? "1" : null)
+                            .toList()).when(values).multiGet(any());
+            listener.handleClusterMessage(update);
+            listener.handleClusterMessage(update);
+            desktop.runPendingTasks();
+            snapshot = desktop.readOutbound();
+            assertTrue(snapshot.isDesktopOnline());
+            assertFalse(snapshot.isAppOnline());
+            assertNull(desktop.readOutbound());
+        } finally {
+            desktop.finishAndReleaseAll();
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
     void explicitPresenceRequestReturnsCurrentOnlineFriends() {
         StringRedisTemplate redis = mock(StringRedisTemplate.class);
         SetOperations<String, String> sets = mock(SetOperations.class);
@@ -239,8 +296,13 @@ class PresenceDeliveryTest {
     }
 
     @Test
-    void heartbeatOnlyAcknowledgesLivenessAndDoesNotQueryFriendList() {
+    @SuppressWarnings("unchecked")
+    void heartbeatRenewsDeviceLivenessWithoutQueryingFriendList() {
         StringRedisTemplate redis = mock(StringRedisTemplate.class);
+        HashOperations<String, Object, Object> hashes = mock(HashOperations.class);
+        ValueOperations<String, String> values = mock(ValueOperations.class);
+        when(redis.opsForHash()).thenReturn(hashes);
+        when(redis.opsForValue()).thenReturn(values);
         HeartBeatHandler handler = new HeartBeatHandler();
         ReflectionTestUtils.setField(handler, "stringRedisTemplate", redis);
         EmbeddedChannel channel = new EmbeddedChannel(handler);
@@ -253,7 +315,9 @@ class PresenceDeliveryTest {
             Message pong = channel.readOutbound();
             assertEquals(0, pong.getMessageType());
             assertEquals(37, pong.getSequenceId());
+            assertInstanceOf(DevicePresenceResponseVO.class, channel.readOutbound());
             assertNull(channel.readOutbound());
+            verify(values).set("im:device:presence:" + channel.id().asLongText(), "1", Duration.ofSeconds(90));
             verify(redis, never()).opsForSet();
         } finally {
             channel.finishAndReleaseAll();

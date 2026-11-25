@@ -146,7 +146,13 @@ public class MQMessagePublish {
                 message.getMessageType() == Message.QuitLoginResponseVO;
         for (Channel channel : ChannelManageUtil.getChannels(userId)) {
             String connection = channel.id().asLongText();
-            if (!connections.contains(connection) || !ChannelManageUtil.isCurrent(channel, stringRedisTemplate)) continue;
+            if (!connections.contains(connection)) continue;
+            if (message.getMessageType() == Message.DevicePresenceResponseVO) {
+                DevicePresence.pushSnapshot(stringRedisTemplate, channel);
+                scheduled = true;
+                continue;
+            }
+            if (!ChannelManageUtil.isCurrent(channel, stringRedisTemplate)) continue;
             if (!channel.isWritable() && !presence) continue;
             scheduled = true;
             channel.writeAndFlush(message).addListener(future -> {

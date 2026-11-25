@@ -4,6 +4,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.zzzlew.domain.Message;
 import com.zzzlew.domain.request.HeartRequestDTO;
 import com.zzzlew.utils.ChannelManageUtil;
+import com.zzzlew.utils.DevicePresence;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -48,6 +49,7 @@ public class HeartBeatHandler extends ChannelDuplexHandler {
             HeartRequestDTO pong = new HeartRequestDTO();
             pong.setSequenceId(message.getSequenceId());
             ctx.writeAndFlush(pong);
+            DevicePresence.onHeartbeat(stringRedisTemplate, ctx.channel());
             return;
         }
         ctx.fireChannelRead(msg);

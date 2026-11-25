@@ -2,6 +2,7 @@ package com.zzzlew.handler;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.zzzlew.domain.dto.UserBaseDTO;
+import com.zzzlew.domain.response.DevicePresenceResponseVO;
 import com.zzzlew.domain.response.QuitLoginResponseVO;
 import com.zzzlew.publish.MQMessagePublish;
 import com.zzzlew.result.MessageResult;
@@ -89,8 +90,15 @@ public class QuitLoginHandler extends ChannelInboundHandlerAdapter {
         // 推送离线消息给他的好友
         // 获得用户的基础信息
         ChannelManageUtil.Session session = ChannelManageUtil.getSession(ctx.channel());
-        if (!ChannelManageUtil.removeChannel(ctx.channel())
-                || !DevicePresence.wentOffline(stringRedisTemplate, session, ctx.channel())) {
+        if (!ChannelManageUtil.removeChannel(ctx.channel())) {
+            ctx.fireChannelInactive();
+            return;
+        }
+        DevicePresence.Disconnect result = DevicePresence.remove(stringRedisTemplate, session, ctx.channel());
+        if (result == DevicePresence.Disconnect.OTHER_DEVICES_REMAIN) {
+            mqMessagePublish.sendToCluster(MessageResult.single(new DevicePresenceResponseVO(), session.user().getId()));
+        }
+        if (result != DevicePresence.Disconnect.LAST_DEVICE) {
             ctx.fireChannelInactive();
             return;
         }
@@ -105,8 +113,7 @@ public class QuitLoginHandler extends ChannelInboundHandlerAdapter {
         quitLoginResponseVO.setUserId(userBaseDTO.getId());
 
         // 推送退出的消息给好友，即使更新在线状态
-        MessageResult result = MessageResult.multiple(quitLoginResponseVO, friendIds);
-        mqMessagePublish.sendToCluster(result);
+        mqMessagePublish.sendToCluster(MessageResult.multiple(quitLoginResponseVO, friendIds));
         // RTopic topic = redissonClient.getTopic(SYSTEM_MESSAGE_BROADCAST);
         // topic.publish(result);
 

@@ -4,35 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="登陆代码">
+    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="多端登录代码">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/src/main/resources/login_token_atomic_operation.lua" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/src/test/java/com/zzzlew/controller/SessionLoginControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/test/java/com/zzzlew/controller/SessionLoginControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-auth/src/test/java/com/zzzlew/server/impl/SessionLoginTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/test/java/com/zzzlew/server/impl/SessionLoginTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-model/src/main/java/com/zzzlew/domain/ClusterMessageWrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-model/src/main/java/com/zzzlew/domain/ClusterMessageWrapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-common/common-redis/src/main/java/com/zzzlew/constant/RedisConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-redis/src/main/java/com/zzzlew/constant/RedisConstant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-gateway/src/main/java/com/zzzlew/filters/AuthGlobalFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/src/main/java/com/zzzlew/filters/AuthGlobalFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-gateway/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/domain/Message.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/ConnectSuccessMessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/ConnectSuccessMessageHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/HeartBeatHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/HeartBeatHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/HttpHeadersHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/HttpHeadersHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/MessageDispatcherHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/MessageDispatcherHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/QuitLoginHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/QuitLoginHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/listener/BroadCastListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/listener/BroadCastListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/listener/MQMessageListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/listener/MQMessageListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/publish/MQMessagePublish.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/publish/MQMessagePublish.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/utils/ChannelManageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/utils/ChannelManageUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-server/src/main/resources/store_offline_message.lua" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/utils/DevicePresence.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/utils/DevicePresence.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/websocket/NettyWebSocketServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/websocket/NettyWebSocketServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/resources/lua/register_device_presence.lua" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/resources/lua/register_device_presence.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/resources/lua/remove_device_presence.lua" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/resources/lua/remove_device_presence.lua" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/im-server/src/test/java/com/zzzlew/PresenceDeliveryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/test/java/com/zzzlew/PresenceDeliveryTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/朱林威-AI-Agent后端开发-简历.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/朱林威-Java后端开发-Agent与AI-简历.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/朱林威-Java后端开发-简历.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/朱林威-Java开发工程师-简历.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/朱林威-Java开发工程师-简历.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/朱林威-全栈开发-简历.html" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -520,15 +504,7 @@
       <workItem from="1795054130206" duration="2007000" />
       <workItem from="1795142037545" duration="736000" />
       <workItem from="1795400373995" duration="1204000" />
-      <workItem from="1795564403692" duration="5377000" />
-    </task>
-    <task id="LOCAL-00011" summary="我写了写撤回的逻辑，这个算是系统消息吧，系统消息的设计把我难住了，我很想设计一个不麻烦的，但是好像没什么很好的办法。我想暂时搁置一下了，我准备优化项目了，边复习springboot的基础边优化项目。我感觉我的项目还不是很规范">
-      <option name="closed" value="true" />
-      <created>1773219035921</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1773219035921</updated>
+      <workItem from="1795564403692" duration="6787000" />
     </task>
     <task id="LOCAL-00012" summary="系统消息的设计还是没有思路，想先放一放了，修改了一个bug，关于文件发送的bug，这个主要是前端的修改，后端就修改了一下ws的返回包装类，少了数据。然后是退出的ws消息推送。全局异常处理类">
       <option name="closed" value="true" />
@@ -914,7 +890,15 @@
       <option name="project" value="LOCAL" />
       <updated>1794820140883</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="多端登录代码">
+      <option name="closed" value="true" />
+      <created>1795573387050</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1795573387050</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -932,7 +916,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="这次提交，我想说一下我的规划。经过一段时间的八股复习，我发现自己的基础特别的不好，写项目和基础完全就是两回事，因此我感觉我的项目的基层越来越不稳定。部署到服务器上之后的bug频繁出现，并且高并发效果不好。本来打算4月13号就投简历的，但是发现自己不能这么着急，还需要打磨。主要原因我认为是这个项目写的时间太长了，花费了4个多月的时间，而且，大量的时间花在了写前端代码上，但是我的前端代码的基础也不好。我认为是我的学习方法出现了一点问题。接下来的时间安排我打算是6月份等到期末考试结束，我在投暑假的日常实习。然后说一下后面的复习方法，也就是说又争取到了两个月的时间，我准备慢慢的来了，先从redis开始，项目二和项目一都有对redis的应用，但是我的理解还是不够深，打算八股和项目结合学习。然后是RabbitMQ，这个也要深度学习。接下来就是MySQL，项目一是自己独立写的，数据库设计也是自己设计的，相关的优化需要做一下，这个也可以根据项目来学习。然后是JVM，JavaSE，JUC，JavaList这些java基础，只能是熟能生巧了，我也想不到什么好办法去理解，有的感觉就是需要背。只能慢慢来了。算法的话，我现在应该是刷出技巧来了，不会刷的心态崩溃了。" />
     <MESSAGE value="完成了一些优化吧，完成了消息并发的测试，收获就是对Jmeter的使用更了解了。以及netty在linux下的配置" />
     <MESSAGE value="集群信息使用Hash结构存储，节约内存。一些小功能的优化，分片文件失败的重传，ip限流异常信息" />
     <MESSAGE value="AI扩展，扩展了智谱大模型，因为这个免费" />
@@ -957,7 +940,8 @@
     <MESSAGE value="清理加完善用户资料修改功能" />
     <MESSAGE value="保存项目" />
     <MESSAGE value="登陆代码" />
-    <option name="LAST_COMMIT_MESSAGE" value="登陆代码" />
+    <MESSAGE value="多端登录代码" />
+    <option name="LAST_COMMIT_MESSAGE" value="多端登录代码" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

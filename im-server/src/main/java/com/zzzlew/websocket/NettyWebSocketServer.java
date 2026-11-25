@@ -35,6 +35,7 @@ import static com.zzzlew.config.NettyConfig.NETTY_CLUSTER_ID;
 import static com.zzzlew.config.NettyConfig.NETTY_PORT;
 import static com.zzzlew.constant.RabbitMQConstant.QUEUE_NETTY_PREFIX;
 import static com.zzzlew.constant.RabbitMQConstant.QUEUE_NETTY_ROUTING_KEY;
+import static com.zzzlew.utils.DevicePresence.CONNECTION_IDLE_SECONDS;
 
 /**
  * @Auther: zzzlew
@@ -121,7 +122,7 @@ public class NettyWebSocketServer {
                 pipeline.addLast(new MessageCodecSharable());
                 // 先统计解码后的入站消息，再交给会消费消息的处理器，避免心跳被提前拦截。
                 // 连续 90 秒没有读到完整的应用层消息时触发 READER_IDLE。
-                pipeline.addLast(new IdleStateHandler(90, 0, 0, TimeUnit.SECONDS));
+                pipeline.addLast(new IdleStateHandler(CONNECTION_IDLE_SECONDS, 0, 0, TimeUnit.SECONDS));
                 pipeline.addLast(new HeartBeatHandler());
                 // 消息分发处理器，用于分发消息到不同的处理器
                 pipeline.addLast(new MessageDispatcherHandler());
