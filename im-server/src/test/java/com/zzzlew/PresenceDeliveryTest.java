@@ -65,7 +65,8 @@ class PresenceDeliveryTest {
     }
 
     private void addChannel(EmbeddedChannel channel, String deviceId) {
-        ChannelManageUtil.authenticate(channel, new ChannelManageUtil.Session(user, deviceId, "", "access-" + deviceId));
+        ChannelManageUtil.authenticate(channel, user, LEGACY_DEVICE_ID.equals(deviceId) ? null : deviceId,
+                "access-" + deviceId);
         ChannelManageUtil.register(channel);
     }
 
@@ -111,7 +112,7 @@ class PresenceDeliveryTest {
             when(hashes.multiGet(USER_CLUSTER_MAPPING_KEY, List.of("100")))
                     .thenReturn(List.of(JSON.toJSONString(Map.of(LEGACY_DEVICE_ID,
                             List.of(NettyConfig.NETTY_CLUSTER_ID, channel.id().asLongText())))));
-            when(redis.hasKey("access-" + LEGACY_DEVICE_ID)).thenReturn(true);
+            when(redis.hasKey(LOGIN_USERINFO_ACCESSTOKEN_KEY + "access-" + LEGACY_DEVICE_ID)).thenReturn(true);
             ExecutorService executor = mock(ExecutorService.class);
             doAnswer(invocation -> {
                 invocation.<Runnable>getArgument(0).run();
@@ -139,7 +140,7 @@ class PresenceDeliveryTest {
             channel.unsafe().outboundBuffer().setUserDefinedWritability(1, false);
             Message online = presence(type);
             StringRedisTemplate redis = mock(StringRedisTemplate.class);
-            when(redis.hasKey("access-" + LEGACY_DEVICE_ID)).thenReturn(true);
+            when(redis.hasKey(LOGIN_USERINFO_ACCESSTOKEN_KEY + "access-" + LEGACY_DEVICE_ID)).thenReturn(true);
             MQMessageListener listener = new MQMessageListener();
             ReflectionTestUtils.setField(listener, "stringRedisTemplate", redis);
             listener.handleClusterMessage(new ClusterMessageWrapper<>(online, 100L));
@@ -150,15 +151,20 @@ class PresenceDeliveryTest {
     }
 
     @Test
-    void nodeDeliversToAllListedDevicesAndSkipsRevokedSession() {
+    @SuppressWarnings("unchecked")
+    void nodeDeliversToAllListedDevicesAndSkipsRevokedConnection() {
         EmbeddedChannel desktop = new EmbeddedChannel(DefaultChannelId.newInstance());
         EmbeddedChannel app = new EmbeddedChannel(DefaultChannelId.newInstance());
         try {
             addChannel(desktop, "desktop");
             addChannel(app, "app");
             StringRedisTemplate redis = mock(StringRedisTemplate.class);
-            when(redis.hasKey("access-desktop")).thenReturn(true);
-            when(redis.hasKey("access-app")).thenReturn(true);
+            HashOperations<String, Object, Object> hashes = mock(HashOperations.class);
+            when(redis.opsForHash()).thenReturn(hashes);
+            when(hashes.get(deviceTokenKey(user.getId(), "desktop"), "connectionId"))
+                    .thenReturn(desktop.id().asLongText());
+            when(hashes.get(deviceTokenKey(user.getId(), "app"), "connectionId"))
+                    .thenReturn(app.id().asLongText());
             MQMessageListener listener = new MQMessageListener();
             ReflectionTestUtils.setField(listener, "stringRedisTemplate", redis);
             Message online = presence(9);
@@ -168,13 +174,42 @@ class PresenceDeliveryTest {
             assertSame(online, desktop.readOutbound());
             assertSame(online, app.readOutbound());
 
-            when(redis.hasKey("access-app")).thenReturn(false);
+            when(hashes.get(deviceTokenKey(user.getId(), "app"), "connectionId")).thenReturn(null);
             listener.handleClusterMessage(wrapper);
             assertSame(online, desktop.readOutbound());
             assertNull(app.readOutbound());
         } finally {
             desktop.finishAndReleaseAll();
             app.finishAndReleaseAll();
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void onlyTheCurrentConnectionOfADeviceCanSendMessages() {
+        EmbeddedChannel old = new EmbeddedChannel(DefaultChannelId.newInstance());
+        EmbeddedChannel current = new EmbeddedChannel(DefaultChannelId.newInstance());
+        try {
+            addChannel(old, "desktop_one");
+            addChannel(current, "desktop_one");
+            StringRedisTemplate redis = mock(StringRedisTemplate.class);
+            HashOperations<String, Object, Object> hashes = mock(HashOperations.class);
+            when(redis.opsForHash()).thenReturn(hashes);
+            String deviceKey = deviceTokenKey(user.getId(), "desktop_one");
+            when(hashes.get(deviceKey, "connectionId")).thenReturn(old.id().asLongText());
+            assertTrue(ChannelManageUtil.isCurrent(old, redis));
+
+            // 新登录清除了登记，旧连接不能在新握手前继续发送。
+            when(hashes.get(deviceKey, "connectionId")).thenReturn(null);
+            assertFalse(ChannelManageUtil.isCurrent(old, redis));
+
+            when(hashes.get(deviceKey, "connectionId")).thenReturn(current.id().asLongText());
+            assertFalse(ChannelManageUtil.isCurrent(old, redis));
+            assertTrue(ChannelManageUtil.isCurrent(current, redis));
+            verify(redis, never()).hasKey(anyString());
+        } finally {
+            old.finishAndReleaseAll();
+            current.finishAndReleaseAll();
         }
     }
 
@@ -220,7 +255,8 @@ class PresenceDeliveryTest {
             ValueOperations<String, String> values = mock(ValueOperations.class);
             when(redis.opsForHash()).thenReturn(hashes);
             when(redis.opsForValue()).thenReturn(values);
-            when(redis.hasKey("access-desktop_one")).thenReturn(true);
+            when(hashes.get(deviceTokenKey(user.getId(), "desktop_one"), "connectionId"))
+                    .thenReturn(desktop.id().asLongText());
             when(hashes.get(USER_CLUSTER_MAPPING_KEY, "100")).thenReturn(JSON.toJSONString(Map.of(
                     "desktop_one", List.of(NettyConfig.NETTY_CLUSTER_ID, desktop.id().asLongText()),
                     "app_one", List.of("other-node", "first"),
@@ -308,7 +344,7 @@ class PresenceDeliveryTest {
         EmbeddedChannel channel = new EmbeddedChannel(handler);
         try {
             addChannel(channel);
-            when(redis.hasKey("access-" + LEGACY_DEVICE_ID)).thenReturn(true);
+            when(redis.hasKey(LOGIN_USERINFO_ACCESSTOKEN_KEY + "access-" + LEGACY_DEVICE_ID)).thenReturn(true);
             HeartRequestDTO heartbeat = new HeartRequestDTO();
             heartbeat.setSequenceId(37);
             channel.writeInbound(heartbeat);

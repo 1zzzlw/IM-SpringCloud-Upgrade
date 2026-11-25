@@ -152,14 +152,14 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
                                     String tokenKey, Long ttl) {
         Long userId = Long.valueOf(user.get("id").toString());
         Object deviceId = user.get(DEVICE_ID_CLAIM);
-        String sessionKey = deviceId == null ? LOGIN_USER_TOKEN_LIST_KEY + userId
-                : deviceSessionKey(userId, deviceId.toString());
+        String tokenIndexKey = deviceId == null ? LOGIN_USER_TOKEN_LIST_KEY + userId
+                : deviceTokenKey(userId, deviceId.toString());
         return reactiveRedisTemplate.expire(tokenKey, Duration.ofMinutes(ttl)).flatMap(renewed -> {
             if (!renewed) {
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 return exchange.getResponse().setComplete();
             }
-            return reactiveRedisTemplate.expire(sessionKey, Duration.ofMinutes(LOGIN_USER_TOKEN_LIST_KEY_TTL))
+            return reactiveRedisTemplate.expire(tokenIndexKey, Duration.ofMinutes(LOGIN_USER_TOKEN_LIST_KEY_TTL))
                     .then(Mono.defer(() -> passThrough(exchange, chain, user)));
         });
     }

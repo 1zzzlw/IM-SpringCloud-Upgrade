@@ -44,16 +44,13 @@ public class HttpHeadersHandler extends ChannelInboundHandlerAdapter {
                 }
                 UserBaseDTO user = BeanUtil.copyProperties(claims, UserBaseDTO.class);
                 String deviceId = claims.get(DEVICE_ID_CLAIM, String.class);
-                String sessionId = claims.get(SESSION_ID_CLAIM, String.class);
                 String accessKey = LOGIN_USERINFO_ACCESSTOKEN_KEY + token;
                 if (!Boolean.TRUE.equals(SpringUtil.getBean(StringRedisTemplate.class).hasKey(accessKey))) {
                     request.release();
                     ctx.close();
                     return;
                 }
-                ChannelManageUtil.authenticate(ctx.channel(), new ChannelManageUtil.Session(user,
-                        deviceId == null ? LEGACY_DEVICE_ID : deviceId,
-                        sessionId == null ? "" : sessionId, accessKey));
+                ChannelManageUtil.authenticate(ctx.channel(), user, deviceId, token);
                 ctx.fireChannelRead(msg);
             } catch (Exception e) {
                 log.error("HttpRequest 处理异常", e);

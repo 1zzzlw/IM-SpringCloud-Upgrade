@@ -89,28 +89,29 @@ public class QuitLoginHandler extends ChannelInboundHandlerAdapter {
         log.info("与客户端 {} 断开连接，通道关闭！", ctx.channel().remoteAddress());
         // 推送离线消息给他的好友
         // 获得用户的基础信息
-        ChannelManageUtil.Session session = ChannelManageUtil.getSession(ctx.channel());
+        UserBaseDTO userBaseDTO = ChannelManageUtil.getUser(ctx.channel());
+        String deviceId = ChannelManageUtil.getDeviceId(ctx.channel());
         if (!ChannelManageUtil.removeChannel(ctx.channel())) {
             ctx.fireChannelInactive();
             return;
         }
-        DevicePresence.Disconnect result = DevicePresence.remove(stringRedisTemplate, session, ctx.channel());
+        Long userId = userBaseDTO.getId();
+        DevicePresence.Disconnect result = DevicePresence.remove(stringRedisTemplate, userId, deviceId, ctx.channel());
         if (result == DevicePresence.Disconnect.OTHER_DEVICES_REMAIN) {
-            mqMessagePublish.sendToCluster(MessageResult.single(new DevicePresenceResponseVO(), session.user().getId()));
+            mqMessagePublish.sendToCluster(MessageResult.single(new DevicePresenceResponseVO(), userId));
         }
         if (result != DevicePresence.Disconnect.LAST_DEVICE) {
             ctx.fireChannelInactive();
             return;
         }
-        UserBaseDTO userBaseDTO = session.user();
-        log.info("用户 {} 离线！", userBaseDTO.getId());
-        String key = USER_FRIEND_LIST_KEY + userBaseDTO.getId();
+        log.info("用户 {} 离线！", userId);
+        String key = USER_FRIEND_LIST_KEY + userId;
         // 1 从redis中获取当前用户的好友列表id
         List<Long> friendIds =
                 stringRedisTemplate.opsForSet().members(key).stream().map(s -> Long.valueOf(s)).toList();
 
         QuitLoginResponseVO quitLoginResponseVO = new QuitLoginResponseVO();
-        quitLoginResponseVO.setUserId(userBaseDTO.getId());
+        quitLoginResponseVO.setUserId(userId);
 
         // 推送退出的消息给好友，即使更新在线状态
         mqMessagePublish.sendToCluster(MessageResult.multiple(quitLoginResponseVO, friendIds));

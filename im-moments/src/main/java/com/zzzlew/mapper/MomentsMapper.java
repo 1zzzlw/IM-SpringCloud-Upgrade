@@ -5,6 +5,7 @@ import com.zzzlew.domain.dto.MomentCommentsPageQueryDTO;
 import com.zzzlew.domain.dto.MomentsDTO;
 import com.zzzlew.domain.vo.MomentsCommentsVO;
 import com.zzzlew.domain.vo.MomentsVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -102,6 +103,8 @@ public interface MomentsMapper {
      * @return 最热朋友圈列表
      */
     Page<MomentsVO> listByHot();
+
+    Page<MomentsVO> search(@Param("keyword") String keyword, @Param("hot") boolean hot);
 
     /**
      * 获取用户朋友圈

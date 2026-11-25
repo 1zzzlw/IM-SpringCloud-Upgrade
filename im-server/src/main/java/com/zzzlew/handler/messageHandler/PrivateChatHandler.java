@@ -51,6 +51,7 @@ public class PrivateChatHandler implements MessageHandler<PrivateChatRequestDTO>
             messageId = String.valueOf(IdUtil.getSnowflakeNextId());
         }
         privateChatResponseVO.setId(messageId);
+        privateChatResponseVO.setSendStatus(1);
         log.info("已向接收者{}的channel写入私聊消息:{}", receiverId, privateChatResponseVO);
         // 返回发送消息成功发送服务端的ACK消息
         ACKMessageResponseVO successACK = ACKMessagePackUtil.createSuccessACK(String.valueOf(privateChatRequestDTO.getId()), privateChatResponseVO.getId());

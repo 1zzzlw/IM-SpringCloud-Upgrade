@@ -9,37 +9,38 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.zzzlew.constant.RedisConstant.SESSION_ID_CLAIM;
-import static com.zzzlew.constant.RedisConstant.deviceSessionKey;
+import static com.zzzlew.constant.RedisConstant.LOGIN_USERINFO_ACCESSTOKEN_KEY;
+import static com.zzzlew.constant.RedisConstant.deviceTokenKey;
 
 public class ChannelManageUtil {
-    private static final AttributeKey<Session> SESSION = AttributeKey.valueOf("im.session");
+    private static final AttributeKey<UserBaseDTO> USER = AttributeKey.valueOf("im.user");
+    private static final AttributeKey<String> DEVICE_ID = AttributeKey.valueOf("im.deviceId");
+    private static final AttributeKey<String> ACCESS_TOKEN = AttributeKey.valueOf("im.accessToken");
     private static final AttributeKey<Boolean> REGISTERED = AttributeKey.valueOf("im.registered");
     private static final ConcurrentHashMap<Long, Set<Channel>> CHANNELS = new ConcurrentHashMap<>();
 
-    public record Session(UserBaseDTO user, String deviceId, String sessionId, String accessKey) {
-        public String redisKey() {
-            return deviceSessionKey(user.getId(), deviceId);
-        }
-    }
-
-    public static void authenticate(Channel channel, Session session) {
-        channel.attr(SESSION).set(session);
-    }
-
-    public static Session getSession(Channel channel) {
-        return channel.attr(SESSION).get();
+    public static void authenticate(Channel channel, UserBaseDTO user, String deviceId, String accessToken) {
+        channel.attr(DEVICE_ID).set(deviceId);
+        channel.attr(ACCESS_TOKEN).set(accessToken);
+        channel.attr(USER).set(user);
     }
 
     public static UserBaseDTO getUser(Channel channel) {
-        Session session = getSession(channel);
-        return session == null ? null : session.user();
+        return channel.attr(USER).get();
+    }
+
+    public static String getDeviceId(Channel channel) {
+        return channel.attr(DEVICE_ID).get();
+    }
+
+    static String getAccessToken(Channel channel) {
+        return channel.attr(ACCESS_TOKEN).get();
     }
 
     public static void register(Channel channel) {
-        Session session = getSession(channel);
+        UserBaseDTO user = getUser(channel);
         channel.attr(REGISTERED).set(true);
-        CHANNELS.compute(session.user().getId(), (userId, devices) -> {
+        CHANNELS.compute(user.getId(), (userId, devices) -> {
             if (devices == null) devices = ConcurrentHashMap.newKeySet();
             devices.add(channel);
             return devices;
@@ -52,9 +53,11 @@ public class ChannelManageUtil {
     }
 
     public static boolean removeChannel(Channel channel) {
-        Session session = channel.attr(SESSION).getAndSet(null);
-        if (session == null || !Boolean.TRUE.equals(channel.attr(REGISTERED).getAndSet(false))) return false;
-        CHANNELS.computeIfPresent(session.user().getId(), (userId, devices) -> {
+        UserBaseDTO user = channel.attr(USER).getAndSet(null);
+        channel.attr(DEVICE_ID).set(null);
+        channel.attr(ACCESS_TOKEN).set(null);
+        if (user == null || !Boolean.TRUE.equals(channel.attr(REGISTERED).getAndSet(false))) return false;
+        CHANNELS.computeIfPresent(user.getId(), (userId, devices) -> {
             devices.remove(channel);
             return devices.isEmpty() ? null : devices;
         });
@@ -62,11 +65,13 @@ public class ChannelManageUtil {
     }
 
     public static boolean isCurrent(Channel channel, StringRedisTemplate redis) {
-        Session session = getSession(channel);
-        if (session == null || !channel.isActive() || !Boolean.TRUE.equals(channel.attr(REGISTERED).get())) return false;
-        if (session.sessionId().isEmpty()) return Boolean.TRUE.equals(redis.hasKey(session.accessKey()));
-        List<Object> current = redis.opsForHash().multiGet(session.redisKey(), List.of(SESSION_ID_CLAIM, "connectionId"));
-        return current != null && current.size() == 2 && session.sessionId().equals(current.get(0))
-                && channel.id().asLongText().equals(current.get(1));
+        if (!channel.isActive() || !Boolean.TRUE.equals(channel.attr(REGISTERED).get())) return false;
+        String deviceId = getDeviceId(channel);
+        String accessToken = getAccessToken(channel);
+        UserBaseDTO user = getUser(channel);
+        if (user == null) return false;
+        if (deviceId == null) return Boolean.TRUE.equals(redis.hasKey(LOGIN_USERINFO_ACCESSTOKEN_KEY + accessToken));
+        Object current = redis.opsForHash().get(deviceTokenKey(user.getId(), deviceId), "connectionId");
+        return channel.id().asLongText().equals(current);
     }
 }

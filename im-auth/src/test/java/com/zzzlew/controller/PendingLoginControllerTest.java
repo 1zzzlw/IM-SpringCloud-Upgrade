@@ -14,7 +14,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-class SessionLoginControllerTest {
+class PendingLoginControllerTest {
     private UserService service;
     private MockMvc mvc;
 
@@ -34,7 +34,7 @@ class SessionLoginControllerTest {
     }
 
     @Test
-    void expiredSessionIsUnauthorizedAndDoesNotReturnCredentials() throws Exception {
+    void expiredTokenIsUnauthorizedAndDoesNotReturnCredentials() throws Exception {
         when(service.pendingLogin(anyString(), anyLong(), isNull(), any())).thenThrow(new TokenExpiredException("登录已失效"));
         mvc.perform(post("/user/pendingLogin").header("Authorization", "expired").contentType("application/json").content("{\"userId\":42}"))
             .andExpect(status().isUnauthorized()).andExpect(header().doesNotExist("Authorization")).andExpect(jsonPath("$.code").value(0));

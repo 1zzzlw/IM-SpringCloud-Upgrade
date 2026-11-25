@@ -66,12 +66,13 @@ public class ConnectSuccessMessageHandler extends ChannelInboundHandlerAdapter {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
         if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete) {
             log.info("ws协议正式搭建完成，通道成功开启，客户端 {} 握手完成！", ctx.channel().remoteAddress());
-            ChannelManageUtil.Session session = ChannelManageUtil.getSession(ctx.channel());
-            if (session == null) {
+            UserBaseDTO userInfo = ChannelManageUtil.getUser(ctx.channel());
+            if (userInfo == null) {
                 ctx.close();
                 return;
             }
-            Long first = DevicePresence.register(stringRedisTemplate, session, ctx.channel());
+            Long userId = userInfo.getId();
+            Long first = DevicePresence.register(stringRedisTemplate, userId, ctx.channel());
             if (first == null || first < 0) {
                 ctx.close();
                 return;
@@ -79,12 +80,10 @@ public class ConnectSuccessMessageHandler extends ChannelInboundHandlerAdapter {
             ChannelManageUtil.register(ctx.channel());
             DevicePresence.pushSnapshot(stringRedisTemplate, ctx.channel());
             if (first == 0) {
-                mqMessagePublish.sendToCluster(MessageResult.single(new DevicePresenceResponseVO(), session.user().getId()));
+                mqMessagePublish.sendToCluster(MessageResult.single(new DevicePresenceResponseVO(), userId));
                 return;
             }
 
-            UserBaseDTO userInfo = session.user();
-            Long userId = userInfo.getId();
             if (hasOfflineMessages(userId)) {
                 log.info("用户 {} 有离线消息，开始推送", userId);
                 pushOfflineMessages(userId, ctx.channel());

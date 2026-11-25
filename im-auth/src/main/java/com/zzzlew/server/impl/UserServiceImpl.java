@@ -174,7 +174,7 @@ public class UserServiceImpl implements UserService {
         // 构建用户信息对象
         UserInfoVO userInfoVO = UserInfoVO.builder().id(userInfo.getId()).username(userInfo.getUsername()).avatar(userInfo.getAvatar()).account(userInfo.getAccount()).phone(userInfo.getPhone()).gender(userInfo.getGender()).build();
 
-        return completeLogin(userInfoVO, newSession(deviceId), response);
+        return completeLogin(userInfoVO, normalizeDevice(deviceId), "", deviceId == null, response);
     }
 
     private void storeFriendListId(Long userId) {
@@ -238,7 +238,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserAuth register(UserRegisterDTO userRegisterDTO, MultipartFile avatarFile, String deviceId, HttpServletResponse response) {
-        DeviceSession session = newSession(deviceId);
+        String normalizedDeviceId = normalizeDevice(deviceId);
         // 随机生成一个不会重复的账号
         long timestamp = System.currentTimeMillis();
         String randomStr = RandomUtil.randomString(4);
@@ -278,7 +278,8 @@ public class UserServiceImpl implements UserService {
         userMapper.insertUserAuth(userAuth);
         log.info("主要用户信息：{}", userAuth);
         // 生成并存储用户登录信息在redis中
-        TokenResult tokenResult = generateAndStoreWithUpdateToken(userInfoVO, session);
+        TokenResult tokenResult = generateAndStoreWithUpdateToken(
+                userInfoVO, normalizedDeviceId, "", deviceId == null, true);
 
         response.setHeader("Authorization", "Bearer " + tokenResult.getAccessToken());
         response.setHeader("refreshtoken", tokenResult.getRefreshToken());
@@ -327,34 +328,33 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserInfoVO pendingLogin(String token, Long userId, String deviceId, HttpServletResponse response) {
-        if (userId == null) throw expiredSession();
+        if (userId == null) throw expiredToken();
         Claims claims = refreshClaims(token, userId);
         String boundDevice = claims.get(DEVICE_ID_CLAIM, String.class);
         String requestedDevice = normalizeDevice(deviceId);
         if (boundDevice != null && deviceId != null && !boundDevice.equals(requestedDevice)) {
-            throw expiredSession();
+            throw expiredToken();
         }
-        DeviceSession session = new DeviceSession(
-                boundDevice == null ? requestedDevice : boundDevice, UUID.randomUUID().toString(),
-                token, boundDevice == null);
+        String loginDevice = boundDevice == null ? requestedDevice : boundDevice;
         UserAuth userAuth = userMapper.selectUserInfoById(userId);
         if (userAuth == null) throw new TokenExpiredException(MessageConstant.TOKEN_EXPIRED);
 
         // 构建用户信息对象
         UserInfoVO userInfoVO = UserInfoVO.builder().id(userAuth.getUserId()).username(userAuth.getUsername()).avatar(userAuth.getAvatar()).account(userAuth.getAccount()).phone(userAuth.getPhone()).gender(userAuth.getGender()).build();
 
-        return completeLogin(userInfoVO, session, response);
+        return completeLogin(userInfoVO, loginDevice, token, boundDevice == null, response);
     }
 
-    private UserInfoVO completeLogin(UserInfoVO profile, DeviceSession session, HttpServletResponse response) {
+    private UserInfoVO completeLogin(UserInfoVO profile, String deviceId, String expectedRefresh,
+                                     boolean legacy, HttpServletResponse response) {
         UserHolder.save(BeanUtil.copyProperties(profile, UserBaseDTO.class));
         try {
             storeFriendListId(profile.getId());
         } finally {
             UserHolder.removeUser();
         }
-        // 外部依赖准备完成后再轮换凭据，失败时原会话仍可重试。
-        TokenResult tokens = generateAndStoreWithUpdateToken(profile, session);
+        // 外部依赖准备完成后再轮换凭据，失败时可用旧凭据重试。
+        TokenResult tokens = generateAndStoreWithUpdateToken(profile, deviceId, expectedRefresh, legacy, true);
         response.setHeader("Authorization", "Bearer " + tokens.getAccessToken());
         response.setHeader("refreshtoken", tokens.getRefreshToken());
         return profile;
@@ -396,13 +396,11 @@ public class UserServiceImpl implements UserService {
         // stringRedisTemplate.expire(userKey, LOGIN_USER_TOKEN_LIST_KEY_TTL, TimeUnit.MINUTES);
         Claims claims = refreshClaims(token, userId);
         UserBaseDTO user = UserHolder.getUser();
-        if (user == null || !userId.equals(user.getId())) throw expiredSession();
+        if (user == null || !userId.equals(user.getId())) throw expiredToken();
         UserInfoVO profile = BeanUtil.copyProperties(user, UserInfoVO.class);
-        String sessionId = claims.get(SESSION_ID_CLAIM, String.class);
         String boundDevice = claims.get(DEVICE_ID_CLAIM, String.class);
-        DeviceSession session = new DeviceSession(normalizeDevice(boundDevice == null ? deviceId : boundDevice),
-                sessionId == null ? UUID.randomUUID().toString() : sessionId, token, sessionId == null);
-        TokenResult tokens = generateAndStoreWithUpdateToken(profile, session);
+        String refreshDevice = normalizeDevice(boundDevice == null ? deviceId : boundDevice);
+        TokenResult tokens = generateAndStoreWithUpdateToken(profile, refreshDevice, token, boundDevice == null, false);
         response.setHeader("Authorization", "Bearer " + tokens.getAccessToken());
         response.setHeader("refreshtoken", tokens.getRefreshToken());
     }
@@ -412,8 +410,8 @@ public class UserServiceImpl implements UserService {
         Claims claims = refreshClaims(token, null);
         Long userId = Long.valueOf(claims.get(JwtClaimsConstant.USER_ID).toString());
         String deviceId = claims.get(DEVICE_ID_CLAIM, String.class);
-        updateDeviceSession(userId, new DeviceSession(normalizeDevice(deviceId), "", token, deviceId == null),
-                "", "", "");
+        updateDeviceTokens(userId, normalizeDevice(deviceId), token, deviceId == null,
+                "", "", "", false);
     }
 
     private Claims refreshClaims(String token, Long userId) {
@@ -421,31 +419,24 @@ public class UserServiceImpl implements UserService {
         try {
             claims = JwtUtil.parseJWT(jwtproperties.getFreshSecretKey(), token);
         } catch (Exception exception) {
-            throw expiredSession();
+            throw expiredToken();
         }
-        if (claims == null || claims.get(JwtClaimsConstant.USER_ID) == null) throw expiredSession();
+        if (claims == null || claims.get(JwtClaimsConstant.USER_ID) == null) throw expiredToken();
         String subject = claims.get(JwtClaimsConstant.USER_ID).toString();
-        if (userId != null && !subject.equals(userId.toString())) throw expiredSession();
+        if (userId != null && !subject.equals(userId.toString())) throw expiredToken();
         Map<Object, Object> cached = stringRedisTemplate.opsForHash().entries(LOGIN_USERINFO_REFRESHTOKEN_KEY + token);
-        if (!subject.equals(cached.get("id"))) throw expiredSession();
+        if (!subject.equals(cached.get("id"))) throw expiredToken();
         return claims;
     }
 
-    private TokenExpiredException expiredSession() {
+    private TokenExpiredException expiredToken() {
         return new TokenExpiredException(MessageConstant.TOKEN_EXPIRED);
     }
 
     private String normalizeDevice(String deviceId) {
         if (deviceId == null) return LEGACY_DEVICE_ID;
-        if (!deviceId.matches("[a-zA-Z0-9_-]{1,64}")) throw expiredSession();
+        if (!deviceId.matches("[a-zA-Z0-9_-]{1,64}")) throw expiredToken();
         return deviceId;
-    }
-
-    private DeviceSession newSession(String deviceId) {
-        return new DeviceSession(normalizeDevice(deviceId), UUID.randomUUID().toString(), "", deviceId == null);
-    }
-
-    private record DeviceSession(String deviceId, String sessionId, String expectedRefresh, boolean legacy) {
     }
 
     @Override
@@ -542,13 +533,13 @@ public class UserServiceImpl implements UserService {
     //     return tokenResult;
     // }
 
-    private TokenResult generateAndStoreWithUpdateToken(UserInfoVO userInfoVO, DeviceSession session) {
+    private TokenResult generateAndStoreWithUpdateToken(UserInfoVO userInfoVO, String deviceId, String expectedRefresh,
+                                                        boolean legacy, boolean replaceConnection) {
         Map<String, Object> claims = new HashMap<>();
         Long userId = userInfoVO.getId();
         claims.put(JwtClaimsConstant.USER_ID, userId);
         claims.put("jti", UUID.randomUUID().toString());
-        claims.put(DEVICE_ID_CLAIM, session.deviceId());
-        claims.put(SESSION_ID_CLAIM, session.sessionId());
+        claims.put(DEVICE_ID_CLAIM, deviceId);
         claims.put(JwtClaimsConstant.USERNAME, userInfoVO.getUsername());
         claims.put(JwtClaimsConstant.ACCOUNT, userInfoVO.getAccount());
         claims.put(JwtClaimsConstant.AVATAR, userInfoVO.getAvatar());
@@ -559,7 +550,8 @@ public class UserServiceImpl implements UserService {
         // 生成短期token
         String accessToken = JwtUtil.createJWT(jwtproperties.getAccessSecretKey(), jwtproperties.getAccessExpiration(), claims);
 
-        updateDeviceSession(userId, session, accessToken, refreshToken, JSON.toJSONString(userInfoVO));
+        updateDeviceTokens(userId, deviceId, expectedRefresh, legacy, accessToken, refreshToken,
+                JSON.toJSONString(userInfoVO), replaceConnection);
 
         TokenResult tokenResult = new TokenResult();
         tokenResult.setAccessToken(accessToken);
@@ -567,15 +559,16 @@ public class UserServiceImpl implements UserService {
         return tokenResult;
     }
 
-    private void updateDeviceSession(Long userId, DeviceSession session, String access, String refresh, String profile) {
-        List<String> keys = List.of(deviceSessionKey(userId, session.deviceId()),
+    private void updateDeviceTokens(Long userId, String deviceId, String expectedRefresh, boolean legacy,
+                                    String access, String refresh, String profile, boolean replaceConnection) {
+        List<String> keys = List.of(deviceTokenKey(userId, deviceId),
                 LOGIN_USERINFO_ACCESSTOKEN_KEY + access, LOGIN_USERINFO_REFRESHTOKEN_KEY + refresh,
-                LOGIN_USER_TOKEN_LIST_KEY + userId, LOGIN_USERINFO_REFRESHTOKEN_KEY + session.expectedRefresh());
+                LOGIN_USER_TOKEN_LIST_KEY + userId, LOGIN_USERINFO_REFRESHTOKEN_KEY + expectedRefresh);
         Long result = stringRedisTemplate.execute(tokenAtomicScript, keys, access, refresh,
                 LOGIN_USER_TOKEN_LIST_KEY_TTL.toString(), LOGIN_USERINFO_ACCESSTOKEN_KEY_TTL.toString(),
-                LOGIN_USERINFO_REFRESHTOKEN_KEY_TTL.toString(), profile, session.deviceId(),
-                session.sessionId(), session.expectedRefresh(), session.legacy() ? "1" : "0");
-        if (Long.valueOf(0).equals(result)) throw expiredSession();
+                LOGIN_USERINFO_REFRESHTOKEN_KEY_TTL.toString(), profile, deviceId,
+                replaceConnection ? "1" : "0", expectedRefresh, legacy ? "1" : "0");
+        if (Long.valueOf(0).equals(result)) throw expiredToken();
         if (!Long.valueOf(1).equals(result)) throw new TokenGenerateException("Token生成与存储失败");
     }
 

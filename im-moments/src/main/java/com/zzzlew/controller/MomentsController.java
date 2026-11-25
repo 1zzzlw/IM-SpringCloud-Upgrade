@@ -228,15 +228,13 @@ public class MomentsController {
         return Result.success();
     }
 
-    @Operation(summary = "搜索帖子")
+    @Operation(summary = "按正文搜索帖子")
     @GetMapping("/search")
     public Result<PageResult<MomentsVO>> search(@RequestParam String keyword,
                                                 @RequestParam(defaultValue = "1") int page,
-                                                @RequestParam(defaultValue = "20") int pageSize) {
-        log.info("搜索帖子，keyword: {}, page: {}, pageSize: {}", keyword, page, pageSize);
-        // PageResult<MomentsVO> pageResult = momentsService.search(keyword, page, pageSize);
-        // return Result.success(pageResult);
-        return Result.success();
+                                                @RequestParam(defaultValue = "20") int pageSize,
+                                                @RequestParam(defaultValue = "false") boolean hot) {
+        return Result.success(momentsService.search(keyword, page, pageSize, hot));
     }
 
 }

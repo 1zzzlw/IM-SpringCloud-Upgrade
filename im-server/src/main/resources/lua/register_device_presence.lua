@@ -1,7 +1,7 @@
--- KEYS：在线用户集合、用户路由、Access Token 信息、设备会话、连接存活标记。
--- ARGV：用户 ID、设备 ID、节点 ID、连接 ID、在线 TTL（秒）、会话 ID、连接存活 TTL（秒）。
+-- KEYS：在线用户集合、用户路由、Access Token 信息、设备 Token 索引、连接存活标记。
+-- ARGV：用户 ID、设备 ID、节点 ID、连接 ID、在线 TTL（秒）、设备绑定的 Access Token、连接存活 TTL（秒）。
 if redis.call('EXISTS', KEYS[3]) == 0 then return -1 end
-if ARGV[6] ~= '' and redis.call('HGET', KEYS[4], 'sessionId') ~= ARGV[6] then
+if ARGV[6] ~= '' and redis.call('HGET', KEYS[4], 'access') ~= ARGV[6] then
     return -1
 end
 

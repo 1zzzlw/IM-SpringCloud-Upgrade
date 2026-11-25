@@ -41,22 +41,28 @@ public class DevicePresence {
         return script;
     }
 
-    public static Long register(StringRedisTemplate redis, ChannelManageUtil.Session session, Channel channel) {
+    public static Long register(StringRedisTemplate redis, Long userId, Channel channel) {
+        String deviceId = ChannelManageUtil.getDeviceId(channel);
+        String routeDeviceId = deviceId == null ? LEGACY_DEVICE_ID : deviceId;
+        String accessToken = ChannelManageUtil.getAccessToken(channel);
         String connectionId = channel.id().asLongText();
         return redis.execute(REGISTER,
-                List.of(USER_ONLINE_STATUS_KEY, USER_CLUSTER_MAPPING_KEY, session.accessKey(), session.redisKey(),
+                List.of(USER_ONLINE_STATUS_KEY, USER_CLUSTER_MAPPING_KEY, LOGIN_USERINFO_ACCESSTOKEN_KEY + accessToken,
+                        deviceTokenKey(userId, routeDeviceId),
                         CONNECTION_KEY_PREFIX + connectionId),
-                session.user().getId().toString(), session.deviceId(), NETTY_CLUSTER_ID, connectionId,
-                USER_ONLINE_STATUS_KEY_TTL.toString(), session.sessionId(), String.valueOf(CONNECTION_IDLE_SECONDS));
+                userId.toString(), routeDeviceId, NETTY_CLUSTER_ID, connectionId,
+                USER_ONLINE_STATUS_KEY_TTL.toString(), deviceId == null ? "" : accessToken,
+                String.valueOf(CONNECTION_IDLE_SECONDS));
     }
 
-    public static Disconnect remove(StringRedisTemplate redis, ChannelManageUtil.Session session, Channel channel) {
+    public static Disconnect remove(StringRedisTemplate redis, Long userId, String deviceId, Channel channel) {
+        String routeDeviceId = deviceId == null ? LEGACY_DEVICE_ID : deviceId;
         String connectionId = channel.id().asLongText();
         String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         Long removed = redis.execute(REMOVE,
                 List.of(USER_ONLINE_STATUS_KEY, USER_CLUSTER_MAPPING_KEY, USER_OFFLINE_INFO_KEY,
                         CONNECTION_KEY_PREFIX + connectionId),
-                session.user().getId().toString(), session.deviceId(), connectionId, time);
+                userId.toString(), routeDeviceId, connectionId, time);
         if (Long.valueOf(1).equals(removed)) return Disconnect.LAST_DEVICE;
         if (Long.valueOf(2).equals(removed)) return Disconnect.OTHER_DEVICES_REMAIN;
         return Disconnect.STALE;

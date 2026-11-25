@@ -783,6 +783,19 @@ public class MomentsServiceImpl implements MomentsService {
         return new PageResult<>(pageResult.getTotal(), pageResult.getResult());
     }
 
+    @Override
+    public PageResult<MomentsVO> search(String keyword, int page, int pageSize, boolean hot) {
+        String query = keyword.strip();
+        if (query.isEmpty()) return new PageResult<>(0L, List.of());
+
+        PageHelper.startPage(Math.max(1, page), Math.max(1, Math.min(50, pageSize)));
+        Page<MomentsVO> matches = momentsMapper.search(query, hot);
+        List<MomentsVO> posts = matches.getResult();
+        isMomentLiked(posts);
+        updateCount(posts);
+        return new PageResult<>(matches.getTotal(), posts);
+    }
+
     private void requireMomentOwner(Long momentId) {
         MomentsVO moment = momentId == null ? null : momentsMapper.getById(momentId);
         if (moment == null) throw new BaseException("帖子不存在");

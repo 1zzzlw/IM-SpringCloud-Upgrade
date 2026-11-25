@@ -51,6 +51,21 @@
         order by like_count DESC
     </select>
 
+    <select id="search" resultType="com.zzzlew.domain.vo.MomentsVO">
+        select *
+        from moments
+        where is_deleted = 0
+        <!-- 保留段落间隔，去掉富文本标签和属性，再还原编辑器常见的字符转义。 -->
+          and locate(#{keyword}, replace(replace(replace(replace(
+              regexp_replace(
+                  regexp_replace(content, '&lt;/(p|h[1-6]|li|blockquote|pre)&gt;|&lt;br */?&gt;', ' '),
+                  '&lt;(?:[^"''&gt;]|"[^"]*"|''[^'']*'')*&gt;', ''),
+              '&amp;nbsp;', ' '), '&amp;lt;', '&lt;'), '&amp;gt;', '&gt;'), '&amp;amp;', '&amp;')) > 0
+        order by
+        <if test="hot">like_count desc,</if>
+        id desc
+    </select>
+
     <update id="like">
         update moments
         set like_count = like_count + #{i}

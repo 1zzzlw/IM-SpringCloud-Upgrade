@@ -4,6 +4,7 @@ import com.zzzlew.client.ChatClient;
 import com.zzzlew.client.PayClient;
 import com.zzzlew.client.SocialClient;
 import com.zzzlew.constant.JwtClaimsConstant;
+import com.zzzlew.domain.dto.UserBaseDTO;
 import com.zzzlew.domain.entity.UserAuth;
 import com.zzzlew.domain.vo.UserInfoVO;
 import com.zzzlew.exception.TokenExpiredException;
@@ -11,8 +12,10 @@ import com.zzzlew.mapper.UserMapper;
 import com.zzzlew.properties.JwtProperties;
 import com.zzzlew.result.Result;
 import com.zzzlew.utils.JwtUtil;
+import com.zzzlew.utils.UserHolder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.RedisScript;
@@ -28,12 +31,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-class SessionLoginTest {
+class DeviceTokenLoginTest {
     private UserServiceImpl service;
     private UserMapper mapper;
+    private StringRedisTemplate redis;
     private HashOperations<String, Object, Object> hashes;
     private MockHttpServletResponse response;
-    private final String secret = "session-test-only-secret-123456789";
+    private final String secret = "device-token-test-only-secret-123456789";
 
     @BeforeEach
     void setup() {
@@ -41,7 +45,7 @@ class SessionLoginTest {
         when(social.initFriendList(true)).thenReturn(Result.success(Collections.emptyList()));
         service = new UserServiceImpl(social, mock(ChatClient.class), mock(PayClient.class));
         mapper = mock(UserMapper.class);
-        StringRedisTemplate redis = mock(StringRedisTemplate.class);
+        redis = mock(StringRedisTemplate.class);
         hashes = mock(HashOperations.class);
         when(redis.opsForHash()).thenReturn(hashes);
         JwtProperties properties = new JwtProperties();
@@ -75,7 +79,7 @@ class SessionLoginTest {
     }
 
     @Test
-    void rejectsRevokedSessionAndMismatchingCachedIdentity() {
+    void rejectsRevokedTokenAndMismatchingCachedIdentity() {
         String token = token(1L, 60000);
         when(hashes.entries(LOGIN_USERINFO_REFRESHTOKEN_KEY + token)).thenReturn(Collections.emptyMap());
         assertThrows(TokenExpiredException.class, () -> service.pendingLogin(token, 1L, null, response));
@@ -87,14 +91,14 @@ class SessionLoginTest {
     @Test
     void rejectsQuickLoginForAnotherDeviceBeforeReadingProfile() {
         String token = JwtUtil.createJWT(secret, 60000, new HashMap<>(Map.of(
-                JwtClaimsConstant.USER_ID, 1L, DEVICE_ID_CLAIM, "app_one", SESSION_ID_CLAIM, "session-one")));
+                JwtClaimsConstant.USER_ID, 1L, DEVICE_ID_CLAIM, "app_one")));
         when(hashes.entries(LOGIN_USERINFO_REFRESHTOKEN_KEY + token)).thenReturn(Map.of("id", "1"));
         assertThrows(TokenExpiredException.class, () -> service.pendingLogin(token, 1L, "desktop_one", response));
         verifyNoInteractions(mapper);
     }
 
     @Test
-    void validSessionReturnsFreshProfileAndRotatesBothTokens() {
+    void validTokenReturnsFreshProfileAndRotatesBothTokens() {
         String token = token(1L, 60000);
         when(hashes.entries(LOGIN_USERINFO_REFRESHTOKEN_KEY + token)).thenReturn(Map.of("id", "1"));
         UserAuth user = new UserAuth();
@@ -110,6 +114,33 @@ class SessionLoginTest {
         assertNotEquals(token, rotated);
         var claims = JwtUtil.parseJWT(secret, rotated);
         assertEquals(LEGACY_DEVICE_ID, claims.get(DEVICE_ID_CLAIM));
-        assertNotNull(claims.get(SESSION_ID_CLAIM));
+        assertNull(claims.get("sessionId"));
+        ArgumentCaptor<Object[]> arguments = ArgumentCaptor.forClass(Object[].class);
+        verify(redis).execute(any(RedisScript.class), anyList(), arguments.capture());
+        assertEquals("1", arguments.getValue()[7]);
+    }
+
+    @Test
+    void regularRefreshPreservesTheDeviceConnection() {
+        String token = JwtUtil.createJWT(secret, 60000, new HashMap<>(Map.of(
+                JwtClaimsConstant.USER_ID, 1L, DEVICE_ID_CLAIM, "desktop_one")));
+        when(hashes.entries(LOGIN_USERINFO_REFRESHTOKEN_KEY + token)).thenReturn(Map.of("id", "1"));
+        UserBaseDTO user = new UserBaseDTO();
+        user.setId(1L);
+        UserHolder.save(user);
+        try {
+            service.refreshToken(token, 1L, "desktop_one", response);
+        } finally {
+            UserHolder.removeUser();
+        }
+
+        var claims = JwtUtil.parseJWT(secret, response.getHeader("refreshtoken"));
+        assertEquals("desktop_one", claims.get(DEVICE_ID_CLAIM));
+        assertNull(claims.get("sessionId"));
+        ArgumentCaptor<Object[]> arguments = ArgumentCaptor.forClass(Object[].class);
+        verify(redis).execute(any(RedisScript.class), anyList(), arguments.capture());
+        assertEquals("0", arguments.getValue()[7]);
+        assertEquals(token, arguments.getValue()[8]);
+        assertEquals("0", arguments.getValue()[9]);
     }
 }

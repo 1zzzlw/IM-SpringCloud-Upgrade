@@ -5,7 +5,7 @@ import com.zzzlew.annotaion.UrlLimit;
 import com.zzzlew.domain.dto.UserLoginDTO;
 import com.zzzlew.domain.dto.UserRegisterDTO;
 import com.zzzlew.domain.dto.UserProfileUpdateDTO;
-import com.zzzlew.domain.dto.SessionLoginDTO;
+import com.zzzlew.domain.dto.PendingLoginDTO;
 import com.zzzlew.exception.TokenExpiredException;
 import com.zzzlew.domain.vo.UserProfileVO;
 import com.zzzlew.domain.entity.UserAuth;
@@ -96,13 +96,13 @@ public class UserController {
     @PostMapping("/pendingLogin")
     public Result<UserInfoVO> pendingLogin(@RequestHeader(value = "Authorization", defaultValue = "") String token,
                                            @RequestHeader(value = DEVICE_ID_HEADER, required = false) String deviceId,
-                                           @Valid @RequestBody SessionLoginDTO body, HttpServletResponse response) {
+                                           @Valid @RequestBody PendingLoginDTO body, HttpServletResponse response) {
         return Result.success(userService.pendingLogin(rawToken(token), body.getUserId(), deviceId, response));
     }
 
     @ExceptionHandler(TokenExpiredException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public Result<String> invalidSession(TokenExpiredException exception) {
+    public Result<String> invalidToken(TokenExpiredException exception) {
         return Result.error(exception.getMessage());
     }
 

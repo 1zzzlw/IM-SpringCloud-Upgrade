@@ -4,33 +4,34 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="多端设备在线状态显示功能">
-      <change afterPath="$PROJECT_DIR$/docs/images/主界面.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/images/发布动态界面.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/images/收藏界面.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/images/登录界面.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/images/聊天窗口.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/images/联系人界面.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/images/自动登录界面.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/images/设置界面.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/images/钱包界面.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/images/频道界面.png" afterDir="false" />
+    <list default="true" id="ecb6e31d-2154-456f-bf23-97c585e35494" name="Changes" comment="更新README">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/AI长任务SSE保活.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/login.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/register.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/主界面.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/媒体消息去除Base64.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/笔记界面.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/联系人界面.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/自动登录.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/设置界面.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/controller/FriendController.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/controller/FriendController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/mapper/FriendMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/mapper/FriendMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/server/FriendService.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/server/FriendService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/server/impl/FriendServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/src/main/java/com/zzzlew/server/impl/FriendServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/im-social/src/main/resources/mapper/FriendMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-social/src/main/resources/mapper/FriendMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/domain/dto/SessionLoginDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/java/com/zzzlew/server/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/src/main/resources/lua/login_token_atomic_operation.lua" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/src/main/resources/lua/login_token_atomic_operation.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/src/test/java/com/zzzlew/controller/SessionLoginControllerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/src/test/java/com/zzzlew/server/impl/SessionLoginTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/controller/UserController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/server/impl/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-auth/target/classes/com/zzzlew/server/impl/UserServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-redis/src/main/java/com/zzzlew/constant/RedisConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-redis/src/main/java/com/zzzlew/constant/RedisConstant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-common/common-redis/target/classes/com/zzzlew/constant/RedisConstant.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-common/common-redis/target/classes/com/zzzlew/constant/RedisConstant.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/src/main/java/com/zzzlew/filters/AuthGlobalFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/src/main/java/com/zzzlew/filters/AuthGlobalFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-gateway/target/classes/com/zzzlew/filters/AuthGlobalFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/im-gateway/target/classes/com/zzzlew/filters/AuthGlobalFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/controller/MomentsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/controller/MomentsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/mapper/MomentsMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/mapper/MomentsMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/MomentsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/MomentsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/impl/MomentsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/java/com/zzzlew/server/impl/MomentsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-moments/src/main/resources/mapper/MomentsMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/im-moments/src/main/resources/mapper/MomentsMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/ConnectSuccessMessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/ConnectSuccessMessageHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/HttpHeadersHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/HttpHeadersHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/QuitLoginHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/QuitLoginHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/messageHandler/GroupChatHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/messageHandler/GroupChatHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/messageHandler/PrivateChatHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/handler/messageHandler/PrivateChatHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/utils/ChannelManageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/utils/ChannelManageUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/utils/DevicePresence.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/java/com/zzzlew/utils/DevicePresence.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/main/resources/lua/register_device_presence.lua" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/main/resources/lua/register_device_presence.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/im-server/src/test/java/com/zzzlew/PresenceDeliveryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/im-server/src/test/java/com/zzzlew/PresenceDeliveryTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -293,9 +294,9 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.SocialApplication" />
         <item itemvalue="Spring Boot.ChatApplication" />
         <item itemvalue="Spring Boot.PayApplication" />
+        <item itemvalue="Spring Boot.SocialApplication" />
         <item itemvalue="Spring Boot.AuthApplication" />
         <item itemvalue="Spring Boot.ContentApplication" />
       </list>
@@ -518,15 +519,8 @@
       <workItem from="1795054130206" duration="2007000" />
       <workItem from="1795142037545" duration="736000" />
       <workItem from="1795400373995" duration="1204000" />
-      <workItem from="1795564403692" duration="8410000" />
-    </task>
-    <task id="LOCAL-00014" summary="完成了好友申请处理的ws通知的代码，本来今天是准备完成多窗口缓存共享的问题的，但是好久没有想过这个问题了，所以暂时模拟不出来需要共享的场景了，就转向ws通知代码的完善了。目前是只写了好友申请的通知，还剩下群聊申请的通知，大概明天写完，然后找到需要共享窗口的场景，在完成一些多窗口的缓存共享问题。这就是前端的内容了。自此，这个项目小问题估计大部分都解决了，只剩下小功能了，还有一些优化的点，后端还要引入MQ，还有redis的优化等问题，以及全局异常处理的补充，还有很多的代码细节没有完成，慢慢来吧，等会在补一下八股，java基础">
-      <option name="closed" value="true" />
-      <created>1773754358348</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1773754358348</updated>
+      <workItem from="1795564403692" duration="9204000" />
+      <workItem from="1795577755173" duration="8566000" />
     </task>
     <task id="LOCAL-00015" summary="完成了好友申请处理的ws通知的代码，本来今天是准备完成多窗口缓存共享的问题的，但是好久没有想过这个问题了，所以暂时模拟不出来需要共享的场景了，就转向ws通知代码的完善了。目前是只写了好友申请的通知，还剩下群聊申请的通知，大概明天写完，然后找到需要共享窗口的场景，在完成一些多窗口的缓存共享问题。这就是前端的内容了。自此，这个项目小问题估计大部分都解决了，只剩下小功能了，还有一些优化的点，后端还要引入MQ，还有redis的优化等问题，以及全局异常处理的补充，还有很多的代码细节没有完成，慢慢来吧，等会在补一下八股，java基础">
       <option name="closed" value="true" />
@@ -912,7 +906,15 @@
       <option name="project" value="LOCAL" />
       <updated>1795575158501</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="更新README">
+      <option name="closed" value="true" />
+      <created>1795576669126</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1795576669126</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -930,7 +932,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="集群信息使用Hash结构存储，节约内存。一些小功能的优化，分片文件失败的重传，ip限流异常信息" />
     <MESSAGE value="AI扩展，扩展了智谱大模型，因为这个免费" />
     <MESSAGE value="auth模块完成，并且成功启动" />
     <MESSAGE value="所有模块全部划分完成，准备搭建网关，网关搭建完成就开始测试" />
@@ -955,7 +956,8 @@
     <MESSAGE value="登陆代码" />
     <MESSAGE value="多端登录代码" />
     <MESSAGE value="多端设备在线状态显示功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="多端设备在线状态显示功能" />
+    <MESSAGE value="更新README" />
+    <option name="LAST_COMMIT_MESSAGE" value="更新README" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

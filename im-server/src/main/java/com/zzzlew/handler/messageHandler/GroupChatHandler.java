@@ -53,6 +53,7 @@ public class GroupChatHandler implements MessageHandler<GroupChatRequestDTO> {
             messageId = String.valueOf(IdUtil.getSnowflakeNextId());
         }
         groupChatResponseVO.setId(messageId);
+        groupChatResponseVO.setSendStatus(1);
         log.info("群聊回应的消息为: {}", groupChatResponseVO);
         // 返回发送消息成功发送服务端的ACK消息
         ACKMessageResponseVO successACK = ACKMessagePackUtil.createSuccessACK(String.valueOf(groupChatRequestDTO.getId()), groupChatResponseVO.getId());

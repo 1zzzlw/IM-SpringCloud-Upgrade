@@ -49,6 +49,8 @@ public interface MomentsService {
      */
     PageResult<MomentsVO> listByHot(int page, int pageSize);
 
+    PageResult<MomentsVO> search(String keyword, int page, int pageSize, boolean hot);
+
     /**
      * 点赞
      *
