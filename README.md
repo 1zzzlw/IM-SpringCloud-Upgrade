@@ -1,14 +1,10 @@
-# Lumina-Agent · 微光 — Java 服务端
-
-不刺眼，但足够温暖。
+# Lumina-Agent — Java 服务端
 
 ## 项目简介
 
 基于 SpringBoot + Netty + Vue3 + Electron 实现的全栈即时通讯系统，支持单聊 / 群聊、文件分片上传、消息持久化、AI 智能聊天等核心功能。
 
 ## 核心技术栈
-
-图片/视频预览改为 HTTP 文件上传、WS 只发送元数据，启用与数据库字段说明见[媒体消息去除 Base64](docs/媒体消息去除Base64.md)。本次数据库删列由用户执行，未运行测试或构建。
 
 - 后端：Java，SpringBoot，Netty，Redis，RabbitMQ，MySQL，Minio，Canal，ElasticSearch
 - 前端： Vite/Vue3，TypeScript，JavaScript，Electron，WebSocket，SQLite3
@@ -176,31 +172,44 @@ docker run -d --name im-server-2 -p 8001:8000 -e WS_MQ=2 im-server
 
 ## 项目界面展示
 
-### 登录界面
-<div style="display: flex; gap: 20px;">
-  <img src="docs/login.png" style="width: 45%;">
-  <img src="docs/自动登录.png" style="width: 45%;">
-</div>
+### 登录与自动登录
 
-### 注册界面
-
-![register](docs/register.png)
+<p>
+  <img src="docs/images/登录界面.png" alt="登录界面" width="300">
+  <img src="docs/images/自动登录界面.png" alt="自动登录界面" width="300">
+</p>
 
 ### 主界面
 
-![主界面](docs/主界面.png)
+![主界面](docs/images/主界面.png)
+
+### 聊天窗口
+
+![聊天窗口](docs/images/聊天窗口.png)
 
 ### 联系人界面
 
-![联系人界面](docs/联系人界面.png)
+![联系人界面](docs/images/联系人界面.png)
 
-### 笔记界面
+### 世界频道
 
-![笔记界面](docs/笔记界面.png)
+![频道界面](docs/images/频道界面.png)
+
+### 发布动态
+
+![发布动态界面](docs/images/发布动态界面.png)
+
+### 收藏界面
+
+![收藏界面](docs/images/收藏界面.png)
+
+### 钱包界面
+
+![钱包界面](docs/images/钱包界面.png)
 
 ### 设置界面
 
-![设置界面](docs/设置界面.png)
+![设置界面](docs/images/设置界面.png)
 
 ## 核心技术知识点复盘
 

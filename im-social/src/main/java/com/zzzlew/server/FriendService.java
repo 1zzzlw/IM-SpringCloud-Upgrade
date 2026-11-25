@@ -21,6 +21,8 @@ public interface FriendService {
      */
     List<FriendRelationVO> initFriendList(Boolean isInit);
 
+    List<String> listFriendIds();
+
     /**
      * 删除好友
      *

@@ -40,6 +40,11 @@ public class FriendController {
         return Result.success(friendRelationVOList);
     }
 
+    @GetMapping("/ids")
+    public Result<List<String>> listFriendIds() {
+        return Result.success(friendService.listFriendIds());
+    }
+
     /**
      * 删除好友
      *

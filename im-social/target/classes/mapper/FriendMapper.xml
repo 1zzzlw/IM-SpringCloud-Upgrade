@@ -28,6 +28,12 @@
         </where>
     </select>
 
+    <select id="selectFriendIds" resultType="java.lang.Long">
+        select friend_id
+        from friend_relation
+        where user_id = #{userId} and relation_status in (1, 2)
+    </select>
+
     <insert id="addFriendToRelation">
         insert into friend_relation (user_id, friend_id)
         values (#{toUserId}, #{fromUserId})

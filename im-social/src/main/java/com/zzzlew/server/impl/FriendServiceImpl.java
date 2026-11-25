@@ -83,6 +83,11 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
+    public List<String> listFriendIds() {
+        return friendMapper.selectFriendIds(UserHolder.getUser().getId()).stream().map(String::valueOf).toList();
+    }
+
+    @Override
     public void deleteFriend(String friendId) {
         Long userId = UserHolder.getUser().getId();
         Long friendId1 = Long.parseLong(friendId);

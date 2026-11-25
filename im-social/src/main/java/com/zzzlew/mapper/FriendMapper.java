@@ -22,6 +22,8 @@ public interface FriendMapper {
      */
     List<FriendRelationVO> selectFriendList(Long userId, String quitTime);
 
+    List<Long> selectFriendIds(@Param("userId") Long userId);
+
     /**
      * 添加好友关系
      *
